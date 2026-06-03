@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Monitor - Galerías de Diseños</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .design-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .design-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-preview {
+            height: 250px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .card-preview.preview1 {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+
+        .card-preview.preview2 {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .card-preview.preview3 {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .card-preview.preview4 {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+
+        .card-content {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .card-type {
+            font-size: 12px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 15px;
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .card-features {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .feature {
+            margin: 5px 0;
+        }
+
+        .feature::before {
+            content: "✓ ";
+            color: #10b981;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+        }
+
+        .view-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .view-btn:hover {
+            background: #5568d3;
+            transform: scale(1.02);
+        }
+
+        .view-btn.secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+            margin-top: 8px;
+        }
+
+        .view-btn.secondary:hover {
+            background: #d1d5db;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer p {
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+
+        .comparison-note {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .comparison-note strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>🎨 Prototipos VPN Monitor</h1>
+            <p>Explora 4 estilos visuales diferentes para el dashboard. Cada opción tiene su propio enfoque de diseño, colores y estructura.</p>
+        </div>
+
+        <!-- Comparison Note -->
+        <div class="comparison-note">
+            <strong>💡 Cómo usar esta galería:</strong>
+            Haz clic en "Ver Prototipo" para ver cada diseño en detalle. No se han aplicado cambios al dashboard actual - estos son solo ejemplos visuales para que decidas cuál te gusta más.
+        </div>
+
+        <!-- Design Gallery -->
+        <div class="gallery">
+            <!-- Option 1: Financial Dashboard -->
+            <div class="design-card">
+                <div class="card-preview preview1"></div>
+                <div class="card-content">
+                    <div class="card-type">Opción 1</div>
+                    <div class="card-title">Financial Dashboard</div>
+                    <div class="card-description">
+                        Diseño profesional y corporativo. Enfoque en métricas clave (KPIs) con tarjetas grandes y claras. Perfecto para ejecutivos y gerentes.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature">KPI cards prominentes</div>
+                        <div class="feature">Tablas detalladas de datos</div>
+                        <div class="feature">Gráficos claros y legibles</div>
+                        <div class="feature">Colores azules profesionales</div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="view-btn" onclick="window.open('dashboard_option1_financial.html', '_blank')">Ver Prototipo</button>
+                        <button class="view-btn secondary" onclick="scrollToInfo('info1')">Más Info</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Option 4: Real-Time Monitoring -->
+            <div class="design-card">
+                <div class="card-preview preview2"></div>
+                <div class="card-content">
+                    <div class="card-type">Opción 4</div>
+                    <div class="card-title">Real-Time Monitoring</div>
+                    <div class="card-description">
+                        Diseño moderno y dinámico con tema oscuro. Enfoque en alertas y actividad en vivo. Incluye indicadores pulsantes y feed de eventos.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature">Tema oscuro moderno</div>
+                        <div class="feature">Indicadores pulsantes</div>
+                        <div class="feature">Feed de actividad en tiempo real</div>
+                        <div class="feature">Alertas destacadas</div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="view-btn" onclick="window.open('dashboard_option4_realtime.html', '_blank')">Ver Prototipo</button>
+                        <button class="view-btn secondary" onclick="scrollToInfo('info4')">Más Info</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Option 7: Sales Intelligence -->
+            <div class="design-card">
+                <div class="card-preview preview3"></div>
+                <div class="card-content">
+                    <div class="card-type">Opción 7</div>
+                    <div class="card-title">Sales Intelligence</div>
+                    <div class="card-description">
+                        Diseño de performance y competencia. Leaderboards, rankings y análisis por departamento. Ideal para motivación y reconocimiento.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature">Leaderboard con medallas</div>
+                        <div class="feature">Rankings visuales</div>
+                        <div class="feature">Análisis por departamento</div>
+                        <div class="feature">Barras de progreso visuales</div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="view-btn" onclick="window.open('dashboard_option7_salesintel.html', '_blank')">Ver Prototipo</button>
+                        <button class="view-btn secondary" onclick="scrollToInfo('info7')">Más Info</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Option 3: Comparative Analysis -->
+            <div class="design-card">
+                <div class="card-preview preview4"></div>
+                <div class="card-content">
+                    <div class="card-type">Opción 3</div>
+                    <div class="card-title">Comparative Analysis</div>
+                    <div class="card-description">
+                        Diseño de análisis comparativo. Lado a lado con deltas e indicadores de cambio. Excelente para reportes semanales/mensuales.
+                    </div>
+                    <div class="card-features">
+                        <div class="feature">Comparación período a período</div>
+                        <div class="feature">Indicadores de cambio (deltas)</div>
+                        <div class="feature">Tendencias visuales</div>
+                        <div class="feature">Tablas comparativas</div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="view-btn" onclick="window.open('dashboard_option3_comparative.html', '_blank')">Ver Prototipo</button>
+                        <button class="view-btn secondary" onclick="scrollToInfo('info3')">Más Info</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Info Section -->
+        <div style="background: white; border-radius: 16px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #1f2937; margin-bottom: 30px; font-size: 24px;">📊 Comparación Detallada de Estilos</h2>
+
+            <div id="info1" style="margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #e5e7eb;">
+                <h3 style="color: #1e3a8a; font-size: 18px; margin-bottom: 12px;">Opción 1: Financial Dashboard (Azul corporativo)</h3>
+                <p style="color: #6b7280; line-height: 1.8;">
+                    <strong>Mejor para:</strong> Presentaciones a directores, reportes ejecutivos, usuarios que necesitan un resumen rápido de KPIs.<br>
+                    <strong>Características clave:</strong> Tarjetas de métricas prominentes, tabla de usuarios conectados, gráficos de barras simples.<br>
+                    <strong>Complejidad:</strong> Baja - fácil de entender para cualquier usuario.<br>
+                    <strong>Colores:</strong> Azul profundo (#1e3a8a) con acentos cyan, verde y naranja.
+                </p>
+            </div>
+
+            <div id="info4" style="margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #e5e7eb;">
+                <h3 style="color: #0f172a; font-size: 18px; margin-bottom: 12px;">Opción 4: Real-Time Monitoring (Tema oscuro)</h3>
+                <p style="color: #6b7280; line-height: 1.8;">
+                    <strong>Mejor para:</strong> Equipo de IT, monitoreo de seguridad, seguimiento 24/7, control de infraestructura.<br>
+                    <strong>Características clave:</strong> Feed de actividad en vivo, indicadores pulsantes, alertas prominentes, usuarios activos con avatares.<br>
+                    <strong>Complejidad:</strong> Media - más visual e interactivo.<br>
+                    <strong>Colores:</strong> Tema oscuro elegante con cyan (#0ea5e9) y verde (#10b981) para indicadores de estado.
+                </p>
+            </div>
+
+            <div id="info7" style="margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #e5e7eb;">
+                <h3 style="color: #f59e0b; font-size: 18px; margin-bottom: 12px;">Opción 7: Sales Intelligence (Performance)</h3>
+                <p style="color: #6b7280; line-height: 1.8;">
+                    <strong>Mejor para:</strong> RRHH, gerentes, análisis de productividad y desempeño, motivación de equipos.<br>
+                    <strong>Características clave:</strong> Leaderboard con medallas (oro, plata, bronce), rankings visuales, análisis por departamento.<br>
+                    <strong>Complejidad:</strong> Media - muy visual y gamificado.<br>
+                    <strong>Colores:</strong> Dorado (#f59e0b) como principal, con tonos cálidos y profesionales.
+                </p>
+            </div>
+
+            <div id="info3">
+                <h3 style="color: #6366f1; font-size: 18px; margin-bottom: 12px;">Opción 3: Comparative Analysis (Análisis)</h3>
+                <p style="color: #6b7280; line-height: 1.8;">
+                    <strong>Mejor para:</strong> RRHH, reportes mensuales, análisis de tendencias, decisiones basadas en datos.<br>
+                    <strong>Características clave:</strong> Comparaciones lado a lado, indicadores de cambio (deltas), barras de tendencia, tablas comparativas.<br>
+                    <strong>Complejidad:</strong> Alta - requiere entender cambios porcentuales.<br>
+                    <strong>Colores:</strong> Púrpura (#6366f1) como principal con tonos neutros para las comparaciones.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Próximos pasos:</strong></p>
+            <p>Una vez que elijas tu diseño favorito, haremos clic en "Aplicar" para actualizar el dashboard actual con ese estilo.</p>
+            <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">VPN Monitor • Galería de Diseños • Sin cambios aplicados aún</p>
+        </div>
+    </div>
+
+    <script>
+        function scrollToInfo(id) {
+            const element = document.getElementById(id);
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

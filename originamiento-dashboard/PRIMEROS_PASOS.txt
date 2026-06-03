@@ -1,0 +1,82 @@
+════════════════════════════════════════════════════════════════════════════════
+                    ORIGINAMIENTO DASHBOARD - PRIMEROS PASOS
+════════════════════════════════════════════════════════════════════════════════
+
+📋 PASO 1: CONFIGURACIÓN INICIAL
+═══════════════════════════════════════════════════════════════════════════════
+
+  1. Haz doble-clic en: setup.bat
+
+  ✅ Esto creará automáticamente el archivo .env
+
+
+📝 PASO 2: EDITAR CREDENCIALES
+═══════════════════════════════════════════════════════════════════════════════
+
+  1. Abre el archivo: .env (con Notepad, VSCode, etc.)
+
+  2. Busca estas líneas y completa con tus datos:
+
+     ODOO_URL=https://odoo-originamiento.argensun.com.ar
+     ODOO_USER=tu_email@example.com          ← CAMBIA ESTO
+     ODOO_PASSWORD=tu_contraseña             ← CAMBIA ESTO
+     ANTHROPIC_API_KEY=sk-ant-xxxxx          ← CAMBIA ESTO
+
+  3. Guarda el archivo (Ctrl+S)
+
+
+🚀 PASO 3: INICIAR LA PLATAFORMA
+═══════════════════════════════════════════════════════════════════════════════
+
+  1. Haz doble-clic en: START_HERE.cmd
+
+  ✅ Los servicios se iniciarán automáticamente
+  ✅ El navegador se abrirá en http://localhost:3000
+
+
+👤 PASO 4: INICIAR SESIÓN
+═══════════════════════════════════════════════════════════════════════════════
+
+  Usuario:     demo
+  Contraseña:  demo123
+
+
+════════════════════════════════════════════════════════════════════════════════
+                                INFORMACIÓN ADICIONAL
+════════════════════════════════════════════════════════════════════════════════
+
+URLS DISPONIBLES:
+  📊 Dashboard:        http://localhost:3000
+  📚 API Docs:         http://localhost:8000/docs
+  🗄️  Base de Datos:    localhost:5432
+
+PARA DETENER:
+  ❌ Presiona Ctrl+C en la ventana de consola
+
+ARCHIVOS IMPORTANTES:
+  📄 README.md         - Documentación completa
+  📄 QUICK_START.md    - Guía rápida
+  ⚙️  .env             - Configuración (editar con tus credenciales)
+
+REQUERIMIENTOS:
+  ✅ Docker Desktop instalado y ejecutándose
+  ✅ Archivo .env configurado
+
+
+════════════════════════════════════════════════════════════════════════════════
+
+¿PREGUNTAS?
+
+❓ Docker no se encuentra
+   👉 Descarga: https://www.docker.com/products/docker-desktop
+
+❓ Puerto ya en uso
+   👉 Ejecuta en consola: docker-compose down
+
+❓ Error en credenciales
+   👉 Verifica ODOO_URL, ODOO_USER, ODOO_PASSWORD en .env
+
+❓ Ver logs detallados
+   👉 Abre otra consola y ejecuta: docker-compose logs -f
+
+════════════════════════════════════════════════════════════════════════════════

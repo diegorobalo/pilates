@@ -1,0 +1,299 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║         DOCUMENTACIÓN VPN MONITOR - ÍNDICE Y GUÍA DE LECTURA                   ║
+║                              v2.1.0 (Abril 2026)                              ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+¿QUÉ DOCUMENTO DEBO LEER? (según mi rol)
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 👨‍💼 SI SOY: JEFE DE RECURSOS HUMANOS                                           │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  OBLIGATORIO (primero):                                                       │
+│  1️⃣  RESUMEN_EJECUTIVO.md              [15 min]                              │
+│      └─ Entender qué es, beneficios, métricas clave                          │
+│                                                                                │
+│  2️⃣  GUIA_RAPIDA.txt                   [20 min]                              │
+│      └─ Cómo empezar y tareas comunes                                        │
+│                                                                                │
+│  3️⃣  MANUAL_RRHH.md - Secciones:       [45 min]                              │
+│      └─ "Cómo usa RRHH el sistema"                                           │
+│      └─ "Tareas comunes de RRHH"                                             │
+│      └─ "Cómo interpretar datos"                                             │
+│                                                                                │
+│  OPCIONAL (profundizar):                                                      │
+│  4️⃣  CASOS_PRACTICOS_RRHH.md           [1 hora]                              │
+│      └─ Escenarios reales de uso                                             │
+│      └─ Cómo tomar decisiones                                                │
+│      └─ Solución de problemas                                                │
+│                                                                                │
+│  PARA ENTRENAR A TU EQUIPO:                                                    │
+│  • Mostrar: GUIA_RAPIDA.txt (visual, rápido)                                  │
+│  • Demostración en vivo: Acceder y explorar las 7 pestañas                    │
+│  • Ejercicio práctico: Generar un reporte de un usuario                       │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 👥 SI SOY: PERSONAL DE RECURSOS HUMANOS (Auditoría/Nómina)                    │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  OBLIGATORIO (primero):                                                       │
+│  1️⃣  GUIA_RAPIDA.txt                   [20 min]                              │
+│      └─ Empieza aquí                                                         │
+│                                                                                │
+│  2️⃣  MANUAL_RRHH.md - Secciones:       [60 min]                              │
+│      └─ "Las 7 pestañas explicadas" (todo)                                   │
+│      └─ "Guía rápida de uso"                                                 │
+│      └─ "Checklist mensual"                                                  │
+│                                                                                │
+│  PARA TUS TAREAS DIARIAS:                                                     │
+│  • Control de asistencia:                                                     │
+│    └─ Ve a AUDITORÍA cada mañana (5 min)                                      │
+│  • Reportes individuales:                                                     │
+│    └─ Usa INFORME USUARIO (15-30 min por persona)                             │
+│  • Evaluaciones:                                                              │
+│    └─ Revisa RRHH/GESTIÓN semanalmente (30 min)                               │
+│                                                                                │
+│  REFERENCIA RÁPIDA:                                                           │
+│  • Tabla en CASOS_PRACTICOS_RRHH.md: "Tabla de referencia rápida"             │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 👔 SI SOY: DIRECTIVO / GERENTE DE LA EMPRESA                                  │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  OBLIGATORIO:                                                                 │
+│  1️⃣  RESUMEN_EJECUTIVO.md              [20 min]                              │
+│      └─ Todo lo que necesitas saber                                          │
+│                                                                                │
+│  OPCIONAL:                                                                    │
+│  2️⃣  CASOS_PRACTICOS_RRHH.md           [30 min]                              │
+│      └─ "Escenario 6: Optimización de recursos"                              │
+│      └─ "Escenario 7: Preparar reporte mensual"                              │
+│                                                                                │
+│  PARA PRESENTACIONES:                                                         │
+│  • Usa datos de RRHH/GESTIÓN (gráficos)                                       │
+│  • Exporta a Excel [Exportar CSV]                                             │
+│  • Presenta Top 10, productividad por sector, ROI                             │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🔧 SI SOY: ADMINISTRADOR DE SISTEMAS / IT                                     │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  OBLIGATORIO:                                                                 │
+│  1️⃣  README_FIXES.txt o FIXES_APPLIED.md  [30 min]                           │
+│      └─ Cambios técnicos realizados                                          │
+│                                                                                │
+│  2️⃣  MANUAL_RRHH.md - Sección:          [15 min]                              │
+│      └─ "Configuración importante"                                           │
+│      └─ "Seguridad y privacidad"                                             │
+│                                                                                │
+│  PARA MANTENIMIENTO:                                                          │
+│  • Revisar logs: vpn_monitor.log                                              │
+│  • Pestaña: IT / SEGURIDAD (para alertas técnicas)                            │
+│  • Base de datos: vpn_sessions.db (SQLite)                                    │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 📖 ESTRUCTURA DE CADA DOCUMENTO                                                │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  RESUMEN_EJECUTIVO.md:                                                        │
+│  ├─ Qué es VPN Monitor (1 minuto)                                            │
+│  ├─ Beneficios comerciales (5 minutos)                                       │
+│  ├─ Las 7 funcionalidades (10 minutos)                                       │
+│  ├─ ROI y costos (5 minutos)                                                 │
+│  └─ Conclusión y recomendación                                               │
+│                                                                                │
+│  GUIA_RAPIDA.txt:                                                             │
+│  ├─ Cómo empezar (3 pasos)                                                   │
+│  ├─ Las 7 pestañas resumidas                                                 │
+│  ├─ Tareas comunes (paso a paso)                                             │
+│  ├─ Cómo interpretar números                                                 │
+│  ├─ Señales de alerta                                                        │
+│  └─ Checklist de primeros días                                               │
+│                                                                                │
+│  MANUAL_RRHH.md:                                                              │
+│  ├─ Arquitectura del sistema (visual)                                        │
+│  ├─ Las 7 pestañas DETALLADAS (explicación completa)                         │
+│  ├─ Guía de uso paso a paso                                                  │
+│  ├─ Cómo interpretar datos                                                   │
+│  ├─ Seguridad y privacidad                                                   │
+│  └─ Preguntas frecuentes                                                     │
+│                                                                                │
+│  CASOS_PRACTICOS_RRHH.md:                                                     │
+│  ├─ 7 escenarios reales (control asistencia, evaluación, etc)                │
+│  ├─ Paso a paso de solución                                                  │
+│  ├─ Ejemplos de conversaciones                                               │
+│  ├─ Cómo interpretar heatmaps                                                │
+│  ├─ Detección de anomalías                                                   │
+│  ├─ Preparación de reportes mensuales                                        │
+│  └─ Tabla de referencia rápida                                               │
+│                                                                                │
+│  INDICE_DOCUMENTACION.txt (este archivo):                                     │
+│  └─ Cuál documento leer según tu rol                                         │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ ⏱️  ESTIMACIÓN DE TIEMPO DE LECTURA                                             │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  Muy rápido (5 minutos):                                                      │
+│  └─ GUIA_RAPIDA.txt - Sección "COMENZAR EN 3 PASOS"                           │
+│                                                                                │
+│  Rápido (15-20 minutos):                                                      │
+│  └─ RESUMEN_EJECUTIVO.md (ejecutivos/directivos)                              │
+│  └─ GUIA_RAPIDA.txt completo                                                  │
+│                                                                                │
+│  Normal (45 minutos - 1 hora):                                                 │
+│  └─ MANUAL_RRHH.md - Primeras secciones                                       │
+│  └─ CASOS_PRACTICOS_RRHH.md - 1-2 escenarios                                  │
+│                                                                                │
+│  Completo (2-3 horas):                                                        │
+│  └─ Todo: RESUMEN_EJECUTIVO.md + MANUAL_RRHH.md + CASOS_PRACTICOS            │
+│                                                                                │
+│  Para capacitar al equipo (4-5 horas):                                         │
+│  └─ Leer: GUIA_RAPIDA.txt + MANUAL_RRHH.md                                    │
+│  └─ Demo en vivo: 1 hora accediendo al sistema                                │
+│  └─ Ejercicios prácticos: 1-2 horas                                           │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 PLAN SUGERIDO DE LECTURA POR NIVEL                                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  NIVEL 1: USUARIO BÁSICO (Leer en 1 día)                                      │
+│  ────────────────────────────────────────────                                 │
+│  • Mañana: GUIA_RAPIDA.txt (20 min)                                           │
+│  • Tarde: Acceder al sistema y explorar (30 min)                              │
+│  • Tarde: MANUAL_RRHH.md - Sección "Las 7 pestañas" (45 min)                  │
+│  ✓ Ahora puedes: Usar el sistema para tareas diarias                          │
+│                                                                                │
+│  NIVEL 2: USUARIO INTERMEDIO (Leer en 2 días)                                 │
+│  ────────────────────────────────────────────────────────────────             │
+│  • Día 1: Todo del NIVEL 1                                                    │
+│  • Día 1 tarde: MANUAL_RRHH.md - Sección "Guía rápida" (30 min)               │
+│  • Día 2: CASOS_PRACTICOS_RRHH.md - Escenarios 1-3 (45 min)                   │
+│  ✓ Ahora puedes: Tomar decisiones basadas en datos                            │
+│                                                                                │
+│  NIVEL 3: USUARIO AVANZADO (Leer en 3-4 días)                                 │
+│  ────────────────────────────────────────────────────────────────────         │
+│  • Día 1-2: Todo del NIVEL 2                                                  │
+│  • Día 3: Resto de CASOS_PRACTICOS_RRHH.md (1 hora)                           │
+│  • Día 3-4: RESUMEN_EJECUTIVO.md (20 min)                                     │
+│  • Día 4: Generar reportes y presentaciones (1 hora)                          │
+│  ✓ Ahora puedes: Entrenar otros, tomar decisiones estratégicas                │
+│                                                                                │
+│  DIRECTIVO/GERENTE (Leer en 1 día)                                             │
+│  ────────────────────────────────────────                                     │
+│  • Mañana: RESUMEN_EJECUTIVO.md (20 min)                                      │
+│  • Tarde: CASOS_PRACTICOS_RRHH.md - Escenarios 6-7 (45 min)                   │
+│  ✓ Ahora puedes: Entender ROI y tomar decisiones ejecutivas                   │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 💡 CONSEJOS DE LECTURA                                                         │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  ✓ Empieza por GUIA_RAPIDA.txt (es la más corta y completa)                   │
+│                                                                                │
+│  ✓ Accede al sistema MIENTRAS lees:                                           │
+│    • Abre una ventana del navegador                                           │
+│    • Abre otra ventana con el documento                                       │
+│    • Sigue los pasos del documento en el sistema                              │
+│                                                                                │
+│  ✓ Toma notas mientras lees los CASOS_PRACTICOS                               │
+│    • Escribe situaciones similares en tu empresa                              │
+│    • Planifica cómo las resolverías                                           │
+│                                                                                │
+│  ✓ Lee MANUAL_RRHH.md de una sección a la vez                                 │
+│    • Completa cada sección antes de pasar a la siguiente                      │
+│    • Pausa para procesarla                                                    │
+│                                                                                │
+│  ✓ Guarda GUIA_RAPIDA.txt en tu teléfono o escritorio                         │
+│    • Consulta rápida cuando necesites recordar algo                           │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 📋 CHECKLIST POST-LECTURA (Verifica que entendiste)                            │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  Después de leer GUIA_RAPIDA.txt, ¿puedes?                                     │
+│  ☐ Acceder al sistema                                                        │
+│  ☐ Nombrar las 7 pestañas                                                    │
+│  ☐ Entender cuál usar para control de asistencia                             │
+│  ☐ Entender cuál usar para evaluación de desempeño                           │
+│                                                                                │
+│  Después de leer MANUAL_RRHH.md, ¿puedes?                                      │
+│  ☐ Explicar qué es cada sección                                              │
+│  ☐ Usar el buscador de AUDITORÍA                                             │
+│  ☐ Generar un reporte de un usuario                                          │
+│  ☐ Comparar productividad entre departamentos                                │
+│                                                                                │
+│  Después de leer CASOS_PRACTICOS_RRHH.md, ¿puedes?                             │
+│  ☐ Detectar ausentismo injustificado                                         │
+│  ☐ Evaluar productividad individual                                          │
+│  ☐ Analizar por departamento                                                 │
+│  ☐ Identificar anomalías                                                     │
+│  ☐ Preparar un reporte mensual                                               │
+│                                                                                │
+│  Después de leer RESUMEN_EJECUTIVO.md, ¿puedes?                                │
+│  ☐ Explicar el ROI a un directivo                                            │
+│  ☐ Justificar el uso del sistema                                             │
+│  ☐ Identificar beneficios comerciales                                        │
+│  ☐ Tomar decisiones basadas en datos                                         │
+│                                                                                │
+│  Si respondiste SÍ a todas: ¡Estás listo! 🎉                                   │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🔗 CÓMO NAVEGAR ENTRE DOCUMENTOS                                                │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  Dentro de cada documento encontrarás referencias a otros:                    │
+│                                                                                │
+│  GUIA_RAPIDA.txt menciona:                                                     │
+│  → Si quieres más detalles, ver MANUAL_RRHH.md                                │
+│  → Si quieres casos reales, ver CASOS_PRACTICOS_RRHH.md                       │
+│                                                                                │
+│  MANUAL_RRHH.md menciona:                                                      │
+│  → Para ejemplos prácticos, ver CASOS_PRACTICOS_RRHH.md                       │
+│  → Para resumen ejecutivo, ver RESUMEN_EJECUTIVO.md                           │
+│                                                                                │
+│  CASOS_PRACTICOS_RRHH.md menciona:                                             │
+│  → Para entender mejor, ver secciones del MANUAL_RRHH.md                      │
+│                                                                                │
+│  RESUMEN_EJECUTIVO.md menciona:                                                │
+│  → Para detalles técnicos, ver MANUAL_RRHH.md                                 │
+│  → Para casos prácticos, ver CASOS_PRACTICOS_RRHH.md                          │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════════════════════╗
+║ 🎓 RESUMEN FINAL                                                               ║
+║                                                                                ║
+║ 5 documentos = Cobertura completa de VPN Monitor                              ║
+║                                                                                ║
+║ 1. INDICE_DOCUMENTACION.txt (este) - Mapa de lectura                           ║
+║ 2. GUIA_RAPIDA.txt - Empieza por aquí                                          ║
+║ 3. MANUAL_RRHH.md - Referencia completa                                        ║
+║ 4. CASOS_PRACTICOS_RRHH.md - Situaciones reales                                ║
+║ 5. RESUMEN_EJECUTIVO.md - Para directivos                                      ║
+║                                                                                ║
+║ Tiempo total de lectura: 2-4 horas (según tu rol)                              ║
+║ Tiempo para ser experto: 5-8 horas (con práctica)                              ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+                          Versión 2.1.0 | Abril 2026
+                          Última actualización: Hoy

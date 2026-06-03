@@ -1,0 +1,273 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                   VPN MONITOR - GUÍA RÁPIDA PARA RRHH                          ║
+║                              v2.1.0 (Abril 2026)                              ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 COMENZAR EN 3 PASOS                                                         │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  1️⃣  Abre en el navegador:  http://localhost:5555                             │
+│                                                                                │
+│  2️⃣  Ingresa credenciales:   Usuario: admin  |  Contraseña: admin             │
+│                                                                                │
+│  3️⃣  ¡Ya estás dentro!      Explora las 7 pestañas                            │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 📱 LAS 7 PESTAÑAS EXPLICADAS                                                   │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  1️⃣  CONECTADOS          ➜  ¿Quién está usando VPN AHORA?                    │
+│      • Nombres de usuarios conectados en este momento                         │
+│      • Ubicación geográfica (Ciudad/País)                                     │
+│      • Hora de conexión actual                                                │
+│      • Datos descargados/subidos                                              │
+│      ✓ USO: Control de presencia en tiempo real                               │
+│                                                                                │
+│  2️⃣  TABLA DETALLE       ➜  Vista más técnica de conectados ahora             │
+│      • IP asignada a cada usuario                                             │
+│      • Identificador del dispositivo (PC, móvil, etc)                         │
+│      • Consumo de ancho de banda detallado                                    │
+│      ✓ USO: Análisis técnico de conexiones                                    │
+│                                                                                │
+│  3️⃣  HISTORIAL          ➜  ¿Qué pasó en los últimos días?                    │
+│      • Cada sesión completada (inicio y fin)                                  │
+│      • Horas de trabajo por sesión                                            │
+│      • Datos transferidos por sesión                                          │
+│      ✓ USO: Revisar historial de conexiones                                   │
+│                                                                                │
+│  4️⃣  AUDITORÍA          ➜  CONTROL DE ASISTENCIA                             │
+│      • Detecta usuarios sin conectar 3+ días                                  │
+│      • Identifica ausentes del trabajo                                        │
+│      • Muestra patrones de ausentismo                                         │
+│      • Buscar por nombre para ver detalles                                    │
+│      ✓ USO: Justificaciones de ausencias y control diario                     │
+│                                                                                │
+│  5️⃣  INFORME USUARIO    ➜  REPORTE INDIVIDUAL DE PRODUCTIVIDAD               │
+│      • Gráfico de horas por día (últimos 30 días)                             │
+│      • Distribución por día de semana                                         │
+│      • Total de horas trabajadas                                              │
+│      • Tendencias y promedios                                                 │
+│      ✓ USO: Evaluar desempeño individual de empleados                         │
+│                                                                                │
+│  6️⃣  RRHH / GESTIÓN     ➜  ANÁLISIS GLOBAL DE RECURSOS HUMANOS                │
+│      • Top 10 usuarios más productivos                                        │
+│      • Resumen de horas por sector/departamento                               │
+│      • Mapa de calor de actividad (qué días hay más trabajo)                  │
+│      • Detección de ausencias prolongadas                                     │
+│      • ASIGNAR usuarios a departamentos                                       │
+│      ✓ USO: Análisis de productividad por sector y decisiones RRHH            │
+│                                                                                │
+│  7️⃣  IT / SEGURIDAD     ➜  MONITOREO TÉCNICO Y DE SEGURIDAD                  │
+│      • Horas pico de conexión (cuándo más se usa)                             │
+│      • Ubicaciones de conexión (países/ciudades)                              │
+│      • Detección de anomalías                                                 │
+│      ✓ USO: IT y Seguridad (no es para RRHH)                                  │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 TAREAS COMUNES DE RRHH                                                      │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  TAREA: "Necesito saber quién faltó hoy"                                      │
+│  ─────────────────────────────────────────                                    │
+│  1. Abre pestaña: AUDITORÍA                                                   │
+│  2. Busca el nombre del empleado                                              │
+│  3. Si aparece sin horas → No se conectó → AUSENTE                            │
+│     Si aparece con horas → Se conectó → PRESENTE                             │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  TAREA: "Quiero saber si Juan está siendo productivo"                         │
+│  ──────────────────────────────────────────────────────                       │
+│  1. Abre pestaña: INFORME USUARIO                                             │
+│  2. Selecciona: Juan Pérez                                                    │
+│  3. Haz clic: [Generar]                                                       │
+│  4. Mira los gráficos y el promedio de horas/día                              │
+│     • 5+ horas/día = Productivo ✓                                             │
+│     • 3-5 horas/día = Normal ✓                                                │
+│     • < 3 horas/día = Revisar ⚠️                                              │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  TAREA: "Comparar productividad entre departamentos"                          │
+│  ──────────────────────────────────────────────────                           │
+│  1. Abre pestaña: RRHH / GESTIÓN                                              │
+│  2. Haz clic: [Cargar]                                                        │
+│  3. Mira: "RESUMEN POR SECTOR"                                                │
+│  4. Compara horas por sector                                                  │
+│  5. Si un sector está bajo: Investigar por qué                                │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  TAREA: "Asignar un usuario a un departamento"                                │
+│  ──────────────────────────────────────────────                               │
+│  1. Abre pestaña: RRHH / GESTIÓN                                              │
+│  2. Scrollea hasta: "ASIGNAR DEPARTAMENTO"                                    │
+│  3. Selecciona Usuario y Departamento                                         │
+│  4. Haz clic: [Guardar]                                                       │
+│  5. Listo! El usuario está asignado                                           │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  TAREA: "Generar reporte mensual para mostrar a la Dirección"                 │
+│  ─────────────────────────────────────────────────────────────                │
+│  1. Abre el VPN Monitor                                                       │
+│  2. Cambia selector de días a [30]                                            │
+│  3. Ve a pestaña RRHH/GESTIÓN y haz clic [Cargar]                             │
+│  4. Toma captura de pantalla de:                                              │
+│     • TOP 10 USUARIOS                                                         │
+│     • RESUMEN POR SECTOR                                                      │
+│     • Ausencias detectadas                                                    │
+│  5. Copia datos a Excel usando: [Exportar CSV]                                │
+│  6. Crea documento Word/Calc con:                                             │
+│     • Título: "Reporte de Actividad VPN - Abril 2026"                         │
+│     • Screenshots de gráficos                                                 │
+│     • Análisis e interpretación                                               │
+│     • Recomendaciones                                                         │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  TAREA: "Exportar datos a Excel para mis archivos"                            │
+│  ────────────────────────────────────────────────                             │
+│  Desde CUALQUIER pestaña:                                                     │
+│  1. Haz clic: [Exportar CSV]                                                  │
+│  2. Se descarga archivo: vpn_monitor_export.csv                               │
+│  3. Abre con Excel/Calc                                                       │
+│  4. Guarda en tu carpeta de RRHH                                              │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 📊 CÓMO INTERPRETAR NÚMEROS                                                    │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  HORAS:                                                                       │
+│  • 7-8 horas/día = Jornada laboral completa ✓                                 │
+│  • 4-6 horas/día = Medio día de trabajo ⚠️                                     │
+│  • 0-3 horas/día = Muy poco trabajo ✗                                         │
+│                                                                                │
+│  BYTES / MB / GB:                                                              │
+│  • MB = Megabytes (1000 KB) - archivos pequeños                               │
+│  • GB = Gigabytes (1000 MB) - archivos grandes, videos                        │
+│  • Normal: 10-30 MB por hora de trabajo                                       │
+│  • Anormal: > 50 MB por hora (posible descarga excesiva)                      │
+│                                                                                │
+│  DÍAS ACTIVOS:                                                                │
+│  • 20-22 días en un mes = Normal (descuenta fines de semana)                  │
+│  • 25-30 días = Muy productivo                                                │
+│  • < 15 días = Revisar asistencia                                             │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🚨 SEÑALES DE ALERTA                                                           │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  ⚠️  USUARIO CON 0 HORAS HOY                                                   │
+│      → Significa: No se conectó a VPN hoy                                     │
+│      → Acción: Revisar si está de vacaciones/licencia/ausente                 │
+│                                                                                │
+│  ⚠️  CONEXIONES A OTRAS CIUDADES/PAÍSES                                        │
+│      → Significa: El usuario se conectó desde otro lugar                      │
+│      → Acción: Si no es viaje de negocios, investigar                         │
+│                                                                                │
+│  ⚠️  HORAS MUY BAJAS (< 2 horas/día)                                            │
+│      → Significa: Usuario no trabaja mucho desde el VPN                       │
+│      → Acción: Entrevistar para entender por qué                              │
+│                                                                                │
+│  ⚠️  DATOS MUY ALTOS (> 100 MB/hora)                                            │
+│      → Significa: Usuario descarga muchos datos                               │
+│      → Acción: Revisar si es trabajo legítimo o problema técnico              │
+│                                                                                │
+│  ⚠️  CONEXIÓN A LAS 3 AM                                                       │
+│      → Significa: Usuario trabajando fuera de horario                         │
+│      → Acción: Revisar si es autorizado o si hace horas extra no pagadas      │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 💡 CONSEJOS PRÁCTICOS                                                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  ✓ Revisa diariamente la pestaña AUDITORÍA (5 minutos)                        │
+│    para detectar ausencias en el día                                          │
+│                                                                                │
+│  ✓ Genera reportes semanales de cada sector                                   │
+│    para mantener seguimiento constante                                        │
+│                                                                                │
+│  ✓ Asigna a cada usuario su departamento en RRHH/GESTIÓN                      │
+│    para que los análisis sean más precisos                                    │
+│                                                                                │
+│  ✓ Exporta datos a Excel una vez al mes                                       │
+│    para tener historial respaldado                                            │
+│                                                                                │
+│  ✓ Cuando un usuario tiene ausencias, entrevista primero                      │
+│    antes de tomar medidas disciplinarias                                      │
+│    (puede haber justificativo válido)                                         │
+│                                                                                │
+│  ✓ Comparte los reportes con los Gerentes de Área                             │
+│    para que vean la productividad de su equipo                                │
+│                                                                                │
+│  ✓ Si varias personas no se conectan el mismo día,                            │
+│    probablemente fue feriado/paro/evento especial                             │
+│    (no necesita acción)                                                       │
+│                                                                                │
+│  ✓ Reconoce públicamente a los usuarios del Top 10                            │
+│    para motivar al equipo                                                     │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ ❓ PREGUNTAS FRECUENTES                                                         │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  P: ¿El VPN Monitor sabe QUÉ está haciendo cada usuario?                      │
+│  R: No. Solo ve cuándo se conecta/desconecta. No ve documentos,               │
+│     emails, ni lo que escriben. Es un monitor de PRESENCIA, no de CONTENIDO.  │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  P: ¿Es legal usar este monitor?                                              │
+│  R: Sí, si se informa a los empleados. Es monitoreo de conectividad,          │
+│     no de contenido. Consultar con abogados de la empresa.                    │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  P: ¿Se guarda el historial de años anteriores?                               │
+│  R: Sí, todo se guarda en la base de datos. Puedes cambiar el                 │
+│     selector de "Días" a 60, 90 o 365 para ver más atrás.                     │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  P: ¿Qué pasa si un usuario se desconecta accidentalmente?                    │
+│  R: Se registra como una sesión finalizada. Si se conecta de nuevo            │
+│     en 5 minutos, aparece como otra sesión. Es normal.                        │
+│                                                                                │
+│  ────────────────────────────────────────────────────────────────────────────  │
+│                                                                                │
+│  P: ¿Por qué hay días con 0 conexiones pero el usuario dice que trabajó?      │
+│  R: Probablemente trabajó sin VPN (red local, wifi otro sitio,                │
+│     dispositivo diferente). Hay que revisar caso a caso.                      │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════════════════════╗
+║ ✅ CHECKLIST: Primeros días usando el sistema                                 ║
+║                                                                                ║
+║ □ Acceso: Abrir http://localhost:5555 y entrar                                ║
+║ □ Exploración: Revisar las 7 pestañas                                         ║
+║ □ Configuración: Asignar todos los usuarios a sus departamentos               ║
+║ □ Prueba: Buscar un usuario y ver su reporte                                  ║
+║ □ Exportar: Probar descargar datos a Excel                                    ║
+║ □ Documentación: Leer MANUAL_RRHH.md y CASOS_PRACTICOS_RRHH.md               ║
+║ □ Capacitación: Enseñar a otros en RRHH cómo usarlo                           ║
+║ □ Rutina: Establecer cuándo revisar (recomendado: diariamente)                ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+                          Versión 2.1.0 | Abril 2026
+                   Estado: ✅ LISTO PARA USAR POR RRHH

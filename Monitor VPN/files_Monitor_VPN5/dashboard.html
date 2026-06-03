@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPN Monitor — Argensun Foods</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --card: #F8F4EE;
+  --ring: #B45309;
+  --input: #E4D9BC;
+  --muted: #F1E9DA;
+  --accent: #f2daba;
+  --border: #E4D9BC;
+  --radius: 0.3rem;
+  --chart-1: #B45309;
+  --chart-2: #78716C;
+  --chart-3: #A16207;
+  --chart-4: #78716C;
+  --chart-5: #CA8A04;
+  --popover: #F8F4EE;
+  --primary: #B45309;
+  --sidebar: #F1E9DA;
+  --font-mono: Fira Code, monospace;
+  --font-sans: Oxanium, sans-serif;
+  --secondary: #E4C090;
+  --background: #FDFBF7;
+  --font-serif: Merriweather, serif;
+  --foreground: #4A3B33;
+  --destructive: #991B1B;
+  --shadow-blur: 3px;
+  --shadow-color: hsl(28 18% 25%);
+  --sidebar-ring: #B45309;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.18;
+  --sidebar-accent: #A16207;
+  --sidebar-border: #E4D9BC;
+  --card-foreground: #4A3B33;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 2px;
+  --sidebar-primary: #B45309;
+  --muted-foreground: #78716C;
+  --accent-foreground: #57534E;
+  --popover-foreground: #4A3B33;
+  --primary-foreground: #FFFFFF;
+  --sidebar-foreground: #4A3B33;
+  --secondary-foreground: #57534E;
+  --destructive-foreground: #FFFFFF;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-primary-foreground: #FFFFFF;
+
+  /* Alias para compatibilidad con CSS actual */
+  --bg: #FDFBF7;
+  --s1: #F8F4EE;
+  --s2: #F1E9DA;
+  --s3: #E4D9BC;
+  --bd: #E4D9BC;
+  --tx: #4A3B33;
+  --txd: #78716C;
+  --txb: #2B2117;
+  --ac: #B45309;
+  --gn: #10b981;
+  --rd: #991B1B;
+  --yw: #CA8A04;
+  --pp: #a16207;
+  --or: #A16207;
+  --r: 6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+body.dark {
+  --card: #292524;
+  --ring: #F97316;
+  --input: #44403C;
+  --muted: #292524;
+  --accent: #1e4252;
+  --border: #44403C;
+  --popover: #292524;
+  --primary: #F97316;
+  --sidebar: #292524;
+  --secondary: #57534E;
+  --background: #1C1917;
+  --foreground: #F5F5F4;
+  --destructive: #DC2626;
+  --shadow-color: hsl(0 0% 5%);
+  --sidebar-ring: #F97316;
+  --sidebar-accent: #0EA5E9;
+  --sidebar-border: #44403C;
+  --card-foreground: #F5F5F4;
+  --sidebar-primary: #F97316;
+  --muted-foreground: #A8A29E;
+  --accent-foreground: #E7E5E4;
+  --popover-foreground: #F5F5F4;
+  --sidebar-foreground: #F5F5F4;
+  --secondary-foreground: #E7E5E4;
+  --destructive-foreground: #FFFFFF;
+  --sidebar-accent-foreground: #0C2A4D;
+  --sidebar-primary-foreground: #FFFFFF;
+
+  --bg: #1C1917;
+  --s1: #292524;
+  --s2: #292524;
+  --s3: #44403C;
+  --bd: #44403C;
+  --tx: #F5F5F4;
+  --txd: #A8A29E;
+  --txb: #FFFBF9;
+  --ac: #F97316;
+  --gn: #10b981;
+  --rd: #DC2626;
+  --yw: #EAB308;
+  --pp: #0EA5E9;
+  --or: #0EA5E9;
+}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* Header */
+.hdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-l img{height:32px}
+.hdr h1{font-size:16px;font-weight:700;color:var(--txb)}
+.hdr h1 span{color:var(--txd);font-weight:400;font-size:12px;margin-left:8px}
+.hdr-r{display:flex;gap:8px;align-items:center}
+.hdr-r label{font-size:11px;color:var(--txd)}
+.hdr-r input,.hdr-r select{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:5px 10px;border-radius:7px;font-size:12px;font-family:'JetBrains Mono',monospace}
+.live{width:7px;height:7px;background:var(--gn);border-radius:50%;animation:pls 2s infinite;display:inline-block}
+@keyframes pls{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+.btn{background:var(--ac);color:#fff;border:none;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.btn:hover{filter:brightness(1.15)}
+.btn-o{background:transparent;border:1px solid var(--bd);color:var(--tx)}
+.btn-o:hover{border-color:var(--ac);color:var(--ac)}
+.btn-sm{padding:4px 10px;font-size:11px}
+
+/* Layout */
+.main{padding:20px 24px;max-width:1500px;margin:0 auto}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.st{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px;position:relative;overflow:hidden}
+.st::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.st.g::before{background:linear-gradient(90deg,var(--gn),transparent)}
+.st.b::before{background:linear-gradient(90deg,var(--ac),transparent)}
+.st.p::before{background:linear-gradient(90deg,var(--pp),transparent)}
+.st.y::before{background:linear-gradient(90deg,var(--yw),transparent)}
+.st-l{font-size:11px;color:var(--txd);text-transform:uppercase;letter-spacing:.7px;font-weight:600;margin-bottom:6px}
+.st-v{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--txb);line-height:1}
+.st-s{font-size:11px;color:var(--txd);margin-top:4px}
+
+/* Tabs */
+.tabs{display:flex;gap:3px;margin-bottom:16px;background:var(--s1);border-radius:8px;padding:3px;width:fit-content;border:1px solid var(--bd)}
+.tab{padding:7px 16px;font-size:12px;font-weight:600;color:var(--txd);cursor:pointer;border-radius:6px;border:none;background:none;font-family:inherit;transition:.2s}
+.tab:hover{color:var(--tx)}
+.tab.on{background:var(--ac);color:#fff}
+
+/* Panels */
+.pnl{display:none}.pnl.on{display:block}
+
+/* Cards grid */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:14px;transition:.2s;position:relative}
+.card:hover{border-color:var(--ac);transform:translateY(-1px)}
+.card-name{font-size:14px;font-weight:700;color:var(--txb);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.card-name .live{margin-right:2px}
+.card-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--bd)}
+.card-row:last-child{border:none}
+.card-row .k{color:var(--txd)}
+.card-row .v{color:var(--txb);font-family:'JetBrains Mono',monospace;font-size:11px}
+.card-geo{font-size:10px;color:var(--pp);margin-top:6px;display:flex;align-items:center;gap:4px}
+
+/* Table */
+.tw{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.tw .sc{max-height:500px;overflow-y:auto}
+.tw .sc::-webkit-scrollbar{width:5px}
+.tw .sc::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--s2);padding:10px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txd);text-align:left;border-bottom:1px solid var(--bd);cursor:pointer;user-select:none;white-space:nowrap}
+th:hover{color:var(--ac)}
+th .arrow{margin-left:4px;font-size:8px}
+td{padding:8px 12px;font-size:12px;border-bottom:1px solid var(--bd);font-family:'JetBrains Mono',monospace;font-size:11px}
+tr:hover td{background:var(--s2)}
+.svc{display:inline-block;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.svc.ovpn{background:rgba(180,83,9,.15);color:var(--ac)}
+.svc.sstp{background:rgba(161,98,7,.15);color:var(--pp)}
+.svc.l2tp{background:rgba(202,138,4,.15);color:var(--yw)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600}
+.badge.on{background:rgba(34,197,94,.1);color:var(--gn)}
+.badge.off{background:rgba(239,68,68,.1);color:var(--rd)}
+
+/* Tooltip */
+.tip{position:relative;cursor:help}
+.tip .tiptext{visibility:hidden;background:var(--s3);color:var(--txb);padding:8px 12px;border-radius:8px;font-size:11px;position:absolute;z-index:50;bottom:125%;left:50%;transform:translateX(-50%);white-space:nowrap;border:1px solid var(--bd);box-shadow:0 4px 12px rgba(0,0,0,.4);opacity:0;transition:.2s}
+.tip:hover .tiptext{visibility:visible;opacity:1}
+
+/* Audit section */
+.audit-box{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.audit-box h3{font-size:14px;color:var(--txb);margin-bottom:12px}
+.audit-form{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.audit-form label{font-size:11px;color:var(--txd);display:block;margin-bottom:3px}
+.audit-form input,.audit-form select{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:7px 12px;border-radius:7px;font-size:12px;font-family:'JetBrains Mono',monospace}
+.audit-result{margin-top:16px}
+.audit-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.audit-stat{background:linear-gradient(135deg,var(--s2),var(--s3));border:1px solid var(--bd);border-radius:10px;padding:14px;text-align:center;transition:.3s;cursor:pointer}
+.audit-stat:hover{transform:translateY(-2px);border-color:var(--ac);box-shadow:0 8px 16px rgba(59,130,246,.15)}
+.audit-stat .n{font-size:22px;font-weight:700;color:var(--txb);font-family:'JetBrains Mono',monospace}
+.audit-stat .l{font-size:10px;color:var(--txd);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* Report */
+.rpt-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.rpt-locations{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.rpt-loc{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;font-size:11px}
+.rpt-loc .city{color:var(--pp);font-weight:600}
+.rpt-loc .ip{color:var(--txd);font-family:'JetBrains Mono',monospace;font-size:10px}
+
+.empty{text-align:center;padding:40px;color:var(--txd)}
+.empty .ico{font-size:36px;margin-bottom:8px}
+
+@media(max-width:1024px){.stats{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.main{padding:12px}.hdr-r{display:none}}
+@media(max-width:640px){.stats{grid-template-columns:1fr}}
+/* Charts */
+.chart-wrap{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.chart-wrap h4{font-size:12px;color:var(--txd);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.stat-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--s2),var(--s3));border:1px solid var(--ac);border-radius:20px;padding:6px 14px;font-size:11px;color:var(--txb);font-weight:600}
+.stat-badge b{color:var(--txb)}
+.rpt-print{display:none}
+@media print{.hdr,.tabs,.audit-form,.rpt-print{display:none!important}.rpt-print{display:block}.pnl{display:block!important}}
+
+/* Heatmap */
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:12px 0;padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid var(--bd)}
+.heat-day{aspect-ratio:1;background:rgba(180,83,9,.1);border:1px solid rgba(180,83,9,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--txd);cursor:help;position:relative;transition:.2s;font-weight:600}
+.heat-day:hover{transform:scale(1.1);border-color:rgba(180,83,9,.8)}
+.heat-day.h0{background:rgba(180,83,9,.05)}
+.heat-day.h1{background:rgba(180,83,9,.25);color:var(--txb)}
+.heat-day.h2{background:rgba(180,83,9,.5);color:var(--txb)}
+.heat-day.h3{background:rgba(180,83,9,.7);color:#fff}
+.heat-day.h4{background:rgba(180,83,9,1);color:#FDFBF7;font-weight:700}
+.heat-day:hover::after{content:attr(data-info);position:absolute;bottom:120%;background:var(--s3);border:1px solid var(--ac);border-radius:8px;padding:8px 12px;font-size:10px;white-space:nowrap;z-index:10;margin-bottom:6px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+
+/* Ranking */
+.ranking-list{list-style:none}
+.ranking-item{background:var(--s2);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.ranking-pos{font-weight:700;color:var(--ac);min-width:30px}
+.ranking-name{flex:1;color:var(--txb);margin:0 12px}
+.ranking-hours{color:var(--txd);font-family:'JetBrains Mono',monospace}
+
+/* Absences */
+.absence-badge{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:11px;color:var(--rd)}
+.absence-badge b{color:var(--rd);font-weight:700}
+
+/* Security alerts */
+.sec-alert{background:rgba(168,85,247,.1);border-left:3px solid rgba(168,85,247,.5);border-radius:4px;padding:8px 12px;margin-bottom:8px;font-size:11px;color:var(--pp)}
+.sec-alert.critical{background:rgba(239,68,68,.1);border-left-color:rgba(239,68,68,.5);color:var(--rd)}
+
+/* Map */
+#geoMap{width:100%;height:300px;border-radius:8px;margin-bottom:12px;border:1px solid var(--bd)}
+
+/* PDF */
+@media print{.hdr,.tabs,.audit-form,.chart-row,.rpt-print{display:none!important}.main{padding:0}.st,.audit-summary{page-break-inside:avoid}.audit-stat{font-size:11px}.tw{page-break-inside:avoid}}
+
+/* ============================================
+   MEJORAS FRONTEND DESIGN - Componentes
+   ============================================ */
+
+/* Spacing Scale */
+:root {
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 300ms ease-in-out;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --radius-full: 9999px;
+  --z-dropdown: 1000;
+  --z-modal: 1040;
+  --z-tooltip: 1060;
+}
+
+/* User Card */
+.user-card{display:flex;align-items:center;gap:var(--space-md);background:var(--s1);border:1px solid var(--bd);border-radius:var(--radius-md);padding:var(--space-md);transition:all var(--transition-base)}
+.user-card:hover{border-color:var(--ac);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.user-avatar{width:40px;height:40px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;background:var(--ac)}
+.user-info{flex:1;min-width:0}
+.user-name{font-weight:600;color:var(--txb);font-size:13px}
+.user-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txd);margin-top:4px}
+.status-dot{width:8px;height:8px;border-radius:var(--radius-full);display:inline-block}
+.status-dot.online{background:#10b981;animation:pulse-dot 2s infinite}
+.status-dot.away{background:#CA8A04}
+.status-dot.offline{background:#78716C}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.5}}
+.user-hours{font-weight:700;color:var(--ac);font-size:13px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
+
+/* Alert */
+.alert{display:flex;align-items:flex-start;gap:var(--space-md);padding:var(--space-lg);border-radius:var(--radius-md);border-left:4px solid;background-color:rgba(0,0,0,0.02);animation:slideInDown var(--transition-base)}
+@keyframes slideInDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.alert-warning{border-left-color:#CA8A04;background:rgba(202,138,4,0.05)}
+.alert-error{border-left-color:#991B1B;background:rgba(153,27,27,0.05)}
+.alert-success{border-left-color:#10b981;background:rgba(16,185,129,0.05)}
+.alert-icon{flex-shrink:0;font-size:18px}
+.alert-content{flex:1}
+.alert-title{font-weight:600;color:var(--txb);font-size:13px;margin-bottom:4px}
+.alert-message{font-size:12px;color:var(--tx);line-height:1.5}
+.alert-close{flex-shrink:0;background:0;border:0;font-size:18px;cursor:pointer;color:var(--txd);padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);transition:all var(--transition-fast)}
+.alert-close:hover{background:var(--s2);color:var(--tx)}
+
+/* Progress Bar */
+.progress{width:100%;height:8px;background:var(--s2);border-radius:var(--radius-full);overflow:hidden;margin:var(--space-md) 0}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--ac),#A16207);border-radius:var(--radius-full);position:relative;overflow:hidden;transition:width var(--transition-base);display:flex;align-items:center;justify-content:flex-end;padding-right:8px}
+.progress-bar::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.progress-label{font-size:11px;font-weight:700;color:#fff;position:relative;z-index:1}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;transition:all var(--transition-fast);border:1px solid}
+.badge-online{background:rgba(16,185,129,0.15);color:#10b981;border-color:rgba(16,185,129,0.3)}
+.badge-away{background:rgba(202,138,4,0.15);color:#CA8A04;border-color:rgba(202,138,4,0.3)}
+.badge-offline{background:rgba(120,113,108,0.15);color:#78716C;border-color:rgba(120,113,108,0.3)}
+.badge:hover{transform:scale(1.05)}
+
+/* Tooltip */
+.tooltip{position:relative}
+.tooltip[data-tooltip]::after{content:attr(data-tooltip);position:absolute;bottom:125%;left:50%;transform:translateX(-50%);background:var(--s3);color:var(--txb);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--transition-fast);z-index:var(--z-tooltip);border:1px solid var(--bd);box-shadow:var(--shadow-lg);margin-bottom:8px}
+.tooltip[data-tooltip]::before{content:'';position:absolute;bottom:120%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--s3);opacity:0;pointer-events:none;transition:opacity var(--transition-fast);z-index:var(--z-tooltip)}
+.tooltip:hover[data-tooltip]::after,.tooltip:hover[data-tooltip]::before{opacity:1}
+
+/* Modal */
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:var(--z-modal);animation:fadeIn var(--transition-base)}
+.modal[open]{display:flex;align-items:center;justify-content:center;padding:var(--space-md)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-content{background:var(--s1);border:1px solid var(--bd);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);max-width:500px;width:100%;animation:slideUp var(--transition-base)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-header{padding:var(--space-lg);border-bottom:1px solid var(--bd);font-size:16px;font-weight:700;color:var(--txb)}
+.modal-body{padding:var(--space-lg);color:var(--tx);line-height:1.5}
+.modal-footer{padding:var(--space-lg);border-top:1px solid var(--bd);display:flex;gap:var(--space-md);justify-content:flex-end}
+
+/* Dropdown */
+.dropdown{position:relative;display:inline-block}
+.dropdown-menu{position:absolute;top:100%;left:0;background:var(--s1);border:1px solid var(--bd);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);min-width:200px;z-index:var(--z-dropdown);display:none;overflow:hidden;animation:slideDown var(--transition-fast);margin-top:var(--space-sm)}
+.dropdown.active .dropdown-menu{display:block}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.dropdown-item{display:flex;align-items:center;gap:var(--space-md);padding:var(--space-md) var(--space-lg);color:var(--tx);text-decoration:none;font-size:13px;transition:all var(--transition-fast);border:0;background:0;cursor:pointer;width:100%;text-align:left}
+.dropdown-item:hover{background:var(--s2);color:var(--ac)}
+.dropdown-item.destructive{color:#991B1B}
+.dropdown-item.destructive:hover{background:rgba(153,27,27,0.1)}
+.dropdown-divider{height:1px;background:var(--bd);margin:var(--space-sm) 0;border:0}
+
+/* Skeleton Loader */
+.skeleton{background:linear-gradient(90deg,var(--s2) 0%,var(--s3) 50%,var(--s2) 100%);background-size:200% 100%;animation:loading 1.5s infinite}
+@keyframes loading{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-line{height:1rem;border-radius:var(--radius-md);margin-bottom:var(--space-md)}
+
+/* Spinner */
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--s2);border-top-color:var(--ac);border-radius:var(--radius-full);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Mejorar componentes existentes */
+.btn{transition:all var(--transition-fast);position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:var(--radius-full);background:rgba(255,255,255,0.2);transform:translate(-50%,-50%);transition:width var(--transition-base),height var(--transition-base)}
+.btn:active::before{width:100px;height:100px}
+.card{transition:all var(--transition-base)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.tab{transition:all var(--transition-fast);position:relative}
+.tab::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--ac);opacity:0;transform:scaleX(0);transition:all var(--transition-base)}
+.tab.on::after{opacity:1;transform:scaleX(1)}
+
+/* Focus States */
+.btn:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-l">
+    <div id="logoArea" style="display:flex;align-items:center">
+  <img src="/static/logo" alt="Argensun Foods" style="height:32px;object-fit:contain;max-width:120px"></div>
+    <h1>VPN Monitor <span>Argensun Foods</span></h1>
+  </div>
+  <div class="hdr-r">
+    <label>API:</label>
+    <input type="text" id="apiUrl" placeholder="auto" style="width:180px">
+    <label>Días:</label>
+    <select id="daysRange">
+      <option value="7">7d</option><option value="15">15d</option>
+      <option value="30" selected>30d</option><option value="60">60d</option>
+    </select>
+    <button class="btn" onclick="refreshAll()" aria-label="Actualizar datos en tiempo real"><span class="live"></span> Actualizar</button>
+    <button class="btn btn-o" onclick="exportCSV()" aria-label="Exportar datos a formato CSV">Exportar CSV</button>
+    <button class="btn btn-o" onclick="toggleDarkMode()" style="margin-left:8px" aria-label="Cambiar entre modo claro y oscuro">🌙 Modo</button>
+  </div>
+</div>
+
+<div class="main">
+  <div id="banner" style="background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.2);border-radius:var(--r);padding:10px 16px;margin-bottom:14px;font-size:12px;color:var(--yw)">
+    Conectando con el servidor API...
+  </div>
+
+  <div class="stats">
+    <div class="st g"><div class="st-l">Conectados ahora</div><div class="st-v" id="sActive">—</div><div class="st-s">usuarios OVPN activos</div></div>
+    <div class="st b"><div class="st-l">Usuarios hoy</div><div class="st-v" id="sToday">—</div><div class="st-s">se conectaron hoy</div></div>
+    <div class="st p"><div class="st-l">Tráfico hoy</div><div class="st-v" id="sTraffic">—</div><div class="st-s">GB transferidos</div></div>
+    <div class="st y"><div class="st-l">Sesiones período</div><div class="st-v" id="sSessions">—</div><div class="st-s" id="sSessionsSub">últimos 30 días</div></div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Navegación principal">
+    <button class="tab on" role="tab" aria-selected="true" aria-controls="p-cards" onclick="sw('cards',this)">Conectados</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-table" onclick="sw('table',this)">Tabla detalle</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-history" onclick="sw('history',this)">Historial</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-audit" onclick="sw('audit',this)">Auditoría</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-report" onclick="sw('report',this)">Informe usuario</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-rrhh" onclick="sw('rrhh',this)">RRHH / Gestión</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-itsec" onclick="sw('itsec',this)">IT / Seguridad</button>
+  </div>
+
+  <!-- Cards view -->
+  <div id="p-cards" class="pnl on">
+    <div class="cards" id="cardsGrid"></div>
+  </div>
+
+  <!-- Table view -->
+  <div id="p-table" class="pnl">
+    <div class="tw"><div class="sc">
+      <table id="activeTable"><thead><tr>
+        <th onclick="sortTbl('activeTable',0)">Usuario <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',1)">IP Asignada <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',2)">IP Pública <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',3)">1ª conexión hoy <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',4)">Ubicación <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',5)">Uptime Diario <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',6)">Uptime Sesión <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',7)">↓ Descarga <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('activeTable',8)">↑ Subida <span class="arrow">▼</span></th>
+      </tr></thead><tbody id="activeTbody"></tbody></table>
+    </div></div>
+  </div>
+
+  <!-- History -->
+  <div id="p-history" class="pnl">
+    <div class="tw"><div class="sc">
+      <table id="histTable"><thead><tr>
+        <th onclick="sortTbl('histTable',0)">Usuario <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',1)">IP Pública <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',2)">Ubicación <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',3)">Conexión <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',4)">Desconexión <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',5)">Duración <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',6)">↓ MB <span class="arrow">▼</span></th>
+        <th onclick="sortTbl('histTable',7)">↑ MB <span class="arrow">▼</span></th>
+      </tr></thead><tbody id="histTbody"></tbody></table>
+    </div></div>
+  </div>
+
+  <!-- Audit -->
+  <div id="p-audit" class="pnl">
+    <div class="audit-box">
+      <h3>Auditoría de conexiones</h3>
+      <div class="audit-form">
+        <div><label>Usuario</label><select id="auditUser" style="min-width:180px"><option value="">Cargando...</option></select></div>
+        <div><label>Desde</label><input type="date" id="auditFrom"></div>
+        <div><label>Hasta</label><input type="date" id="auditTo"></div>
+        <div><button class="btn" onclick="runAudit()" style="margin-top:16px">Buscar</button></div>
+      </div>
+      <div id="auditResult" class="audit-result"></div>
+    </div>
+  </div>
+
+  <!-- User report -->
+  <div id="p-report" class="pnl">
+    <div class="audit-box">
+      <h3>Informe de usuario</h3>
+      <div class="audit-form">
+        <div><label>Usuario</label><select id="rptUser" style="min-width:180px"><option value="">Cargando...</option></select></div>
+        <div><label>Período</label><select id="rptDays">
+          <option value="7">Última semana</option><option value="15">15 días</option>
+          <option value="30" selected>30 días</option><option value="60">60 días</option>
+        </select></div>
+        <div><button class="btn" onclick="runReport()" style="margin-top:16px">Generar</button></div>
+      </div>
+      <div id="rptResult" class="audit-result"></div>
+    </div>
+  </div>
+
+  <!-- RRHH Panel -->
+  <div id="p-rrhh" class="pnl">
+    <div class="audit-box">
+      <h3>Reportes RRHH / Gestión</h3>
+      <div class="audit-form">
+        <div><label>Periodo</label><select id="rrhh-days">
+          <option value="30" selected>30 días</option><option value="60">60 días</option><option value="90">90 días</option>
+        </select></div>
+        <div><button class="btn" onclick="loadRRHHDashboard()">Cargar</button></div>
+        <div><button class="btn btn-o" onclick="downloadPDF()">📥 Descargar PDF</button></div>
+        <div style="border-top:1px solid var(--bd);padding-top:12px;margin-top:12px">
+          <h4 style="color:var(--txb);font-size:12px;margin-bottom:8px">Asignar departamento</h4>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
+            <div style="flex:1;min-width:180px">
+              <label>Usuario</label>
+              <select id="sectorUser" style="width:100%;padding:7px 12px;background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:7px;font-size:12px">
+                <option value="">Cargando...</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:180px">
+              <label>Departamento</label>
+              <select id="sectorName" style="width:100%;padding:7px 12px;background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:7px;font-size:12px">
+                <option value="">Seleccionar...</option>
+                <option value="Administración">Administración</option>
+                <option value="Pipas">Pipas</option>
+                <option value="Calidad">Calidad</option>
+                <option value="Sistemas">Sistemas</option>
+                <option value="Proceso Linera">Proceso Linera</option>
+                <option value="Proceso Pipas">Proceso Pipas</option>
+                <option value="RRHH">RRHH</option>
+                <option value="Semillero">Semillero</option>
+                <option value="Originamiento">Originamiento</option>
+                <option value="Comex">Comex</option>
+                <option value="Finanzas">Finanzas</option>
+                <option value="Consumo Masivo">Consumo Masivo</option>
+                <option value="Deposito">Deposito</option>
+                <option value="Mantenimiento">Mantenimiento</option>
+                <option value="Compras">Compras</option>
+                <option value="Ciruela">Ciruela</option>
+                <option value="Directorio">Directorio</option>
+                <option value="Proveedor Externo">Proveedor Externo</option>
+                <option value="Ventas Internacionales">Ventas Internacionales</option>
+              </select>
+            </div>
+            <div><button class="btn" onclick="setSectorUser()" style="margin-top:16px">Guardar</button></div>
+          </div>
+          <div id="sectorMsg" style="margin-top:8px;font-size:11px;color:var(--txd)"></div>
+        </div>
+      </div>
+    </div>
+    <div id="rrhh-result" class="audit-result"></div>
+  </div>
+
+  <!-- IT/Security Panel -->
+  <div id="p-itsec" class="pnl">
+    <div class="audit-box">
+      <h3>Monitoreo IT / Seguridad</h3>
+      <div class="audit-form">
+        <div><label>Período</label><select id="itsec-days">
+          <option value="7" selected>7 días</option><option value="15">15 días</option><option value="30">30 días</option>
+        </select></div>
+        <div><button class="btn" onclick="loadITSecurityDashboard()">Cargar</button></div>
+      </div>
+    </div>
+    <div id="itsec-result" class="audit-result"></div>
+  </div>
+</div>
+
+<script>
+// Smart API URL detection - use current host if not explicitly set
+function getDefaultAPI(){
+  const stored = localStorage.getItem('vpn-api-url');
+  if(stored) return stored;
+  // Use current origin by default (works for same-origin requests)
+  const proto = window.location.protocol;
+  const host = window.location.hostname;
+  const port = window.location.port;
+  return proto + '//' + host + (port && port!=='80' && port!=='443' ? ':'+port : '');
+}
+
+const API=()=>{
+  let url = document.getElementById('apiUrl').value.trim();
+  if(!url) url = getDefaultAPI();
+  return url.replace(/\/$/,'');
+};
+const DAYS=()=>document.getElementById('daysRange').value;
+let refreshTimer;
+
+// Dark mode toggle
+function toggleDarkMode(){
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('vpn-dark-mode', isDark);
+  // Actualizar tema del sistema si es necesario
+  if(isDark && !document.querySelector('meta[name="color-scheme"]')) {
+    const meta = document.createElement('meta');
+    meta.name = 'color-scheme';
+    meta.content = 'dark light';
+    document.head.appendChild(meta);
+  }
+}
+
+// Initialize dark mode from localStorage
+function initDarkMode(){
+  const isDark = localStorage.getItem('vpn-dark-mode') === 'true';
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if(isDark || (!localStorage.getItem('vpn-dark-mode') && prefersDark)) {
+    document.body.classList.add('dark');
+  }
+}
+
+// ── Componentes Mejorados ──
+
+// Modal/Dialog
+function openModal(modalId){
+  const modal = document.getElementById(modalId);
+  if(modal) modal.setAttribute('open','');
+}
+
+function closeModal(modalId){
+  const modal = document.getElementById(modalId);
+  if(modal) modal.removeAttribute('open');
+}
+
+// Dropdown
+document.addEventListener('click', (e) => {
+  const dropdownTrigger = e.target.closest('.dropdown-trigger');
+  if(dropdownTrigger){
+    const dropdown = dropdownTrigger.closest('.dropdown');
+    if(dropdown) dropdown.classList.toggle('active');
+  }
+
+  const dropdown = e.target.closest('.dropdown');
+  if(!dropdown && !e.target.closest('.dropdown-trigger')){
+    document.querySelectorAll('.dropdown.active').forEach(d => d.classList.remove('active'));
+  }
+});
+
+// Alert Close
+document.addEventListener('click', (e) => {
+  if(e.target.classList.contains('alert-close')){
+    const alert = e.target.closest('.alert');
+    if(alert) alert.style.animation = 'slideInDown 0.3s ease-out reverse';
+    setTimeout(() => alert?.remove(), 300);
+  }
+});
+
+// Show Alert (utility)
+function showAlert(message, type = 'info', duration = 5000){
+  const alertsContainer = document.querySelector('[data-alerts]') || (() => {
+    const container = document.createElement('div');
+    container.setAttribute('data-alerts','');
+    container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;max-width:400px';
+    document.body.appendChild(container);
+    return container;
+  })();
+
+  const icons = {warning:'⚠️',error:'✕',success:'✓',info:'ℹ️'};
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${type}`;
+  alert.innerHTML = `
+    <div class="alert-icon">${icons[type]}</div>
+    <div class="alert-content">
+      <div class="alert-message">${message}</div>
+    </div>
+    <button class="alert-close">×</button>
+  `;
+
+  alertsContainer.appendChild(alert);
+
+  if(duration > 0){
+    setTimeout(() => {
+      alert.style.animation = 'slideInDown 0.3s ease-out reverse';
+      setTimeout(() => alert.remove(), 300);
+    }, duration);
+  }
+
+  return alert;
+}
+
+function sw(name,el){
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.remove('on');
+    t.setAttribute('aria-selected','false');
+  });
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  el.setAttribute('aria-selected','true');
+  document.getElementById('p-'+name).classList.add('on');
+}
+
+async function api(ep,p={}){
+  try{
+    const apiBase = API();
+    if(!apiBase || apiBase.includes('undefined')){
+      throw new Error('API URL no configurada: '+apiBase);
+    }
+    const u = new URL(apiBase + ep);
+    Object.entries(p).forEach(([k,v])=>{if(v)u.searchParams.set(k,v)});
+    const r = await fetch(u);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  }catch(e){
+    console.error('Error en api():', e, 'EP:', ep);
+    throw e;
+  }
+}
+
+function fmtB(b){
+  if(!b||b===0)return'0 B';
+  if(b<1024)return b+' B';
+  if(b<1048576)return(b/1024).toFixed(1)+' KB';
+  if(b<1073741824)return(b/1048576).toFixed(1)+' MB';
+  return(b/1073741824).toFixed(2)+' GB';
+}
+function fmtDur(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);return h+'h '+m+'m'}
+function fmtDt(d){if(!d)return'—';return new Date(d).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'})}
+function geoStr(d){const parts=[d.geo_city,d.geo_region,d.geo_country].filter(Boolean);return parts.join(', ')||'—'}
+
+// ── Cards ──
+async function loadCards(){
+  try{
+    const data=await api('/api/active');
+    const g=document.getElementById('cardsGrid');
+    if(!data.length){g.innerHTML='<div class="empty"><div class="ico">😴</div><p>Sin conexiones activas</p></div>';return}
+    g.innerHTML=data.map(c=>{
+      const initials = c.username.split('@')[0].substring(0,2).toUpperCase();
+      return `<div class="card user-card" role="article" aria-label="Usuario ${c.username}">
+        <div class="user-avatar" title="Avatar de ${c.username}">${initials}</div>
+        <div class="user-info">
+          <div class="user-name">${c.username}</div>
+          <div class="user-status">
+            <span class="status-dot online"></span>
+            En línea • ${fmtDur(c.daily_uptime_seconds||0)}
+          </div>
+          <div style="font-size:11px;color:var(--txd);margin-top:4px">
+            ${c.assigned_ip?'IP: '+c.assigned_ip:''}
+            ${c.assigned_ip && geoStr(c)?'<br>':''}
+            📍 ${geoStr(c)}
+          </div>
+        </div>
+        <div class="user-hours" title="Tráfico hoy">
+          ↓${fmtB(c.daily_bytes_in||0)}<br>
+          ↑${fmtB(c.daily_bytes_out||0)}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){console.error(e)}
+}
+
+// ── Active table ──
+async function loadActive(){
+  try{
+    const data=await api('/api/active');
+    const tb=document.getElementById('activeTbody');
+    if(!data.length){tb.innerHTML='<tr><td colspan="9"><div class="empty">Sin conexiones</div></td></tr>';return}
+    tb.innerHTML=data.map(c=>{
+      const firstConn=c.daily_first_seen?(() => {try{const d=new Date(c.daily_first_seen);return isNaN(d.getTime())?'—':d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}catch(e){return'—'}})():'—';
+      const geoInfo = `📍 ${geoStr(c)}${c.geo_isp?'<br>ISP: '+c.geo_isp:''}`;
+      return `<tr>
+      <td style="font-weight:600;color:var(--txb)">${c.username}</td>
+      <td>${c.assigned_ip||'—'}</td>
+      <td class="tooltip" data-tooltip="${geoStr(c)}">${c.caller_id||'—'}</td>
+      <td style="color:var(--ac)">${firstConn}</td>
+      <td style="color:var(--pp)">${c.geo_city||'—'}</td>
+      <td>${fmtDur(c.daily_uptime_seconds||0)}</td>
+      <td>${c.uptime_raw||'—'}</td>
+      <td>${fmtB(c.bytes_in)}</td>
+      <td>${fmtB(c.bytes_out)}</td>
+    </tr>`;
+    }).join('');
+  }catch(e){console.error(e)}
+}
+
+// ── History ──
+async function loadHistory(){
+  try{
+    const data=await api('/api/sessions',{days:DAYS()});
+    const tb=document.getElementById('histTbody');
+    if(!data.length){tb.innerHTML='<tr><td colspan="8"><div class="empty">Sin sesiones</div></td></tr>';return}
+    document.getElementById('sSessions').textContent=data.length;
+    tb.innerHTML=data.map(s=>`<tr>
+      <td style="font-weight:600;color:var(--txb)">${s.username}</td>
+      <td class="tooltip" data-tooltip="${geoStr(s)}">${s.caller_id||'—'}</td>
+      <td style="color:var(--pp)">${s.geo_city||'—'}</td>
+      <td>${fmtDt(s.connected_at)}</td>
+      <td>${s.disconnected_at?fmtDt(s.disconnected_at):'<span class="badge badge-online">Activo</span>'}</td>
+      <td>${s.hours?s.hours.toFixed(1)+'h':'—'}</td>
+      <td>${(s.bytes_in/1048576).toFixed(1)}</td>
+      <td>${(s.bytes_out/1048576).toFixed(1)}</td>
+    </tr>`).join('');
+  }catch(e){console.error(e)}
+}
+
+// ── Stats ──
+async function loadStats(){
+  try{
+    const d=await api('/api/stats');
+    document.getElementById('sActive').textContent=d.active_now;
+    document.getElementById('sToday').textContent=d.today_users;
+    document.getElementById('sTraffic').textContent=d.today_traffic_gb||'0';
+  }catch(e){console.error(e)}
+}
+
+// ── Users dropdown ──
+async function loadUsers(){
+  try{
+    const users=await api('/api/users');
+    ['auditUser','rptUser'].forEach(id=>{
+      const sel=document.getElementById(id);
+      sel.innerHTML='<option value="">— Seleccionar —</option>'+
+        users.map(u=>`<option value="${u}">${u}</option>`).join('');
+    });
+  }catch(e){console.error(e)}
+}
+
+// ── Audit ──
+async function runAudit(){
+  const user=document.getElementById('auditUser').value;
+  const from=document.getElementById('auditFrom').value;
+  const to=document.getElementById('auditTo').value;
+  if(!user){showAlert('Seleccioná un usuario','warning');return}
+  const res=document.getElementById('auditResult');
+  res.innerHTML='<div class="spinner"></div><p style="color:var(--txd);margin-top:10px">Buscando...</p>';
+  try{
+    const d=await api('/api/audit',{user,from,to});
+    if(d.error){res.innerHTML=`<div class="alert alert-error"><div class="alert-icon">✕</div><div class="alert-content"><div class="alert-title">Error</div><div class="alert-message">${d.error}</div></div></div>`;return}
+
+    // Mostrar alerta si hay baja asistencia
+    if(d.days_connected < d.days_total * 0.75){
+      showAlert(`⚠️ Asistencia baja: ${d.days_connected}/${d.days_total} días`,'warning',8000);
+    }
+    let html=`<div class="audit-summary">
+      <div class="audit-stat"><div class="n">${d.total_hours}</div><div class="l">Horas totales</div></div>
+      <div class="audit-stat"><div class="n">${d.days_connected}/${d.days_total}</div><div class="l">Días conectado</div></div>
+      <div class="audit-stat"><div class="n">${d.total_mb_in}</div><div class="l">MB Descargados</div></div>
+      <div class="audit-stat"><div class="n">${d.total_mb_out}</div><div class="l">MB Subidos</div></div>
+    </div>`;
+    if(d.daily.length){
+      const auditChartId='auditChart_'+Date.now();
+      html+=`<div class="chart-wrap"><h4>📈 Horas conectado por día</h4><canvas id="${auditChartId}" height="120"></canvas></div>`;
+      html+=`<h4 style="color:var(--txb);margin:12px 0 8px">Detalle diario</h4>
+      <div class="tw"><div class="sc"><table><thead><tr>
+        <th>Fecha</th><th>Primera conexión</th><th>Última actividad</th>
+        <th>Tiempo conectado</th><th>↓ MB</th><th>↑ MB</th>
+      </tr></thead><tbody>`;
+      d.daily.forEach(r=>{
+        const hrs=(r.total_seconds/3600).toFixed(1);
+        html+=`<tr>
+          <td style="color:var(--txb)">${r.date}</td>
+          <td>${r.first_seen||'—'}</td><td>${r.last_seen||'—'}</td>
+          <td>${fmtDur(r.total_seconds)} <span style="color:var(--txd);font-size:10px">(${hrs}h)</span></td>
+          <td>${(r.bytes_in/1048576).toFixed(1)}</td>
+          <td>${(r.bytes_out/1048576).toFixed(1)}</td>
+        </tr>`;
+      });
+      html+=`</tbody></table></div></div>`;
+      // Guardar id para renderizar después
+      html+=`<script>window._auditChartId="${auditChartId}";window._auditChartData=${JSON.stringify(d.daily)};<\/script>`;
+    }
+    if(d.sessions.length){
+      html+=`<h4 style="color:var(--txb);margin:16px 0 8px">Sesiones (${d.sessions.length})</h4>
+      <div class="tw"><div class="sc"><table><thead><tr>
+        <th>Conexión</th><th>Desconexión</th><th>IP Pública</th>
+        <th>Ubicación</th><th>Duración</th><th>↓ MB</th><th>↑ MB</th>
+      </tr></thead><tbody>`;
+      d.sessions.forEach(s=>{
+        html+=`<tr>
+          <td>${fmtDt(s.connected_at)}</td>
+          <td>${s.disconnected_at?fmtDt(s.disconnected_at):'<span class="badge on">Activo</span>'}</td>
+          <td>${s.caller_id||'—'}</td>
+          <td style="color:var(--pp)">${[s.geo_city,s.geo_country].filter(Boolean).join(', ')||'—'}</td>
+          <td>${s.hours?s.hours.toFixed(1)+'h':'—'}</td>
+          <td>${(s.bytes_in/1048576).toFixed(1)}</td>
+          <td>${(s.bytes_out/1048576).toFixed(1)}</td>
+        </tr>`;
+      });
+      html+=`</tbody></table></div></div>`;
+    }
+    if(!d.daily.length && !d.sessions.length){
+      html+=`<div class="empty"><div class="ico">📭</div><p>${d.username} no se conectó en el rango seleccionado</p></div>`;
+    }
+    res.innerHTML=html;
+    // Renderizar gráfico auditoría
+    setTimeout(()=>{
+      const el=document.getElementById(document.getElementById('auditResult').querySelector('canvas')?.id||'');
+      if(el&&window._auditChartData){
+        const daily=window._auditChartData;
+        const labels=daily.map(r=>r.date.slice(5)).reverse();
+        const dataHrs=daily.map(r=>parseFloat((r.total_seconds/3600).toFixed(2))).reverse();
+        const computedStyle = getComputedStyle(document.documentElement);
+        const primaryColor = computedStyle.getPropertyValue('--ac').trim() || '#B45309';
+        new Chart(el,{type:'line',data:{labels,datasets:[{label:'Horas',data:dataHrs,borderColor:primaryColor,backgroundColor:primaryColor+'20',fill:true,tension:.3,pointBackgroundColor:primaryColor,pointRadius:3}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(180,83,9,.1)'},ticks:{color:'var(--txd)',callback:v=>v+'h'}},x:{grid:{display:false},ticks:{color:'var(--txd)',maxRotation:45}}}}});
+      }
+    },100);
+  }catch(e){res.innerHTML=`<p style="color:var(--rd)">Error: ${e.message}</p>`}
+}
+
+// ── User report ──
+async function runReport(){
+  const user=document.getElementById('rptUser').value;
+  const days=document.getElementById('rptDays').value;
+  if(!user){alert('Seleccioná un usuario');return}
+  const res=document.getElementById('rptResult');
+  res.innerHTML='<p style="color:var(--txd)">Generando informe...</p>';
+  try{
+    const d=await api('/api/user-report',{user,days});
+    if(d.error){res.innerHTML=`<p style="color:var(--rd)">${d.error}</p>`;return}
+
+    // Calcular días de la semana más frecuentes
+    const weekDays=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const wdCount=[0,0,0,0,0,0,0];
+    d.daily.forEach(r=>{const wd=new Date(r.date+'T12:00:00').getDay();wdCount[wd]+=r.total_seconds/3600});
+
+    let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h4 style="color:var(--txb);font-size:15px">👤 ${d.username}</h4>
+      <div style="display:flex;gap:8px">
+        <span class="stat-badge">📅 Últimos <b>${d.days_range} días</b></span>
+        <button class="btn btn-o btn-sm" onclick="window.print()">🖨️ Imprimir</button>
+      </div>
+    </div>
+    <div class="audit-summary">
+      <div class="audit-stat"><div class="n" style="color:var(--ac)">${d.total_hours}</div><div class="l">Horas totales</div></div>
+      <div class="audit-stat"><div class="n" style="color:var(--gn)">${d.days_connected}</div><div class="l">Días conectado</div></div>
+      <div class="audit-stat"><div class="n" style="color:var(--pp)">${d.total_mb_in}</div><div class="l">MB Descargados</div></div>
+      <div class="audit-stat"><div class="n" style="color:var(--or)">${d.total_mb_out}</div><div class="l">MB Subidos</div></div>
+      <div class="audit-stat"><div class="n" style="color:var(--yw)">${d.days_connected>0?(d.total_hours/d.days_connected).toFixed(1):'0'}</div><div class="l">Hs promedio/día</div></div>
+      <div class="audit-stat"><div class="n">${d.locations?d.locations.length:0}</div><div class="l">Ubicaciones</div></div>
+    </div>`;
+
+    if(d.daily.length){
+      const chartId='rptChart_'+Date.now();
+      const wdChartId='rptWdChart_'+Date.now();
+      html+=`<div class="chart-row">
+        <div class="chart-wrap"><h4>📈 Horas conectado por día</h4><canvas id="${chartId}" height="160"></canvas></div>
+        <div class="chart-wrap"><h4>📅 Distribución por día de semana</h4><canvas id="${wdChartId}" height="160"></canvas></div>
+      </div>`;
+    }
+
+    if(d.locations && d.locations.length){
+      html+=`<div class="chart-wrap"><h4>📍 Ubicaciones de conexión</h4><div class="rpt-locations">`;
+      d.locations.forEach(l=>{
+        html+=`<div class="rpt-loc"><div class="city">📍 ${[l.geo_city,l.geo_region,l.geo_country].filter(Boolean).join(', ')||'Desconocida'}</div><div class="ip">${l.caller_id}</div></div>`;
+      });
+      html+=`</div></div>`;
+    }
+
+    if(d.daily.length){
+      const maxH=Math.max(...d.daily.map(r=>r.total_seconds/3600));
+      html+=`<div class="chart-wrap"><h4>📋 Actividad diaria detallada</h4>
+      <div class="tw"><div class="sc"><table><thead><tr>
+        <th>Fecha</th><th>Día</th><th>Primera conexión</th><th>Última actividad</th>
+        <th>Tiempo conectado</th><th>↓ MB</th><th>↑ MB</th>
+      </tr></thead><tbody>`;
+      d.daily.forEach(r=>{
+        const pct=maxH>0?Math.min(100,(r.total_seconds/3600)/maxH*100):0;
+        const wd=weekDays[new Date(r.date+'T12:00:00').getDay()];
+        const hrs=(r.total_seconds/3600).toFixed(1);
+        const color=r.total_seconds>=28800?'var(--gn)':r.total_seconds>=14400?'var(--yw)':'var(--or)';
+        html+=`<tr>
+          <td style="color:var(--txb);font-weight:600">${r.date}</td>
+          <td style="color:var(--txd)">${wd}</td>
+          <td>${r.first_seen||'—'}</td><td>${r.last_seen||'—'}</td>
+          <td><div style="display:flex;align-items:center;gap:8px">
+            <span style="color:${color};min-width:48px">${fmtDur(r.total_seconds)}</span>
+            <div style="flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;min-width:60px">
+              <div style="width:${pct}%;height:100%;background:${color};border-radius:3px"></div>
+            </div>
+            <span style="color:var(--txd);font-size:10px">${hrs}h</span>
+          </div></td>
+          <td>${(r.bytes_in/1048576).toFixed(1)}</td>
+          <td>${(r.bytes_out/1048576).toFixed(1)}</td>
+        </tr>`;
+      });
+      html+=`</tbody></table></div></div></div>`;
+    }
+
+    if(d.sessions && d.sessions.length){
+      html+=`<div class="chart-wrap"><h4>🔌 Sesiones (${d.sessions.length})</h4>
+      <div class="tw"><div class="sc"><table><thead><tr>
+        <th>Conexión</th><th>Desconexión</th><th>IP Pública</th>
+        <th>Ubicación</th><th>Duración</th><th>↓ MB</th><th>↑ MB</th>
+      </tr></thead><tbody>`;
+      d.sessions.forEach(s=>{
+        html+=`<tr>
+          <td>${fmtDt(s.connected_at)}</td>
+          <td>${s.disconnected_at?fmtDt(s.disconnected_at):'<span class="badge on">Activo</span>'}</td>
+          <td style="font-size:10px">${s.caller_id||'—'}</td>
+          <td style="color:var(--pp)">${[s.geo_city,s.geo_country].filter(Boolean).join(', ')||'—'}</td>
+          <td>${s.hours?s.hours.toFixed(1)+'h':'—'}</td>
+          <td>${(s.bytes_in/1048576).toFixed(1)}</td>
+          <td>${(s.bytes_out/1048576).toFixed(1)}</td>
+        </tr>`;
+      });
+      html+=`</tbody></table></div></div></div>`;
+    }
+
+    res.innerHTML=html;
+
+    // Renderizar gráficos después de insertar el HTML
+    setTimeout(()=>{
+      if(d.daily && d.daily.length){
+        const labels=d.daily.map(r=>r.date.slice(5)).reverse();
+        const dataHrs=d.daily.map(r=>parseFloat((r.total_seconds/3600).toFixed(2))).reverse();
+        const canvases=res.querySelectorAll('canvas');
+        if(canvases.length>0){
+          new Chart(canvases[0],{type:'bar',data:{labels,datasets:[{label:'Horas',data:dataHrs,backgroundColor:dataHrs.map(h=>h>=8?'#10b981':h>=4?'#CA8A04':'#991B1B'),borderRadius:4,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(180,83,9,.1)'},ticks:{color:'var(--txd)',callback:v=>v+'h'}},x:{grid:{display:false},ticks:{color:'var(--txd)',maxRotation:45}}}}});
+        }
+        if(canvases.length>1){
+          new Chart(canvases[1],{type:'bar',data:{labels:weekDays,datasets:[{label:'Horas',data:wdCount.map(h=>parseFloat(h.toFixed(1))),backgroundColor:'#B45309',borderRadius:4,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(180,83,9,.1)'},ticks:{color:'var(--txd)',callback:v=>v+'h'}},x:{grid:{display:false},ticks:{color:'var(--txd)'}}}}});
+        }
+      }
+    }, 50);
+  }catch(e){res.innerHTML=`<p style="color:var(--rd)">Error: ${e.message}</p>`}
+}
+
+// ── Sort ──
+const sortState={};
+function sortTbl(tblId,col){
+  const tbl=document.getElementById(tblId);
+  const tb=tbl.tBodies[0];
+  const rows=Array.from(tb.rows);
+  const key=tblId+'-'+col;
+  sortState[key]=!sortState[key];
+  const dir=sortState[key]?1:-1;
+  rows.sort((a,b)=>{
+    let va=a.cells[col].textContent.trim();
+    let vb=b.cells[col].textContent.trim();
+    const na=parseFloat(va.replace(/[^0-9.-]/g,''));
+    const nb=parseFloat(vb.replace(/[^0-9.-]/g,''));
+    if(!isNaN(na)&&!isNaN(nb))return(na-nb)*dir;
+    return va.localeCompare(vb,'es')*dir;
+  });
+  rows.forEach(r=>tb.appendChild(r));
+}
+
+// ── Export ──
+async function exportCSV(){
+  try{const d=await api('/api/export',{days:DAYS()});alert('Exportado: '+d.file)}
+  catch(e){alert('Error al exportar')}
+}
+
+// ── Connection check ──
+async function checkConn(){
+  const b=document.getElementById('banner');
+  try{
+    await api('/api/stats');
+    b.style.background='rgba(34,197,94,.06)';b.style.borderColor='rgba(34,197,94,.2)';b.style.color='var(--gn)';
+    b.innerHTML='✅ Conectado — auto-refresh cada 60s';
+    return true;
+  }catch(e){
+    b.style.background='rgba(239,68,68,.06)';b.style.borderColor='rgba(239,68,68,.2)';b.style.color='var(--rd)';
+    b.innerHTML='❌ Sin conexión a <b>'+API()+'</b> — verificá que vpn_monitor.py esté corriendo';
+    return false;
+  }
+}
+
+// ── RRHH Dashboard ──
+async function loadRRHHDashboard(){
+  const days=document.getElementById('rrhh-days').value;
+  const res=document.getElementById('rrhh-result');
+  res.innerHTML='<p style="color:var(--txd)">Cargando...</p>';
+  try{
+    const summaryData=await api('/api/summary',{days});
+    const sectorsData=await api('/api/users-by-sector',{days});
+
+    // Top 10
+    const top10=summaryData.slice(0,10);
+    let html=`<div class="chart-wrap"><h4>🏆 Top 10 usuarios - Últimos ${days} días</h4>
+      <ol class="ranking-list">`;
+    top10.forEach((u,i)=>{
+      html+=`<li class="ranking-item">
+        <span class="ranking-pos">${i+1}.</span>
+        <span class="ranking-name">${u.username} <span style="color:var(--txd);font-size:10px">${u.sector||'Sin asignar'}</span></span>
+        <span class="ranking-hours">${u.total_hours}h</span>
+      </li>`;
+    });
+    html+=`</ol></div>`;
+
+    // Reporte por sector
+    if(sectorsData.length){
+      html+=`<div class="chart-wrap"><h4>📊 Resumen por sector</h4>
+        <div class="audit-summary">`;
+      sectorsData.forEach(s=>{
+        html+=`<div class="audit-stat"><div class="n">${s.sector}</div>
+          <div class="l" style="font-size:9px">${s.users_count} usuarios</div>
+          <div style="font-size:10px;color:var(--txd);margin-top:4px">${s.total_hours}h | ${s.avg_hours}h prom.</div>
+        </div>`;
+      });
+      html+=`</div></div>`;
+    }
+
+    // Heatmap mensual - Obtener datos diarios del período
+    const today=new Date();
+    const dailyData={};
+    const daysNum=parseInt(document.getElementById('rrhh-days').value);
+
+    // Sumar horas de todos los usuarios por día
+    if(summaryData && summaryData.length>0){
+      summaryData.forEach(u=>{
+        // Usar el total_hours como aproximación (dividir entre días)
+        const avgHours = u.total_hours / daysNum;
+        for(let i=0; i<daysNum; i++){
+          const d=new Date(today);
+          d.setDate(d.getDate()-i);
+          const dateStr=d.toISOString().split('T')[0];
+          if(!dailyData[dateStr])dailyData[dateStr]=0;
+          dailyData[dateStr]+=avgHours;
+        }
+      });
+    }
+
+    html+=`<div class="chart-wrap"><h4>📅 Actividad mensual (últimos ${daysNum} días)</h4><div class="heatmap">`;
+    const days_arr=[];
+    for(let i=daysNum-1;i>=0;i--){
+      const d=new Date(today);
+      d.setDate(d.getDate()-i);
+      const dateStr=d.toISOString().split('T')[0];
+      const hrs=dailyData[dateStr]||0;
+      const level=hrs>=48?4:hrs>=32?3:hrs>=16?2:hrs>0?1:0;
+      const dayName=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()];
+      const shortDate=d.getDate();
+      html+=`<div class="heat-day h${level}" data-info="${dateStr}: ${hrs.toFixed(1)}h" title="${dateStr}">${shortDate}</div>`;
+    }
+    html+=`</div></div>`;
+
+    // Ausencias
+    const today_str=new Date().toISOString().split('T')[0];
+    const ausencias_3=summaryData.filter(u=>{
+      const lastConn=new Date(u.last_seen);
+      const daysDiff=Math.floor((new Date()-lastConn)/86400000);
+      return daysDiff>=3;
+    });
+    if(ausencias_3.length){
+      html+=`<div class="chart-wrap"><h4>⚠️ Sin conectar en 3+ días</h4>`;
+      ausencias_3.slice(0,10).forEach(u=>{
+        const lastConn=new Date(u.last_seen);
+        const daysDiff=Math.floor((new Date()-lastConn)/86400000);
+        html+=`<div class="absence-badge"><b>${u.username}</b> — Hace ${daysDiff} días</div>`;
+      });
+      html+=`</div>`;
+    }
+
+    res.innerHTML=html;
+  }catch(e){res.innerHTML=`<p style="color:var(--rd)">Error: ${e.message}</p>`}
+}
+
+// ── IT/Security Dashboard ──
+async function loadITSecurityDashboard(){
+  const days=document.getElementById('itsec-days').value;
+  const res=document.getElementById('itsec-result');
+  res.innerHTML='<p style="color:var(--txd)">Analizando...</p>';
+  try{
+    const sessions=await api('/api/sessions',{days});
+
+    let html=`<div class="chart-wrap"><h4>🔍 Análisis de Seguridad</h4>`;
+
+    // Conexiones fuera de horario (22h-6h)
+    const off_hours=sessions.filter(s=>{
+      const h=new Date(s.connected_at).getHours();
+      return h>=22||h<6;
+    });
+
+    // Múltiples IPs mismo día
+    const ips_by_day={};
+    sessions.forEach(s=>{
+      const day=s.connected_at.split(' ')[0];
+      if(!ips_by_day[day])ips_by_day[day]={};
+      if(!ips_by_day[day][s.username])ips_by_day[day][s.username]=new Set();
+      ips_by_day[day][s.username].add(s.caller_id);
+    });
+    const multi_ip_alerts=[];
+    Object.entries(ips_by_day).forEach(([day,users])=>{
+      Object.entries(users).forEach(([user,ips])=>{
+        if(ips.size>1){
+          multi_ip_alerts.push({user,day,ips:Array.from(ips)});
+        }
+      });
+    });
+
+    if(off_hours.length){
+      html+=`<h4 style="color:var(--rd);margin-top:12px">🌙 Conexiones fuera de horario (22h-6h)</h4>`;
+      off_hours.slice(0,15).forEach(s=>{
+        const dt=new Date(s.connected_at);
+        html+=`<div class="sec-alert critical">
+          <b>${s.username}</b> — ${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}h desde ${s.geo_city||'?'} (${s.caller_id})
+        </div>`;
+      });
+    }
+
+    if(multi_ip_alerts.length){
+      html+=`<h4 style="color:var(--pp);margin-top:12px">🔀 Múltiples IPs mismo día</h4>`;
+      multi_ip_alerts.slice(0,10).forEach(a=>{
+        html+=`<div class="sec-alert">
+          <b>${a.user}</b> (${a.day}) — ${a.ips.length} IPs diferentes
+        </div>`;
+      });
+    }
+
+    // Top IPs por tráfico
+    const ips_traffic={};
+    sessions.forEach(s=>{
+      if(!ips_traffic[s.caller_id])ips_traffic[s.caller_id]={bytes_in:0,bytes_out:0,count:0,city:s.geo_city,isp:s.geo_isp};
+      ips_traffic[s.caller_id].bytes_in+=s.bytes_in||0;
+      ips_traffic[s.caller_id].bytes_out+=s.bytes_out||0;
+      ips_traffic[s.caller_id].count+=1;
+    });
+
+    // Distribución de ISPs
+    const isp_dist={};
+    sessions.forEach(s=>{
+      const isp=s.geo_isp||'Desconocido';
+      if(!isp_dist[isp])isp_dist[isp]=0;
+      isp_dist[isp]+=1;
+    });
+
+    // Horas pico
+    const hours_dist=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    sessions.forEach(s=>{
+      const h=new Date(s.connected_at).getHours();
+      hours_dist[h]+=1;
+    });
+    const peak_hour=hours_dist.indexOf(Math.max(...hours_dist));
+
+    // Sesiones anormales (muy largas)
+    const long_sessions=sessions.filter(s=>s.hours&&s.hours>24).sort((a,b)=>b.hours-a.hours);
+
+    if(Object.keys(ips_traffic).length>0){
+      html+=`<h4 style="color:var(--pp);margin-top:12px">🔗 Top IPs por tráfico</h4>
+      <div class="tw"><div class="sc"><table><thead><tr>
+        <th>IP</th><th>Ciudad</th><th>ISP</th><th>↓ MB</th><th>↑ MB</th><th>Sesiones</th>
+      </tr></thead><tbody>`;
+      Object.entries(ips_traffic).sort((a,b)=>(b[1].bytes_in+b[1].bytes_out)-(a[1].bytes_in+a[1].bytes_out))
+        .slice(0,15).forEach(([ip,data])=>{
+        html+=`<tr>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:10px">${ip}</td>
+          <td style="color:var(--pp)">${data.city||'—'}</td>
+          <td>${data.isp?data.isp.substring(0,20)+'...':'—'}</td>
+          <td>${((data.bytes_in||0)/1048576).toFixed(1)}</td>
+          <td>${((data.bytes_out||0)/1048576).toFixed(1)}</td>
+          <td>${data.count}</td>
+        </tr>`;
+      });
+      html+=`</tbody></table></div></div>`;
+    }
+
+    if(Object.keys(isp_dist).length>0){
+      html+=`<h4 style="color:var(--ac);margin-top:12px">🌐 Distribución de ISPs</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">`;
+      Object.entries(isp_dist).sort((a,b)=>b[1]-a[1]).slice(0,12).forEach(([isp,count])=>{
+        const pct=Math.round(count/sessions.length*100);
+        html+=`<div style="background:var(--s2);border-radius:8px;padding:10px">
+          <div style="color:var(--txb);font-weight:600;margin-bottom:4px">${isp.substring(0,30)}</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+            <div style="flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden">
+              <div style="width:${pct}%;height:100%;background:var(--ac);border-radius:3px"></div>
+            </div>
+            <span style="color:var(--txd);min-width:35px">${count} (${pct}%)</span>
+          </div>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+
+    if(hours_dist.some(h=>h>0)){
+      html+=`<h4 style="color:var(--yw);margin-top:12px">⏰ Horas pico de conexión</h4>
+      <div class="chart-wrap"><canvas id="itHoursChart" height="120"></canvas>
+      <p style="font-size:11px;color:var(--txd);margin-top:8px">Pico de actividad: <b>${peak_hour}:00hs</b> (${hours_dist[peak_hour]} conexiones)</p></div>`;
+    }
+
+    if(long_sessions.length>0){
+      html+=`<h4 style="color:var(--rd);margin-top:12px">⚠️ Sesiones anormalmente largas (&gt;24h)</h4>
+      <div style="display:flex;flex-direction:column;gap:6px">`;
+      long_sessions.slice(0,10).forEach(s=>{
+        html+=`<div class="sec-alert critical">
+          <b>${s.username}</b> — ${s.hours.toFixed(1)}h desde ${s.geo_city||'?'} (${new Date(s.connected_at).toLocaleDateString('es-AR')})
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+
+    res.innerHTML=html;
+
+    // Renderizar gráfico horas pico
+    setTimeout(()=>{
+      const canvas=res.querySelector('canvas');
+      if(canvas&&typeof Chart!=='undefined'){
+        const labels=Array.from({length:24},((_,i)=>i+'h'));
+        new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'Conexiones',data:hours_dist,backgroundColor:hours_dist.map((h,i)=>i===peak_hour?'#991B1B':'#CA8A04'),borderRadius:3,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(180,83,9,.1)'},ticks:{color:'var(--txd)'}},x:{grid:{display:false},ticks:{color:'var(--txd)'}}}}});
+      }
+    },50);
+  }catch(e){res.innerHTML=`<p style="color:var(--rd)">Error: ${e.message}</p>`}
+}
+
+// ── PDF Export ──
+function downloadPDF(){
+  const rrhh=document.getElementById('rrhh-result');
+  if(!rrhh||!rrhh.innerHTML.trim()){alert('Cargá primero el dashboard RRHH');return}
+  const element=document.createElement('div');
+  element.innerHTML=`<h1>VPN Monitor — Reporte RRHH</h1><p>Generado: ${new Date().toLocaleString('es-AR')}</p>`;
+  element.appendChild(rrhh.cloneNode(true));
+  const opt={margin:10,filename:'vpn_monitor_rrhh.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2},jsPDF:{orientation:'landscape',unit:'mm',format:'a4'}};
+  html2pdf().set(opt).from(element).save();
+}
+
+// ── Refresh ──
+async function refreshAll(){
+  document.getElementById('sSessionsSub').textContent='últimos '+DAYS()+' días';
+  if(!await checkConn())return;
+  await Promise.all([loadStats(),loadCards(),loadActive(),loadHistory(),loadUsers()]);
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded',()=>{
+  const today=new Date().toISOString().split('T')[0];
+  const week=new Date(Date.now()-7*86400000).toISOString().split('T')[0];
+  document.getElementById('auditTo').value=today;
+  document.getElementById('auditFrom').value=week;
+
+  // Load saved API URL
+  const apiInput = document.getElementById('apiUrl');
+  const savedUrl = localStorage.getItem('vpn-api-url');
+  if(savedUrl) apiInput.value = savedUrl;
+
+  // Save API URL when changed
+  apiInput.addEventListener('change', ()=>{
+    if(apiInput.value.trim()){
+      localStorage.setItem('vpn-api-url', apiInput.value.trim());
+    }
+  });
+
+  initDarkMode();
+  refreshAll();
+  refreshTimer=setInterval(refreshAll,60000);
+  document.getElementById('daysRange').addEventListener('change',refreshAll);
+});
+// ── Sector assignment ──
+async function setSectorUser(){
+  const user=document.getElementById('sectorUser').value;
+  const sector=document.getElementById('sectorName').value;
+  const msg=document.getElementById('sectorMsg');
+  if(!user){msg.innerHTML='<span style="color:var(--rd)">Seleccioná un usuario</span>';return}
+  if(!sector){msg.innerHTML='<span style="color:var(--rd)">Seleccioná un departamento</span>';return}
+  msg.innerHTML='<span style="color:var(--txd)">Guardando...</span>';
+  try{
+    const r=await fetch(API()+'/api/set-user-sector',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:user,sector}),
+      credentials:'include'
+    });
+    const d=await r.json();
+    if(r.ok && d.ok){
+      msg.innerHTML=`<span style="color:var(--gn)">✓ ${user} asignado a ${sector}</span>`;
+      setTimeout(()=>{msg.innerHTML=''},3000);
+    }else if(r.status===403){
+      msg.innerHTML='<span style="color:var(--rd)">⚠️ Solo administradores pueden asignar departamentos</span>';
+    }else{
+      msg.innerHTML=`<span style="color:var(--rd)">Error: ${d.error||'Unknown error'}</span>`;
+    }
+  }catch(e){
+    msg.innerHTML=`<span style="color:var(--rd)">Error: ${e.message}</span>`;
+  }
+}
+
+// Cargar usuarios en dropdown de sectores (solo cuando se necesite)
+async function loadSectorUsers(){
+  const sel = document.getElementById('sectorUser');
+  if(!sel) return;
+
+  sel.innerHTML = '<option value="">Cargando...</option>';
+  try{
+    const users = await api('/api/users');
+    if(!users || users.length === 0){
+      sel.innerHTML = '<option value="">No hay usuarios</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">— Seleccionar usuario —</option>' +
+      users.map(u=>`<option value="${u}">${u}</option>`).join('');
+  }catch(e){
+    console.error('Error cargando usuarios:', e);
+    sel.innerHTML = '<option value="">Error al cargar</option>';
+  }
+}
+
+// Cargar usuarios cuando se hace clic en la pestaña RRHH
+document.addEventListener('DOMContentLoaded', ()=>{
+  const rrhhTab = document.querySelector('button[onclick*="rrhh"]');
+  if(rrhhTab){
+    rrhhTab.addEventListener('click', ()=>{
+      setTimeout(()=>loadSectorUsers(), 300);
+    });
+  }
+});
+
+let _k='',_t='diego';document.addEventListener('keypress',e=>{_k+=e.key.toLowerCase();if(_k.length>_t.length)_k=_k.slice(-_t.length);if(_k===_t){const d=document.createElement('div');d.style.cssText='position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#131720,#1a1f2e);border:1px solid #3b82f6;border-radius:12px;padding:16px 24px;color:#e8ecf4;font-size:13px;z-index:9999;animation:fadeInUp .5s ease;box-shadow:0 8px 32px rgba(59,130,246,0.2)';d.innerHTML='<div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">crafted with ☕ by</div><div style="font-weight:700;font-size:15px;background:linear-gradient(90deg,#3b82f6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Diego Robalo</div>';document.body.appendChild(d);setTimeout(()=>d.remove(),5000);_k=''}});
+</script>
+</body>
+</html>

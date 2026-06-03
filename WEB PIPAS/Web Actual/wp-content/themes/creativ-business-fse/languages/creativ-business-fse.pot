@@ -1,0 +1,389 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-04 11:21+0545\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: inc/theme-info.php:32
+msgid "Welcome to the"
+msgstr ""
+
+#: inc/theme-info.php:33
+msgid "is now installed and ready to use."
+msgstr ""
+
+#: inc/theme-info.php:36
+msgid "creativ-fse-pro"
+msgstr ""
+
+#: inc/theme-info.php:36
+msgid "Buy Pro"
+msgstr ""
+
+#: inc/theme-info.php:37
+msgid "Theme Info"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:24
+#: inc/admin/class-creativ-business-fse-admin.php:121
+msgid "Sorry, you are not allowed to install plugins on this site."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:62
+#: inc/admin/class-creativ-business-fse-admin.php:159
+msgid "Unable to connect to the filesystem. Please confirm your credentials."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:80
+#: inc/admin/class-creativ-business-fse-admin.php:178
+msgid "Plugin installed successfully"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:106
+msgid "Plugin Successfully Activated."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:191
+msgid "Sorry, you are not allowed to activate plugins on this site."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:205
+msgid "Plugin activated successfully"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:420
+msgid "You can import available demos now!"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:424
+msgid "Creativ Themes Demo Importer Plugin is not installed!"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:425
+msgid "Installing & Activating"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:425
+msgid "Installed & Activated"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:426
+msgid "Install and Activate"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:431
+msgid "Creativ Themes Demo Importer Plugin is installed but not activated!"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:432
+msgid "Activating"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:432
+msgid "Activated"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-admin.php:433
+msgid "Activate Now"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:91
+msgid "Action failed. Please refresh the page and retry."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:95
+msgid "Cheat in &#8217; huh?"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:115
+msgid "Dismiss this notice."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:118
+msgid "Congratulations!"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:121
+#, php-format
+msgid ""
+"%1$s is now installed and ready to use. Clicking on Get started with Creativ "
+"Business FSE will install and activate Creativ Demo Importer Plugin."
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:131
+msgid "Done!"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:131
+msgid "Processing"
+msgstr ""
+
+#: inc/admin/class-creativ-business-fse-notice.php:132
+#, php-format
+msgid "Get started with %1$s"
+msgstr ""
+
+#: inc/core/block-patterns.php:17
+msgid "Theme Patterns"
+msgstr ""
+
+#: inc/core/block-styles.php:25 inc/core/block-styles.php:33
+#: inc/core/block-styles.php:55 inc/core/block-styles.php:76
+msgid "Box Shadow"
+msgstr ""
+
+#: inc/core/block-styles.php:40 inc/core/block-styles.php:62
+#: inc/core/block-styles.php:83
+msgid "Box Shadow Medium"
+msgstr ""
+
+#: inc/core/block-styles.php:47 inc/core/block-styles.php:90
+msgid "Box Shadow Large"
+msgstr ""
+
+#: inc/core/block-styles.php:69
+msgid "Box Shadow Larger"
+msgstr ""
+
+#: inc/core/block-styles.php:97 inc/core/block-styles.php:104
+#: inc/core/block-styles.php:112 inc/core/block-styles.php:120
+msgid "Box Shadow on Hover"
+msgstr ""
+
+#: inc/core/block-styles.php:129
+msgid "Secondary"
+msgstr ""
+
+#: patterns/home-business-about.php:27
+msgid "About us"
+msgstr ""
+
+#: patterns/home-business-about.php:32
+msgid "We Are a Team of Creative Thinkers"
+msgstr ""
+
+#: patterns/home-business-about.php:36
+msgid ""
+"Transforming ideas into powerful digital experiences that drive results and "
+"exceed expectations."
+msgstr ""
+
+#: patterns/home-business-about.php:43
+msgid "Expert Team : "
+msgstr ""
+
+#: patterns/home-business-about.php:43
+msgid ""
+"Our professionals bring years of experience and expertise to every project."
+msgstr ""
+
+#: patterns/home-business-about.php:49
+msgid "Innovative Solutions : "
+msgstr ""
+
+#: patterns/home-business-about.php:49
+msgid "We stay ahead of the curve with the latest technologies and trends."
+msgstr ""
+
+#: patterns/home-business-about.php:57
+msgid "Read More"
+msgstr ""
+
+#: patterns/home-business-callback.php:23
+msgid "Our Story"
+msgstr ""
+
+#: patterns/home-business-callback.php:28
+msgid "See How We Transform Ideas Into Reality! Watch Our Story"
+msgstr ""
+
+#: patterns/home-business-callback.php:33
+msgid "View Stories"
+msgstr ""
+
+#: patterns/home-business-callback.php:37 patterns/home-business-hero.php:35
+#: patterns/home-business-services.php:47
+#: patterns/home-business-services.php:73
+#: patterns/home-business-services.php:99
+#: patterns/home-business-services.php:125
+#: patterns/home-business-services.php:151
+#: patterns/home-business-services.php:177
+msgid "Learn More"
+msgstr ""
+
+#: patterns/home-business-hero.php:22
+msgid "We Create Amazing Digital Experiences"
+msgstr ""
+
+#: patterns/home-business-hero.php:26
+msgid ""
+"We help businesses grow with innovative web solutions, creative design, and "
+"strategic marketing."
+msgstr ""
+
+#: patterns/home-business-hero.php:31
+msgid "Get Started"
+msgstr ""
+
+#: patterns/home-business-latest-posts.php:17
+msgid "Latest News"
+msgstr ""
+
+#: patterns/home-business-latest-posts.php:22
+msgid "Our Blog Posts"
+msgstr ""
+
+#: patterns/home-business-latest-posts.php:53
+msgid "No results"
+msgstr ""
+
+#: patterns/home-business-portfolio.php:17
+msgid "Our Work"
+msgstr ""
+
+#: patterns/home-business-portfolio.php:22
+msgid "Portfolio Showcase"
+msgstr ""
+
+#: patterns/home-business-services.php:17
+msgid "What We Offer"
+msgstr ""
+
+#: patterns/home-business-services.php:22
+msgid "Our Services"
+msgstr ""
+
+#: patterns/home-business-services.php:38
+msgid "Web Development"
+msgstr ""
+
+#: patterns/home-business-services.php:42
+msgid ""
+"Most Custom websites and web applications built with the latest technologies "
+"to ensure high performance and great user experience."
+msgstr ""
+
+#: patterns/home-business-services.php:64
+msgid "Mobile Apps"
+msgstr ""
+
+#: patterns/home-business-services.php:68
+msgid ""
+"Native and cross-platform mobile applications that deliver seamless "
+"experiences across all devices and platforms."
+msgstr ""
+
+#: patterns/home-business-services.php:90
+msgid "UI/UX Design"
+msgstr ""
+
+#: patterns/home-business-services.php:94
+msgid ""
+"Beautiful and intuitive user interfaces designed to enhance user experience "
+"and drive engagement."
+msgstr ""
+
+#: patterns/home-business-services.php:116
+msgid "SEO Services"
+msgstr ""
+
+#: patterns/home-business-services.php:120
+msgid ""
+"Improve your online visibility and drive more organic traffic with our "
+"comprehensive SEO strategies."
+msgstr ""
+
+#: patterns/home-business-services.php:142
+msgid "E-commerce"
+msgstr ""
+
+#: patterns/home-business-services.php:146
+msgid ""
+"Complete e-commerce solutions to help you sell products and services online "
+"effectively."
+msgstr ""
+
+#: patterns/home-business-services.php:168
+msgid "Digital Marketing"
+msgstr ""
+
+#: patterns/home-business-services.php:172
+msgid ""
+"Data-driven digital marketing strategies to grow your online presence and "
+"reach your target audience."
+msgstr ""
+
+#: patterns/primary-sidebar.php:19
+msgid "ABOUT DIRECTOR"
+msgstr ""
+
+#: patterns/primary-sidebar.php:34
+msgid "William Wright"
+msgstr ""
+
+#: patterns/primary-sidebar.php:38
+msgid ""
+"Ultricies augue sem fermentum deleniti ac odio curabitur, dolore mus "
+"corporis nisl. Class alias lorem omnis numquam ipsum."
+msgstr ""
+
+#: patterns/primary-sidebar.php:59
+msgid "RECENT POSTS"
+msgstr ""
+
+#: patterns/primary-sidebar.php:95
+msgid "FOLLOW US ON"
+msgstr ""
+
+#: patterns/sidebar-shop.php:19
+msgid "PRODUCT CATEGORIES"
+msgstr ""
+
+#: patterns/sidebar-shop.php:41
+msgid "RECENT PRODUCTS"
+msgstr ""
+
+#: patterns/template-404.php:25
+msgid "This page could not be found. Maybe try a search?"
+msgstr ""
+
+#: patterns/template-cart.php:44 patterns/template-cart.php:107
+msgid "You may be interested in…"
+msgstr ""
+
+#: patterns/template-cart.php:163
+msgid "Your cart is currently empty!"
+msgstr ""
+
+#: patterns/template-cart.php:167
+msgid "Browse store"
+msgstr ""
+
+#: patterns/template-cart.php:175
+msgid "New in store"
+msgstr ""
+
+#: patterns/template-product-search-results.php:54
+msgid "No products were found matching your selection."
+msgstr ""
+
+#: patterns/template-search.php:54
+msgid "Sorry, but nothing matched your search terms. Try another search?"
+msgstr ""
+
+#: patterns/template-single-product.php:72
+msgid "Related products"
+msgstr ""

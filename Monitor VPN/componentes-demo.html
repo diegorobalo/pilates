@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Monitor - Componentes Mejorados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --card: #F8F4EE;
+          --primary: #B45309;
+          --background: #FDFBF7;
+          --foreground: #4A3B33;
+          --s1: #F8F4EE;
+          --s2: #F1E9DA;
+          --s3: #E4D9BC;
+          --bd: #E4D9BC;
+          --tx: #4A3B33;
+          --txd: #78716C;
+          --txb: #2B2117;
+          --ac: #B45309;
+
+          /* Spacing Scale */
+          --space-xs: 0.25rem;
+          --space-sm: 0.5rem;
+          --space-md: 1rem;
+          --space-lg: 1.5rem;
+          --space-xl: 2rem;
+
+          /* Transitions */
+          --transition-fast: 150ms ease-in-out;
+          --transition-base: 300ms ease-in-out;
+
+          /* Shadows */
+          --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+          --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+
+          /* Border Radius */
+          --radius-sm: 0.25rem;
+          --radius-md: 0.75rem;
+          --radius-lg: 1rem;
+          --radius-full: 9999px;
+        }
+
+        body.dark {
+          --card: #292524;
+          --primary: #F97316;
+          --background: #1C1917;
+          --foreground: #F5F5F4;
+          --s1: #292524;
+          --s2: #292524;
+          --s3: #44403C;
+          --bd: #44403C;
+          --tx: #F5F5F4;
+          --txd: #A8A29E;
+          --txb: #FFFBF9;
+          --ac: #F97316;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--background);
+            color: var(--tx);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--bd);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: var(--txb);
+        }
+
+        .toggle-btn {
+            background: var(--ac);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-base);
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--txb);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .component-box {
+            background: var(--s1);
+            border: 1px solid var(--bd);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .component-label {
+            font-size: 12px;
+            color: var(--txd);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* User Card */
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: var(--s1);
+            border: 1px solid var(--bd);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            transition: all var(--transition-base);
+        }
+
+        .user-card:hover {
+            border-color: var(--ac);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            background: var(--ac);
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--txb);
+            font-size: 14px;
+        }
+
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--txd);
+            margin-top: 4px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+        }
+
+        .status-dot.online {
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .user-hours {
+            font-weight: 700;
+            color: var(--ac);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        /* Alert */
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-warning {
+            border-left-color: #CA8A04;
+            background: rgba(202, 138, 4, 0.1);
+        }
+
+        .alert-success {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .alert-error {
+            border-left-color: #991B1B;
+            background: rgba(153, 27, 27, 0.1);
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--txb);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .alert-message {
+            font-size: 13px;
+            color: var(--tx);
+        }
+
+        /* Progress Bar */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: var(--s2);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin: var(--space-md) 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ac), #A16207);
+            border-radius: var(--radius-full);
+            transition: width var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid;
+        }
+
+        .badge-online {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-away {
+            background: rgba(202, 138, 4, 0.15);
+            color: #CA8A04;
+            border-color: rgba(202, 138, 4, 0.3);
+        }
+
+        .badge-offline {
+            background: rgba(120, 113, 108, 0.15);
+            color: #78716C;
+            border-color: rgba(120, 113, 108, 0.3);
+        }
+
+        /* Button */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--ac);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--bd);
+            color: var(--tx);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--ac);
+            color: var(--ac);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        code {
+            background: var(--s2);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--bd);
+            color: var(--txd);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎨 Componentes Mejorados</h1>
+            <button class="toggle-btn" onclick="toggleDarkMode()">🌙 Modo</button>
+        </div>
+
+        <!-- User Card Component -->
+        <div class="section">
+            <div class="section-title">👤 User Card Component</div>
+            <div class="component-grid">
+                <div class="component-box">
+                    <div class="component-label">Online</div>
+                    <div class="user-card">
+                        <div class="user-avatar">JP</div>
+                        <div class="user-info">
+                            <div class="user-name">Juan Pérez</div>
+                            <div class="user-status">
+                                <span class="status-dot online"></span>
+                                En línea
+                            </div>
+                        </div>
+                        <div class="user-hours">5.2h</div>
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-label">Offline</div>
+                    <div class="user-card">
+                        <div class="user-avatar" style="background: #78716C;">ML</div>
+                        <div class="user-info">
+                            <div class="user-name">María López</div>
+                            <div class="user-status">
+                                <span class="status-dot" style="background: #78716C;"></span>
+                                Desconectado
+                            </div>
+                        </div>
+                        <div class="user-hours">0h</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Component -->
+        <div class="section">
+            <div class="section-title">⚠️ Alert Component</div>
+            <div class="component-box">
+                <div class="component-label">Ejemplos</div>
+                <div class="alert alert-success" style="margin-bottom: 15px;">
+                    <div style="font-size: 18px;">✓</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Éxito</div>
+                        <div class="alert-message">Los datos se cargaron correctamente</div>
+                    </div>
+                </div>
+                <div class="alert alert-warning" style="margin-bottom: 15px;">
+                    <div style="font-size: 18px;">⚠️</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Advertencia</div>
+                        <div class="alert-message">Usuario inactivo por más de 3 días</div>
+                    </div>
+                </div>
+                <div class="alert alert-error">
+                    <div style="font-size: 18px;">✕</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Error</div>
+                        <div class="alert-message">No se pudo conectar al servidor API</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar Component -->
+        <div class="section">
+            <div class="section-title">📊 Progress Bar Component</div>
+            <div class="component-grid">
+                <div class="component-box">
+                    <div class="component-label">Asistencia: 85%</div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 85%;">
+                            <span class="progress-label">85%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-label">Productividad: 65%</div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 65%;">
+                            <span class="progress-label">65%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-label">Descarga: 100%</div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%;">
+                            <span class="progress-label">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge Component -->
+        <div class="section">
+            <div class="section-title">🏷️ Badge Component</div>
+            <div class="component-box">
+                <div class="component-label">Estados</div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                    <span class="badge badge-online">✓ En línea</span>
+                    <span class="badge badge-away">⊕ Ausente</span>
+                    <span class="badge badge-offline">✗ Desconectado</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Button Component -->
+        <div class="section">
+            <div class="section-title">🔘 Button Component</div>
+            <div class="component-box">
+                <div class="component-label">Variantes</div>
+                <div class="button-group">
+                    <button class="btn btn-primary">Primario</button>
+                    <button class="btn btn-outline">Outline</button>
+                    <button class="btn btn-outline">Descargar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>✨ Componentes mejorados con frontend-design</p>
+            <p style="font-size: 12px; margin-top: 10px;">
+                CSS incluido en: <code>dashboard-improvements.css</code>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('demo-dark-mode', document.body.classList.contains('dark'));
+        }
+
+        function initDarkMode() {
+            const isDark = localStorage.getItem('demo-dark-mode') === 'true';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isDark || (!localStorage.getItem('demo-dark-mode') && prefersDark)) {
+                document.body.classList.add('dark');
+            }
+        }
+
+        initDarkMode();
+    </script>
+</body>
+</html>

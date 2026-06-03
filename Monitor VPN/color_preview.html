@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsualizador de Paletas - VPN Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Merriweather', serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 28px; }
+
+        .palettes { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+
+        .palette-preview {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .palette-preview:hover { transform: translateY(-5px); }
+
+        .palette-name {
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 3px solid #ddd;
+        }
+
+        /* OPCIÓN 1: AZUL */
+        .palette1 .palette-name { background: #1E40AF; color: white; border-bottom-color: #1E40AF; }
+        .palette1 .preview-header { background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%); }
+        .palette1 .preview-bg { background: #F0F4F8; }
+        .palette1 .preview-card { border-left-color: #1E40AF; }
+        .palette1 .preview-stat { color: #1E40AF; }
+
+        /* OPCIÓN 2: VERDE */
+        .palette2 .palette-name { background: #16A34A; color: white; border-bottom-color: #16A34A; }
+        .palette2 .preview-header { background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%); }
+        .palette2 .preview-bg { background: #F0FDF4; }
+        .palette2 .preview-card { border-left-color: #16A34A; }
+        .palette2 .preview-stat { color: #16A34A; }
+
+        /* OPCIÓN 3: NARANJA */
+        .palette3 .palette-name { background: #EA580C; color: white; border-bottom-color: #EA580C; }
+        .palette3 .preview-header { background: linear-gradient(135deg, #EA580C 0%, #FB923C 100%); }
+        .palette3 .preview-bg { background: #FFF7ED; }
+        .palette3 .preview-card { border-left-color: #EA580C; }
+        .palette3 .preview-stat { color: #EA580C; }
+
+        /* OPCIÓN 4: PÚRPURA */
+        .palette4 .palette-name { background: #7C3AED; color: white; border-bottom-color: #7C3AED; }
+        .palette4 .preview-header { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); }
+        .palette4 .preview-bg { background: #FAF5FF; }
+        .palette4 .preview-card { border-left-color: #7C3AED; }
+        .palette4 .preview-stat { color: #7C3AED; }
+
+        /* OPCIÓN 5: TEAL */
+        .palette5 .palette-name { background: #0D9488; color: white; border-bottom-color: #0D9488; }
+        .palette5 .preview-header { background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%); }
+        .palette5 .preview-bg { background: #F0FDFA; }
+        .palette5 .preview-card { border-left-color: #0D9488; }
+        .palette5 .preview-stat { color: #0D9488; }
+
+        .preview-header {
+            padding: 20px;
+            color: white;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .preview-bg {
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .preview-card {
+            background: white;
+            border-left: 5px solid;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .preview-label { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 5px; }
+        .preview-stat { font-size: 24px; font-weight: bold; margin-bottom: 3px; }
+        .preview-desc { font-size: 12px; color: #666; }
+
+        .color-codes {
+            padding: 15px;
+            background: #f9f9f9;
+            font-family: monospace;
+            font-size: 11px;
+            border-top: 1px solid #eee;
+        }
+
+        .color-codes div { margin: 5px 0; }
+
+        .recommendation {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .recommendation.best { background: #d4edda; border-color: #28a745; color: #155724; }
+    </recommendation>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Previsualizador de Paletas - VPN Monitor Argensun Foods</h1>
+
+        <div class="palettes">
+            <!-- OPCIÓN 1: AZUL -->
+            <div class="palette-preview palette1">
+                <div class="palette-name">1️⃣ AZUL CORPORATIVO</div>
+                <div class="preview-header">VPN Monitor Dashboard</div>
+                <div class="preview-bg">
+                    <div class="preview-card">
+                        <div class="preview-label">Conectados ahora</div>
+                        <div class="preview-stat">12</div>
+                        <div class="preview-desc">usuarios OVPN activos</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-label">Tráfico hoy</div>
+                        <div class="preview-stat">45.2 GB</div>
+                        <div class="preview-desc">transferidos</div>
+                    </div>
+                </div>
+                <div class="color-codes">
+                    <div><strong>Primario:</strong> #1E40AF</div>
+                    <div><strong>Secundario:</strong> #3B82F6</div>
+                    <div><strong>Fondo:</strong> #F0F4F8</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">Profesional, confiable, corporativo</div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 2: VERDE -->
+            <div class="palette-preview palette2">
+                <div class="palette-name">2️⃣ VERDE NATURAL</div>
+                <div class="preview-header">VPN Monitor Dashboard</div>
+                <div class="preview-bg">
+                    <div class="preview-card">
+                        <div class="preview-label">Conectados ahora</div>
+                        <div class="preview-stat">12</div>
+                        <div class="preview-desc">usuarios OVPN activos</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-label">Tráfico hoy</div>
+                        <div class="preview-stat">45.2 GB</div>
+                        <div class="preview-desc">transferidos</div>
+                    </div>
+                </div>
+                <div class="color-codes">
+                    <div><strong>Primario:</strong> #16A34A</div>
+                    <div><strong>Secundario:</strong> #22C55E</div>
+                    <div><strong>Fondo:</strong> #F0FDF4</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;"><span style="color: #16a34a; font-weight: bold;">⭐ RECOMENDADO PARA ALIMENTOS</span></div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 3: NARANJA -->
+            <div class="palette-preview palette3">
+                <div class="palette-name">3️⃣ NARANJA MODERNO</div>
+                <div class="preview-header">VPN Monitor Dashboard</div>
+                <div class="preview-bg">
+                    <div class="preview-card">
+                        <div class="preview-label">Conectados ahora</div>
+                        <div class="preview-stat">12</div>
+                        <div class="preview-desc">usuarios OVPN activos</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-label">Tráfico hoy</div>
+                        <div class="preview-stat">45.2 GB</div>
+                        <div class="preview-desc">transferidos</div>
+                    </div>
+                </div>
+                <div class="color-codes">
+                    <div><strong>Primario:</strong> #EA580C</div>
+                    <div><strong>Secundario:</strong> #FB923C</div>
+                    <div><strong>Fondo:</strong> #FFF7ED</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">Energético, dinámico, moderno</div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 4: PÚRPURA -->
+            <div class="palette-preview palette4">
+                <div class="palette-name">4️⃣ PÚRPURA PREMIUM</div>
+                <div class="preview-header">VPN Monitor Dashboard</div>
+                <div class="preview-bg">
+                    <div class="preview-card">
+                        <div class="preview-label">Conectados ahora</div>
+                        <div class="preview-stat">12</div>
+                        <div class="preview-desc">usuarios OVPN activos</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-label">Tráfico hoy</div>
+                        <div class="preview-stat">45.2 GB</div>
+                        <div class="preview-desc">transferidos</div>
+                    </div>
+                </div>
+                <div class="color-codes">
+                    <div><strong>Primario:</strong> #7C3AED</div>
+                    <div><strong>Secundario:</strong> #A78BFA</div>
+                    <div><strong>Fondo:</strong> #FAF5FF</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">Sofisticado, premium, innovador</div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 5: TEAL -->
+            <div class="palette-preview palette5">
+                <div class="palette-name">5️⃣ TEAL NEUTRAL</div>
+                <div class="preview-header">VPN Monitor Dashboard</div>
+                <div class="preview-bg">
+                    <div class="preview-card">
+                        <div class="preview-label">Conectados ahora</div>
+                        <div class="preview-stat">12</div>
+                        <div class="preview-desc">usuarios OVPN activos</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-label">Tráfico hoy</div>
+                        <div class="preview-stat">45.2 GB</div>
+                        <div class="preview-desc">transferidos</div>
+                    </div>
+                </div>
+                <div class="color-codes">
+                    <div><strong>Primario:</strong> #0D9488</div>
+                    <div><strong>Secundario:</strong> #14B8A6</div>
+                    <div><strong>Fondo:</strong> #F0FDFA</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">Elegante, minimalista, equilibrado</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendation best">
+            ⭐ OPCIÓN 2: VERDE NATURAL<br>
+            Ideal para Argensun Foods (alimentos frescos, naturaleza, confianza)
+        </div>
+
+        <div class="recommendation" style="margin-top: 15px;">
+            Decime el número (1-5) y aplico ese color a todo el dashboard + pongo en negrita los datos clave 🎨
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,338 @@
+2023-10-19T06:15:00+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T10:06:35+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:41+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:42+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:42+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:43+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:43+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:44+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:44+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:45+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:46+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:46+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:46+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:47+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:47+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:48+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:48+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:49+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:49+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:51+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:53+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:53+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:54+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:54+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:55+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+
+2023-10-19T18:22:55+00:00 CRITICAL Uncaught DivisionByZeroError: Modulo by zero in /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code:201
+Stack trace:
+#0 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(103): wisime_afanekhich->xigezu_mujaqesh()
+#1 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(22): wisime_afanekhich->xepewi_botynegyh()
+#2 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(17): wisime_afanekhich->kahati_ybatuqoz()
+#3 /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code(421): wisime_afanekhich->__construct()
+#4 /var/www/html/wp-content/plugins/locejebeso/locejebeso.php(16): vinyko_shofyfab()
+#5 /var/www/html/wp-includes/class-wp-hook.php(310): zakare_hachateb()
+#6 /var/www/html/wp-includes/class-wp-hook.php(334): WP_Hook->apply_filters()
+#7 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action()
+#8 /var/www/html/wp-settings.php(632): do_action()
+#9 /var/www/html/wp-config.php(99): require_once en /var/www/html/wp-content/plugins/locejebeso/iduzazh.txt(46) : eval()'d code en la línea 201
+

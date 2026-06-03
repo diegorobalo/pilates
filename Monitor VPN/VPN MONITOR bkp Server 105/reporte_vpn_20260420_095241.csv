@@ -1,0 +1,102 @@
+﻿Usuario,Servicio,IP Pública,IP Asignada,Ciudad,Región,País,Conexión,Desconexión,Horas,MB Desc.,MB Sub.
+fernanda.velazquez,ovpn,190.124.15.33,10.90.0.84,Luján,Buenos Aires,Argentina,2026-04-20 09:47:10,2026-04-20 09:52:30,0.09,0.03,0.03
+diego.robalo,ovpn,190.124.15.33,10.90.0.85,Luján,Buenos Aires,Argentina,2026-04-20 09:43:22,2026-04-20 09:47:30,0.07,0.42,0.48
+yamila.dezarlo,ovpn,152.168.90.26,10.90.0.64,Córdoba,Cordoba,Argentina,2026-04-20 09:27:10,ACTIVO,0.43,1.69,7.57
+svaldez,ovpn,190.120.244.72,10.90.0.50,San Rafael,Mendoza,Argentina,2026-04-20 09:27:01,ACTIVO,0.43,0.39,0.57
+elisabet.paez,ovpn,186.18.46.8,10.90.0.86,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-20 09:25:46,ACTIVO,0.45,1.95,1.79
+Florencia.galeano,ovpn,186.128.73.44,10.90.0.89,Don Torcuato,Buenos Aires,Argentina,2026-04-20 09:02:43,ACTIVO,0.83,1.34,6.14
+marcos.massera,ovpn,190.124.15.33,10.90.0.87,Luján,Buenos Aires,Argentina,2026-04-20 08:25:54,ACTIVO,1.45,1.55,28.59
+cristian.salcedo,ovpn,190.120.245.117,10.90.0.88,San Rafael,Mendoza,Argentina,2026-04-20 08:21:22,ACTIVO,1.52,1.05,0.66
+sara.leon,ovpn,90.162.178.243,10.90.0.90,Aldaia,Valencia,Spain,2026-04-20 08:09:00,ACTIVO,1.73,0.08,0.22
+grisel.maidana,ovpn,181.47.126.163,10.90.0.66,Villa José León Suárez,Buenos Aires,Argentina,2026-04-20 08:00:06,ACTIVO,1.88,39.21,61.94
+mariajose.malfagon,ovpn,84.121.78.52,10.90.0.55,Paterna,Valencia,Spain,2026-04-20 03:54:02,ACTIVO,5.98,0.94,2.23
+daiana.tevez,ovpn,190.16.121.131,10.90.0.60,Don Torcuato,Buenos Aires,Argentina,2026-04-17 21:24:22,2026-04-20 09:30:47,60.11,0.05,0.05
+daiana.artigas,ovpn,181.91.144.231,10.90.0.82,Villa Ballester,Buenos Aires,Argentina,2026-04-17 21:23:11,2026-04-20 09:30:47,60.13,0.38,4.25
+soledad.miranda,ovpn,181.99.58.230,10.90.0.83,Olivos,Buenos Aires,Argentina,2026-04-17 21:21:21,2026-04-20 09:30:47,60.16,0.16,0.15
+Fabio.espinola,ovpn,181.46.47.181,10.90.0.83,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 21:12:16,2026-04-17 21:18:06,0.1,0.3,0.74
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 20:52:04,2026-04-20 09:30:47,60.65,0.27,0.32
+cecilia.castro,ovpn,201.253.91.102,10.90.0.79,Del Viso,Buenos Aires,Argentina,2026-04-17 20:42:03,2026-04-20 09:30:47,60.81,0.39,0.55
+mariajose.malfagon,ovpn,84.121.78.52,10.90.0.55,Paterna,Valencia,Spain,2026-04-17 20:27:36,2026-04-20 09:30:47,61.05,0.03,0.1
+felicitas.maggi,ovpn,181.169.167.99,10.90.0.67,Tigre,Buenos Aires,Argentina,2026-04-17 20:27:35,2026-04-17 20:46:59,0.32,0.17,0.23
+elisabet.paez,ovpn,181.46.9.68,10.90.0.88,Ituzaingó,Buenos Aires,Argentina,2026-04-17 20:27:35,2026-04-20 09:30:47,61.05,0.12,0.16
+juan.kihlberg,ovpn,201.253.191.49,10.90.0.89,Nordelta,Buenos Aires,Argentina,2026-04-17 20:27:34,2026-04-20 09:30:47,61.05,0.84,0.86
+lgimenez,ovpn,190.173.29.83,10.90.0.90,San Rafael,Mendoza,Argentina,2026-04-17 20:27:34,2026-04-20 09:30:47,61.05,1.07,1.02
+daiana.tevez,ovpn,190.16.121.131,10.90.0.60,Don Torcuato,Buenos Aires,Argentina,2026-04-17 20:27:34,2026-04-17 21:24:07,0.94,0.75,1.25
+claudia.ybarra,ovpn,190.16.97.109,10.90.0.86,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 20:27:34,2026-04-20 09:30:47,61.05,1.07,1.35
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 20:27:31,2026-04-17 20:49:00,0.36,0.09,0.11
+grisel.maidana,ovpn,181.47.126.163,10.90.0.66,Villa José León Suárez,Buenos Aires,Argentina,2026-04-17 20:27:30,2026-04-17 21:23:07,0.93,35.42,51.64
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 20:26:17,2026-04-17 20:27:57,0.03,0.11,0.12
+felicitas.maggi,ovpn,181.169.167.99,10.90.0.67,Tigre,Buenos Aires,Argentina,2026-04-17 20:16:14,2026-04-17 20:27:57,0.2,0.18,0.22
+infoc1,ovpn,190.190.201.147,10.90.0.87,General Pacheco,Buenos Aires,Argentina,2026-04-17 20:12:46,2026-04-20 09:30:47,61.3,2.53,28.87
+juan.odriozola,ovpn,181.89.15.87,10.90.0.75,Ingeniero Maschwitz,Buenos Aires,Argentina,2026-04-17 20:09:55,2026-04-17 20:19:57,0.17,0.36,0.44
+elisabet.paez,ovpn,181.46.9.68,10.90.0.88,Ituzaingó,Buenos Aires,Argentina,2026-04-17 20:07:27,2026-04-17 20:27:57,0.34,0.15,0.15
+lorena.perrucci,ovpn,181.117.12.221,10.90.0.76,Vicente López,Buenos Aires,Argentina,2026-04-17 19:41:42,2026-04-17 19:43:52,0.04,0.0,0.0
+yamila.dezarlo,ovpn,152.168.90.26,10.90.0.64,Córdoba,Cordoba,Argentina,2026-04-17 19:23:37,2026-04-17 19:28:50,0.09,0.25,3.49
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 19:22:09,2026-04-17 19:58:53,0.61,0.31,0.36
+grisel.maidana,ovpn,181.47.126.163,10.90.0.66,Villa José León Suárez,Buenos Aires,Argentina,2026-04-17 19:21:20,2026-04-17 20:27:57,1.11,33.73,25.89
+felicitas.maggi,ovpn,181.169.167.99,10.90.0.67,Tigre,Buenos Aires,Argentina,2026-04-17 19:15:04,2026-04-17 19:41:51,0.45,0.35,0.77
+ncontreras,ovpn,181.170.101.40,10.90.0.88,Luján,Buenos Aires,Argentina,2026-04-17 19:10:25,2026-04-17 19:18:49,0.14,0.31,0.65
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 18:58:10,2026-04-17 19:07:47,0.16,0.08,0.08
+agustin.colodrero,ovpn,181.13.127.90,10.90.0.62,Córdoba,Cordoba,Argentina,2026-04-17 18:57:43,2026-04-17 19:58:53,1.02,0.41,2.35
+romina.gerez,ovpn,190.246.226.52,10.90.0.88,San Isidro,Buenos Aires,Argentina,2026-04-17 18:47:05,2026-04-17 19:04:47,0.29,1.56,1.19
+agustin.colodrero,ovpn,181.13.127.90,10.90.0.62,Córdoba,Cordoba,Argentina,2026-04-17 18:45:13,2026-04-17 18:56:46,0.19,0.08,0.28
+juan.kihlberg,ovpn,201.253.191.49,10.90.0.89,Nordelta,Buenos Aires,Argentina,2026-04-17 18:29:33,2026-04-17 20:27:57,1.97,1.88,2.08
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 18:28:33,2026-04-17 18:57:53,0.49,0.47,1.22
+juan.miguens,ovpn,181.25.163.167,10.90.0.70,General Pacheco,Buenos Aires,Argentina,2026-04-17 18:25:03,2026-04-17 18:29:43,0.08,0.11,0.11
+juan.odriozola,ovpn,181.89.15.87,10.90.0.75,Ingeniero Maschwitz,Buenos Aires,Argentina,2026-04-17 18:18:29,2026-04-17 19:01:47,0.72,2.16,1.9
+fturienzo,ovpn,153.67.181.207,10.90.0.73,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 18:05:36,2026-04-17 18:34:44,0.49,0.24,0.27
+soledad.miranda,ovpn,181.99.58.230,10.90.0.89,Olivos,Buenos Aires,Argentina,2026-04-17 18:05:18,2026-04-17 18:22:42,0.29,0.27,0.28
+agustin.colodrero,ovpn,181.13.127.90,10.90.0.62,Córdoba,Cordoba,Argentina,2026-04-17 17:56:06,2026-04-17 18:21:42,0.43,0.16,0.37
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 17:47:41,2026-04-17 17:55:38,0.13,0.08,0.09
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 17:34:51,2026-04-17 17:47:37,0.21,0.17,0.24
+mariajose.malfagon,ovpn,84.121.78.52,10.90.0.55,Paterna,Valencia,Spain,2026-04-17 17:30:58,2026-04-17 20:27:57,2.95,0.09,0.34
+lgimenez,ovpn,190.173.29.83,10.90.0.90,San Rafael,Mendoza,Argentina,2026-04-17 17:28:16,2026-04-17 20:27:57,2.99,3.26,3.14
+juan.miguens,ovpn,181.25.163.167,10.90.0.70,General Pacheco,Buenos Aires,Argentina,2026-04-17 17:28:08,2026-04-17 18:12:41,0.74,0.29,0.37
+ebarreto,ovpn,190.195.25.85,10.90.0.59,Villa Carlos Paz,Cordoba,Argentina,2026-04-17 17:15:27,2026-04-17 18:17:41,1.04,0.13,0.31
+daiana.tevez,ovpn,190.16.121.131,10.90.0.60,Don Torcuato,Buenos Aires,Argentina,2026-04-17 16:48:05,2026-04-17 20:27:57,3.66,1.09,1.95
+claudia.ybarra,ovpn,190.16.97.109,10.90.0.86,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 16:47:58,2026-04-17 20:27:57,3.67,4.53,6.03
+daiana.tevez,ovpn,190.16.121.131,10.90.0.60,Don Torcuato,Buenos Aires,Argentina,2026-04-17 16:47:17,2026-04-17 16:47:38,0.01,0.0,0.0
+romina.gerez,ovpn,190.246.226.52,10.90.0.89,San Isidro,Buenos Aires,Argentina,2026-04-17 16:47:16,2026-04-17 18:00:39,1.22,6.56,6.86
+claudia.ybarra,ovpn,190.16.97.109,10.90.0.86,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 16:47:07,2026-04-17 16:47:38,0.01,0.0,0.0
+mariajose.malfagon,ovpn,84.121.78.52,10.90.0.55,Paterna,Valencia,Spain,2026-04-17 16:44:01,2026-04-17 17:30:43,0.78,0.02,0.1
+soporte.proveedor,ovpn,181.4.52.246,10.90.0.78,San Isidro,Buenos Aires,Argentina,2026-04-17 16:37:40,2026-04-17 16:42:19,0.08,0.03,0.35
+juan.odriozola,ovpn,181.89.15.87,10.90.0.75,Ingeniero Maschwitz,Buenos Aires,Argentina,2026-04-17 16:35:56,2026-04-17 18:04:39,1.48,4.63,4.34
+cecilia.castro,ovpn,201.253.91.102,10.90.0.79,Del Viso,Buenos Aires,Argentina,2026-04-17 16:35:32,2026-04-17 17:30:36,0.92,0.49,3.35
+juan.miguens,ovpn,181.25.163.167,10.90.0.70,General Pacheco,Buenos Aires,Argentina,2026-04-17 16:32:06,2026-04-17 17:03:32,0.52,0.21,0.28
+cecilia.fiorda,ovpn,190.50.242.169,10.90.0.74,San Miguel,Buenos Aires,Argentina,2026-04-17 16:30:05,2026-04-17 17:07:33,0.62,0.32,0.45
+dylan.corigliano,ovpn,181.106.135.100,10.90.0.83,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 16:20:08,2026-04-17 16:47:30,0.46,0.44,0.45
+agustin.colodrero,ovpn,181.13.127.90,10.90.0.62,Córdoba,Cordoba,Argentina,2026-04-17 16:19:52,2026-04-17 17:56:38,1.61,1.33,4.3
+agustin.colodrero,ovpn,181.13.127.90,10.90.0.62,Córdoba,Cordoba,Argentina,2026-04-17 16:12:54,2026-04-17 16:18:16,0.09,0.04,0.02
+agustin.colodrero,ovpn,181.6.233.64,10.90.0.51,Francisco Álvarez,Buenos Aires,Argentina,2026-04-17 16:09:29,2026-04-17 16:13:15,0.06,0.03,0.01
+mariajose.malfagon,ovpn,84.121.78.52,10.90.0.55,Paterna,Valencia,Spain,2026-04-17 16:06:03,2026-04-17 16:44:30,0.64,0.02,0.09
+fernanda.velazquez,ovpn,190.48.31.147,10.90.0.89,Pilar,Buenos Aires,Argentina,2026-04-17 16:03:18,2026-04-17 16:22:16,0.32,0.37,0.35
+florencia.meroni,ovpn,98.97.134.211,10.90.0.89,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 15:58:00,2026-04-17 16:02:29,0.07,0.45,0.24
+juan.miguens,ovpn,181.25.163.167,10.90.0.70,General Pacheco,Buenos Aires,Argentina,2026-04-17 15:47:01,2026-04-17 16:21:16,0.57,0.48,2.44
+diego.robalo,ovpn,181.117.10.228,10.90.0.68,Vicente López,Buenos Aires,Argentina,2026-04-17 15:43:44,2026-04-17 20:25:57,4.7,137.03,2490.1
+elisabet.paez,ovpn,181.46.107.134,10.90.0.77,Lomas de Zamora,Buenos Aires,Argentina,2026-04-17 15:33:07,2026-04-17 18:40:44,3.13,2.79,12.69
+ignacio.stergar,ovpn,190.211.155.240,10.90.0.71,Pilar,Buenos Aires,Argentina,2026-04-17 15:32:08,2026-04-17 15:55:12,0.38,0.29,0.44
+romina.gerez,ovpn,190.246.226.52,10.90.0.83,San Isidro,Buenos Aires,Argentina,2026-04-17 15:28:54,2026-04-17 16:19:16,0.84,4.15,5.84
+lorena.perrucci,ovpn,190.3.60.47,10.90.0.81,Olivos,Buenos Aires,Argentina,2026-04-17 15:15:39,2026-04-17 16:42:19,1.44,2.07,7.4
+svaldez,ovpn,190.120.244.72,10.90.0.50,San Rafael,Mendoza,Argentina,2026-04-17 15:10:42,2026-04-17 15:56:12,0.76,0.69,1.24
+felicitas.maggi,ovpn,181.169.167.99,10.90.0.67,Tigre,Buenos Aires,Argentina,2026-04-17 15:05:43,2026-04-17 18:31:43,3.43,33.96,63.38
+luz.rosa,ovpn,190.244.148.104,10.90.0.87,General Rodríguez,Buenos Aires,Argentina,2026-04-17 14:56:30,2026-04-17 17:00:32,2.07,7.78,24.92
+Florencia.galeano,ovpn,186.60.206.207,10.90.0.65,Garín,Buenos Aires,Argentina,2026-04-17 14:54:37,2026-04-17 15:51:12,0.94,0.4,0.47
+grisel.maidana,ovpn,181.47.126.163,10.90.0.66,Villa José León Suárez,Buenos Aires,Argentina,2026-04-17 14:33:52,2026-04-17 19:15:48,4.7,7.37,12.54
+cecilia.fiorda,ovpn,190.50.242.169,10.90.0.74,San Miguel,Buenos Aires,Argentina,2026-04-17 14:25:30,2026-04-17 16:24:17,1.98,4.93,11.72
+diego.martin,ovpn,190.51.12.136,10.90.0.72,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 14:16:49,2026-04-17 17:22:34,3.1,3.54,9.35
+mario.disalvo,ovpn,186.130.47.244,10.90.0.82,Villa José León Suárez,Buenos Aires,Argentina,2026-04-17 14:05:53,2026-04-17 17:49:37,3.73,2.46,3.01
+bettina.olmedo,ovpn,190.104.33.133,10.90.0.84,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 13:51:16,2026-04-20 09:30:47,67.66,23.55,354.46
+ebarreto,ovpn,190.195.25.85,10.90.0.59,Villa Carlos Paz,Cordoba,Argentina,2026-04-17 13:08:04,2026-04-17 17:15:34,4.13,0.6,1.4
+diego.robalo,ovpn,181.117.10.228,10.90.0.68,Vicente López,Buenos Aires,Argentina,2026-04-17 13:04:02,2026-04-17 15:43:26,2.66,38.7,665.81
+agustin.colodrero,ovpn,181.13.127.90,10.90.0.62,Córdoba,Cordoba,Argentina,2026-04-17 13:01:52,2026-04-17 16:09:30,3.13,3.22,63.29
+diego.llamesmassini,ovpn,181.13.127.90,10.90.0.52,Córdoba,Cordoba,Argentina,2026-04-17 12:56:16,2026-04-17 16:37:18,3.68,6.12,7.85
+daiana.tevez,ovpn,190.16.121.131,10.90.0.60,Don Torcuato,Buenos Aires,Argentina,2026-04-17 12:54:53,2026-04-17 16:47:30,3.88,4.55,27.84
+lgimenez,ovpn,190.173.27.206,10.90.0.56,San Rafael,Mendoza,Argentina,2026-04-17 12:44:08,2026-04-17 17:28:35,4.74,5.26,5.06
+soporte.proveedor,ovpn,181.4.52.246,10.90.0.78,San Isidro,Buenos Aires,Argentina,2026-04-17 12:44:05,2026-04-17 16:37:35,3.89,1.98,9.69
+barbara.frega,ovpn,186.123.212.7,10.90.0.90,Tigre,Buenos Aires,Argentina,2026-04-17 12:44:03,2026-04-17 17:21:34,4.63,6.37,13.44
+scugliari,ovpn,181.81.81.29,10.90.0.85,Ciudad del Libertador General San Martín,Buenos Aires,Argentina,2026-04-17 12:44:03,2026-04-20 09:30:47,68.78,3.83,6.93
+yamila.dezarlo,ovpn,152.168.90.26,10.90.0.64,Córdoba,Cordoba,Argentina,2026-04-17 12:44:01,2026-04-17 16:24:17,3.67,12.46,62.3
+fturienzo,ovpn,153.67.181.207,10.90.0.73,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 12:43:59,2026-04-17 18:05:39,5.36,4.14,4.34
+mariajose.malfagon,ovpn,84.121.78.52,10.90.0.55,Paterna,Valencia,Spain,2026-04-17 12:43:58,2026-04-17 16:06:14,3.37,0.12,0.44
+claudia.ybarra,ovpn,190.16.97.109,10.90.0.86,Buenos Aires,Buenos Aires F.D.,Argentina,2026-04-17 12:43:56,2026-04-17 16:47:30,4.06,3.59,4.8
+daiana.artigas,ovpn,181.91.144.231,10.90.0.88,Villa Ballester,Buenos Aires,Argentina,2026-04-17 12:43:54,2026-04-17 18:20:42,5.61,13.74,28.74

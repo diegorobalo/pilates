@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Monitor - Tipografía con Efectos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&family=Space+Mono:wght@700&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        h1 { 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-size: 36px;
+            background: linear-gradient(135deg, #16A34A, #84cc16);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 50px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .typography-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(700px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .typo-card {
+            background: rgba(20, 30, 60, 0.4);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            animation: fade-in 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .typo-card:nth-child(1) { animation-delay: 0.1s; }
+        .typo-card:nth-child(2) { animation-delay: 0.2s; }
+        .typo-card:nth-child(3) { animation-delay: 0.3s; }
+        .typo-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .typo-preview {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(20, 40, 30, 0.6));
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .typo-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.2) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(40px, -20px); }
+        }
+
+        .stat-demo {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            background: rgba(22, 163, 74, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-demo:hover {
+            background: rgba(22, 163, 74, 0.15);
+            border-color: rgba(22, 163, 74, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+        }
+
+        /* ===== OPCIÓN 1: NEON GLOW ===== */
+        .typo1 .stat-number {
+            font-family: 'Outfit', sans-serif;
+            color: #84cc16;
+            text-shadow: 
+                0 0 10px #84cc16,
+                0 0 20px #16A34A,
+                0 0 30px rgba(22, 163, 74, 0.5);
+            letter-spacing: 2px;
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { text-shadow: 0 0 10px #84cc16, 0 0 20px #16A34A, 0 0 30px rgba(22, 163, 74, 0.5); }
+            50% { text-shadow: 0 0 15px #84cc16, 0 0 30px #16A34A, 0 0 45px rgba(22, 163, 74, 0.7); }
+        }
+
+        .typo1 .stat-label {
+            color: #84cc16;
+            text-shadow: 0 0 8px rgba(132, 204, 22, 0.5);
+        }
+
+        /* ===== OPCIÓN 2: STRONG OUTLINE ===== */
+        .typo2 .stat-number {
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            -webkit-text-stroke: 2px #16A34A;
+            text-stroke: 2px #16A34A;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .typo2 .stat-label {
+            color: #84cc16;
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== OPCIÓN 3: MONOSPACE BOLD ===== */
+        .typo3 .stat-number {
+            font-family: 'IBM Plex Mono', monospace;
+            color: #fff;
+            letter-spacing: 4px;
+            text-shadow: 
+                2px 2px 0px #16A34A,
+                4px 4px 0px rgba(22, 163, 74, 0.5);
+            font-weight: 700;
+        }
+
+        .typo3 .stat-label {
+            font-family: 'Space Mono', monospace;
+            color: #16A34A;
+            letter-spacing: 3px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ===== OPCIÓN 4: SHADOW DEPTH ===== */
+        .typo4 .stat-number {
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            font-weight: 800;
+            text-shadow: 
+                -2px -2px 0px #16A34A,
+                -4px -4px 0px rgba(22, 163, 74, 0.6),
+                0px 4px 15px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .typo4 .stat-label {
+            color: #84cc16;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            font-weight: 600;
+        }
+
+        .typo-info {
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .typo-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .typo-description {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .typo-specs {
+            background: rgba(22, 163, 74, 0.1);
+            border-left: 3px solid #16A34A;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #888;
+            font-family: 'Space Mono', monospace;
+            line-height: 1.6;
+        }
+
+        .tv-demo {
+            background: rgba(20, 30, 60, 0.4);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .tv-demo h3 {
+            color: #84cc16;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+
+        .tv-mockup {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(20, 40, 30, 0.6));
+            padding: 40px;
+            border-radius: 12px;
+            border: 2px solid rgba(22, 163, 74, 0.3);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            position: relative;
+        }
+
+        .tv-mockup::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.15) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .tv-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(22, 163, 74, 0.08);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .tv-card-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 52px;
+            font-weight: 800;
+            color: #fff;
+            -webkit-text-stroke: 2px #16A34A;
+            text-stroke: 2px #16A34A;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            line-height: 1;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .tv-card-label {
+            font-size: 13px;
+            color: #84cc16;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, rgba(132, 204, 22, 0.1), rgba(22, 163, 74, 0.1));
+            border: 2px solid rgba(132, 204, 22, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .recommendation h3 {
+            color: #84cc16;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .recommendation p {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Tipografía con Efectos - VPN Monitor</h1>
+        <p class="subtitle">Efectos visuales del 1 + Claridad del 2 + Tipografía mejorada</p>
+
+        <div class="typography-grid">
+            <!-- OPCIÓN 1: NEON GLOW -->
+            <div class="typo-card typo1">
+                <div class="typo-preview">
+                    <div class="stat-demo">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Conectados ahora</div>
+                    </div>
+                    <div class="stat-demo">
+                        <div class="stat-number">1559</div>
+                        <div class="stat-label">Sesiones período</div>
+                    </div>
+                </div>
+                <div class="typo-info">
+                    <div class="typo-title">1️⃣ Neon Glow</div>
+                    <p class="typo-description">Números brillan con efecto neon pulsante. Ultra moderno, futurista. Llama la atención. Perfecto para datos que quieres que destaquen.</p>
+                    <div class="typo-specs">
+Font: Outfit (Bold)
+Effect: Neon glow + pulse animation
+Shadow: Triple capa (10px, 20px, 30px)
+Clarity: ⭐⭐⭐⭐⭐
+TV Distance: ✅ Excelente
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 2: STRONG OUTLINE -->
+            <div class="typo-card typo2">
+                <div class="typo-preview">
+                    <div class="stat-demo">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Conectados ahora</div>
+                    </div>
+                    <div class="stat-demo">
+                        <div class="stat-number">1559</div>
+                        <div class="stat-label">Sesiones período</div>
+                    </div>
+                </div>
+                <div class="typo-info">
+                    <div class="typo-title">2️⃣ Strong Outline ⭐</div>
+                    <p class="typo-description">Contorno verde grueso en números blancos. SUPER legible. Combina lo mejor de ambos diseños. Moderno pero claro. <strong>RECOMENDADO</strong></p>
+                    <div class="typo-specs">
+Font: Outfit (ExtraBlack)
+Effect: 2px text-stroke outline
+Shadow: Sombra sutil (4px 12px)
+Clarity: ⭐⭐⭐⭐⭐⭐
+TV Distance: ✅ Perfecta
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 3: MONOSPACE BOLD -->
+            <div class="typo-card typo3">
+                <div class="typo-preview">
+                    <div class="stat-demo">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Conectados ahora</div>
+                    </div>
+                    <div class="stat-demo">
+                        <div class="stat-number">1559</div>
+                        <div class="stat-label">Sesiones período</div>
+                    </div>
+                </div>
+                <div class="typo-info">
+                    <div class="typo-title">3️⃣ Monospace Tech</div>
+                    <p class="typo-description">Fuente monospace con desplazamiento de sombra (2D offset). Hardcore tech. Para IT que ama código. Único y memorable.</p>
+                    <div class="typo-specs">
+Font: IBM Plex Mono (Bold)
+Effect: 2D offset shadow (2px, 4px)
+Shadow: Doble capa
+Clarity: ⭐⭐⭐⭐
+TV Distance: ✅ Muy buena
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 4: SHADOW DEPTH -->
+            <div class="typo-card typo4">
+                <div class="typo-preview">
+                    <div class="stat-demo">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Conectados ahora</div>
+                    </div>
+                    <div class="stat-demo">
+                        <div class="stat-number">1559</div>
+                        <div class="stat-label">Sesiones período</div>
+                    </div>
+                </div>
+                <div class="typo-info">
+                    <div class="typo-title">4️⃣ Shadow Depth</div>
+                    <p class="typo-description">Sombra 3D con profundidad (offset arriba-izquierda). Elegante, sofisticado. Transmite importancia. Profesional premium.</p>
+                    <div class="typo-specs">
+Font: Outfit (ExtraBlack)
+Effect: 3D shadow layers (-2px, -4px)
+Shadow: Triple capa con profundidad
+Clarity: ⭐⭐⭐⭐
+TV Distance: ✅ Muy buena
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tv-demo">
+            <h3>📺 Mockup TV 43" - Opción 2 (Recomendada)</h3>
+            <div class="tv-mockup">
+                <div class="tv-card">
+                    <div class="tv-card-num">5</div>
+                    <div class="tv-card-label">En línea</div>
+                </div>
+                <div class="tv-card">
+                    <div class="tv-card-num">7</div>
+                    <div class="tv-card-label">Hoy</div>
+                </div>
+                <div class="tv-card">
+                    <div class="tv-card-num">0.24</div>
+                    <div class="tv-card-label">Tráfico GB</div>
+                </div>
+                <div class="tv-card">
+                    <div class="tv-card-num">1559</div>
+                    <div class="tv-card-label">Sesiones</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendation">
+            <h3>✨ Mi Recomendación</h3>
+            <p><strong>Opción 2: Strong Outline</strong> - Combina perfectamente los efectos visuales del 1 (Glassmorphism suave) con la claridad de lectura del 2 (texto nítido). El contorno verde en números blancos es super legible desde la TV 43", moderno, y tiene impacto visual sin ser agresivo.</p>
+            <p style="margin-top: 15px; font-size: 12px;">¿Me dices si te gusta así? Si cambias algo (el grosor del contorno, el color de las sombras, el efecto, etc) me avisas y ajusto.</p>
+        </div>
+    </div>
+</body>
+</html>

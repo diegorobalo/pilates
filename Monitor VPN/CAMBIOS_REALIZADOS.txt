@@ -1,0 +1,156 @@
+========================================
+CAMBIOS REALIZADOS AL DASHBOARD VPN
+Fecha: 2026-05-15
+========================================
+
+1. REPARACIÓN DE ENCODING (CORRUPCIÓN DE CARACTERES)
+   ✓ Corregidos todos los acentos y caracteres especiales corrupto:
+     - miércoles (estaba: miércoles)
+     - sábado (estaba: sábado) 
+     - información, conexión, ubicación (todos reparados)
+   ✓ Total: 0 caracteres corrutos restantes (antes: 103 instancias)
+
+2. NUEVA FUNCIÓN: renderResumenDia() - COMPLETAMENTE REESCRITA
+   Cambio: Ahora es ASYNC y obtiene datos históricos del día completo
+   
+   ANTES:
+   - Usaba: allUsers (solo usuarios conectados ACTUALMENTE)
+   - Problema: Solo mostraba 1 conexión por usuario
+   - Limitación: No mostraba desconexiones/reconexiones
+   
+   AHORA:
+   - Usa: API /api/sessions?days=1 (datos completos del día)
+   - Ventajas:
+     ✓ Muestra TODAS las conexiones del día (no solo activas)
+     ✓ Cuenta correctamente: múltiples conexiones/desconexiones
+     ✓ Detecta y marca ubicaciones múltiples por usuario
+     ✓ Ordena por primer horario de conexión
+     ✓ Manejo de errores mejorado
+
+3. NUEVA FUNCIÓN: abrirDetalleResumen(username)
+   - Reemplaza: abrirDetalle() para la pestaña "Resumen del Día"
+   - Muestra:
+     ✓ Información General: Usuario, Total Conexiones, Tiempo Total, Ubicaciones
+     ✓ Tráfico: Bytes entrada/salida en GB
+     ✓ Resumen de Sesiones: Lista detallada de cada sesión
+       - Hora de conexión/desconexión
+       - Estado: Finalizada/Activa (con color diferente)
+       - Duración de la sesión
+       - Ubicación (ciudad, país)
+       - Tráfico individual (MB entrada/salida)
+
+4. FUNCIÓN ACTUALIZADA: updateStatsCards()
+   Cambios:
+   - Parámetro: Ahora recibe sessionsData en lugar de allUsersData
+   - Campos actualizados:
+     * bytes_in/bytes_out (en lugar de daily_bytes_in/daily_bytes_out)
+     * primer_connection (hora actual)
+     * Calcula GB traficado sumando todas las sesiones del día
+
+5. NUEVOS ESTILOS CSS AGREGADOS
+   .conexion-header     - Encabezado de sesión con número y estado
+   .session-num        - Número de sesión con color primario
+   .session-status     - Indicador de estado (Finalizada/Activa)
+   .conexion-details   - Detalles de la sesión (hora, ubicación, tráfico)
+
+6. MEJORAS EN MANEJO DE ERRORES
+   - renderResumenDia() tiene try-catch con mensaje de error claro
+   - Si falla la API, muestra mensaje en rojo y reintentar automático
+
+7. LLAMADA A FUNCIÓN ACTUALIZADA
+   Línea 1300: if (tabName === 'resumen') renderResumenDia()
+   - Ahora maneja promesas async/await correctamente
+   - Error handling en consola si algo falla
+
+========================================
+DATOS QUE AHORA SE MUESTRAN
+========================================
+
+TABLA PRINCIPAL ("Resumen del Día"):
+┌─────────────────────────────────────────────────────┐
+│ Usuario | Primer Hora | Tiempo Total | Conexiones │ Ubicaciones
+│ diego   │ 08:30       │ 5.5h         │ 2          │ 🌐 Buenos Aires (múltiples)
+│ jbasso  │ 09:15       │ 3.2h         │ 1          │ 🌐 La Plata
+└─────────────────────────────────────────────────────┘
+
+MODAL EXPANDIDO (Al hacer clic en un usuario):
+┌──────────────────────────────────────────────────────┐
+│ 🌐 Información General
+│ Usuario: diego | Total Conexiones: 2 | Tiempo: 5.5h
+│ Ubicaciones: Buenos Aires, La Plata
+│ Tráfico Entrada: 0.05 GB | Tráfico Salida: 0.12 GB | Total: 0.17 GB
+│
+│ ⏱️ Resumen de Sesiones (2)
+│ ┌─ Sesión 1 [Finalizada] ────────────────┐
+│ │ Conectado: 08:30  |  Desconectado: 10:45
+│ │ Duración: 2.5h  |  Ubicación: Buenos Aires, AR
+│ │ Tráfico: 0.03 MB ↓ / 0.08 MB ↑
+│ └────────────────────────────────────────┘
+│ ┌─ Sesión 2 [Activa] ────────────────────┐
+│ │ Conectado: 13:00  |  Desconectado: Activa
+│ │ Duración: 3.0h  |  Ubicación: La Plata, AR
+│ │ Tráfico: 0.02 MB ↓ / 0.04 MB ↑
+│ └────────────────────────────────────────┘
+└──────────────────────────────────────────────────────┘
+
+TARJETAS DE STATS:
+- Usuarios conectados hoy: [cantidad única]
+- Total conexiones: [suma de todas las sesiones]
+- GB traficado: [suma de todas las sesiones del día]
+- Primera conexión del día: [hora]
+
+========================================
+COMPORTAMIENTO AHORA
+========================================
+
+1. Usuario abre pestaña "Resumen del Día"
+   → renderResumenDia() se ejecuta
+   → Carga datos de /api/sessions?days=1
+   → Agrupa por usuario y cuenta todas las sesiones
+   → Muestra tabla con múltiples conexiones por usuario
+
+2. Usuario ve que un usuario tiene 3 conexiones en la tabla
+   → Indica que esa persona se desconectó y reconectó
+
+3. Usuario hace clic en una fila
+   → abrirDetalleResumen() muestra modal
+   → Lista cada sesión por separado con:
+     - Horarios exactos de conexión/desconexión
+     - Duración de cada sesión
+     - Ubicación desde donde se conectó
+     - Tráfico individual de cada sesión
+
+4. Si un usuario se conectó desde múltiples ubicaciones
+   → Se indica "(múltiples)" en la columna de ubicaciones
+   → Modal muestra cada ubicación en cada sesión
+
+========================================
+COMPATIBILIDAD
+========================================
+
+✓ Se mantienen todos los tabs existentes
+✓ Se mantiene la funcionalidad de otros tabs
+✓ La función abrirDetalle() sigue existiendo para otros tabs
+✓ CSS backward-compatible
+✓ Sin cambios en la estructura del HTML
+✓ Requiere API endpoint: /api/sessions?days=1
+
+========================================
+PRÓXIMOS PASOS OPCIONALES
+========================================
+
+1. Integración con fichadas (asistencia):
+   - Comparar conexiones VPN con fichadas de RRHH
+   - Mostrar si usuario fichó entrada pero no se conectó
+
+2. Gráficos en el modal:
+   - Timeline de conexiones/desconexiones
+   - Gráfico de tráfico por sesión
+
+3. Exportar datos:
+   - Generar reportes PDF del "Resumen del Día"
+   - Exportar tabla a Excel
+
+========================================
+FIN DE CAMBIOS
+========================================

@@ -1,0 +1,540 @@
+
+/****************saladas*******************/
+.carousel{
+    height: 70vh;
+    margin-top: 5rem;
+}
+.arrows3{
+    position: relative;
+    top: -80%;
+}
+.saladas .espacio{
+    height: 50px;
+    position: relative;
+}
+.saladas .clasicas{
+    display: flex;
+}
+.saladas .clasicas .peso{
+    width: 50%;
+    height: 60vh;
+}
+.saladas .clasicas .desc{
+    width: 50%;
+    height: 60vh;
+    color: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.saladas .clasicas .desc .semillas{
+    width: 40%;
+    font-size: 30px;
+}
+ .glider3 .saladas .pipas{
+    width: auto;
+    height: 98vh;
+    position: absolute;
+    top: -385px;
+    right: 12%;
+}
+ .glider3 .saladas .pipas-gigantes{
+    width: auto;
+    height: 81vh;
+    position: absolute;
+    top: -285px;
+    right: 12%;
+   
+}
+ .glider3 .saladas .pipas-tostadas{
+    width: auto;
+    height: 100vh;
+    position: absolute;
+    top: -390px;
+    right: 12%;
+}
+ .glider3 .saladas .pipas-natural{
+    width: auto;
+    height: 100vh;
+    position: absolute;
+    top: -390px;
+    right: 12%;
+}
+ .glider3 .saladas .pipas-skinny{
+    width: auto;
+    height: 100vh;
+    position: absolute;
+    top: -380px;
+    right: 12%;
+}
+.glider3 .saladas .clasicas .peso .food{
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    position: relative;
+    right: 5%;
+    top: -5%;
+    color: #ffffff;
+}
+.glider3 .saladas .clasicas .food div img{
+width:  45vw;
+height: auto;
+position: relative;
+top: -30px;
+left: 18%;
+filter:brightness(1.1) saturate(100%); 
+}
+
+.glider3 .saladas .clasicas .food div .launch{
+display: flex;
+justify-content: space-around;
+align-items: center;
+position: absolute;
+left: 30%;
+width: 88%;
+z-index: 99;
+top: -20px;
+font-size: 18px;
+}
+.glider3 .saladas .clasicas .food div .launchNatu{
+display: flex;
+justify-content: space-around;
+align-items: center;
+position: absolute;
+left: 28%;
+width: 85%;
+z-index: 99;
+top: -20px;
+font-size: 18px;
+}
+
+.saladas .clasicas .nutri{
+display: flex;
+align-items: flex-end;
+justify-content: flex-end;
+margin-right: 20px;
+color: #ffffff;
+}
+.saladas .clasicas .nutri p{
+    width: 40%;
+    font-family: var(--second-fonts);
+    font-size: 10px;
+    margin-right: 10px;
+   
+}
+.saladas .girasol{
+    color: var(--color-fonts-2);
+    position: relative;
+    left: 7%;
+    margin-bottom: 20px;
+    padding-top: 10%;
+}
+.saladas .girasol h2{
+    font-size: 45px;
+    font-weight: 100;
+}
+.saladas .girasol  span{
+    font-size: 40px;
+}
+.saladas .descri-saladas{
+    width: 54%;
+    padding: 20px 0;
+    height: 160px;
+    font-size: 28px;
+}
+.saladas .descri-natural{
+    width: 48%;
+    padding: 28px 0;
+}
+.saladas .descri-gigante{
+    width: 45%;
+    padding: 26px 0;
+}
+.saladas .descri-skinny{
+    width: 53%;
+    padding: 10px 0;
+
+}
+.saladas .descri-tostada{
+    padding: 28px 0;
+    width: 50%;
+}
+.saladas .descri-candy{
+    width: 50%;
+    padding: 10px 0;
+}
+.dots3{
+    position: relative;
+    top: -70px;
+}
+@media only screen and (min-width: 1600px){
+    .glider3 .saladas .clasicas .food div img{
+        top: -20px;
+        width:  38vw;
+    }
+    
+}
+
+@media only screen and (max-width: 992px){
+    .saladas .descri-saladas{
+        width: 80%; 
+        font-size: 25px;
+        height: 130px;
+    }
+    .saladas .clasicas .peso{
+        height: 100vh;
+    }
+    .saladas .clasicas .desc{
+        height: 100vh
+    }
+    .saladas .clasicas .nutri{
+        display: flex;
+       flex-direction: column;
+       justify-content: flex-start;
+       align-items: flex-start;
+    }
+    .saladas .clasicas .nutri{
+       padding-left: 10px;
+    }
+    .saladas .clasicas .nutri img{
+        padding-top: 10px;
+    }
+    .saladas .clasicas .nutri p{
+        width: 90%;
+    }
+ 
+    .carousel{
+        height: 100vh;
+    }
+    .glider3 .saladas .pipas{
+        top: -130px;
+        width: 40vw;
+        right:8%;
+    }
+    .glider3 .saladas .pipas-gigantes{
+        top: -30px;
+        width: 60vw;
+        right:0%;
+    }
+    .glider3 .saladas .pipas-tostadas{
+        top: -130px;
+        width: 40vw;
+        right:8%;
+    }
+    .glider3 .saladas .pipas-skinny{
+        top: -130px;
+        width: 40vw;
+        right:8%;
+    }
+    .glider3 .saladas .pipas-natural{
+        top: -130px;
+        width: 40vw;
+        right:8%;
+    }
+    .glider3 .saladas .clasicas .peso .food{
+        right: -5px;
+    }
+    .glider3 .saladas .clasicas .food{
+        width: 400px;
+    }
+    .glider3 .saladas .clasicas .food div img{
+        width: 100%;
+        top: -16px;
+    }
+    .glider3 .saladas .clasicas .food div > span{
+        padding-left: 20px;
+        top: -25px;
+    }
+    .saladas .descri-skinny{
+        padding: 28px 0;
+    }
+    .arrows3{
+        display:block;
+        padding-top: 50px;
+    }
+}
+@media only screen and (max-width: 768px){
+    .carousel{
+       height: 100vh;
+    }
+    .saladas .descri-saladas{
+        width: 90%; 
+        font-size: 16px;
+        height: 130px;
+    }
+    .saladas .descri-candy{
+        padding-top: 30px;
+    }
+    .saladas .clasicas .nutri{
+        display: flex;
+       flex-direction: column;
+    }
+    .saladas .girasol {
+        position: relative;
+        bottom: -50%;
+        text-align: center;
+        color: #ffffff;
+        font-size: 20px;
+    }
+    .saladas .girasol p{
+        font-weight: lighter;
+        letter-spacing: .5px;
+        margin: 5px 0;
+        color: #ffffff;
+    }
+    .saladas .girasol span{
+        position: relative;
+        left: -35px;
+        top: -20px;
+        color: #ffffff;
+    }
+    .saladas .clasicas .nutri img{
+        padding:10px 0 0px 10px;
+        margin-top: .5rem;
+    }
+    .saladas .clasicas .nutri p{
+        width: 90%;
+    }
+    .dots3{
+        top: -80px;
+    }
+    .glider3 .saladas .clasicas .peso .food{
+        right: -1px;
+        top: 67%;
+        margin: 20px 0;
+    }
+    .glider3 .saladas .clasicas .food{
+        width: 100%;
+    }
+    .glider3 .saladas .clasicas .food div img{
+        width:  90%;
+        height: auto;
+        position: relative;
+        top: -70px;
+        left: 5%;
+        
+        }
+        .glider3 .saladas .clasicas .food div .launch{
+        left: 5%;
+        width: 85%;
+        top: -55%;
+        font-size: 30px;
+        }
+        .glider3 .saladas .clasicas .food div .launchNatu{
+        left: 5%;
+        width: 80%;
+        top: -55%;
+        font-size: 30px;
+        }
+    .glider3 .saladas .pipas{
+        top: -380px;
+        width: 80vw;
+        height: auto;
+        right:12%;
+    }
+    .glider3 .saladas .pipas-gigantes{
+        top: -210px;
+        width: 90vw;
+        height: auto;
+        right:12%;
+    }
+    .glider3 .saladas .pipas-tostadas{
+        top: -370px;
+        width: 80vw;
+        height: auto;
+        right:12%;
+    }
+     .glider3 .saladas .pipas-natural{
+        top: -350px;
+        width: 80vw;
+        height: auto;
+        right:12%;
+    }
+     .glider3 .saladas .pipas-candy{
+        top: -320px;
+        width: 75vw;
+        height: auto;
+        right:12%;
+    }
+     .glider3 .saladas .pipas-skinny{
+        top: -320px;
+        width: 75vw;
+        height: auto;
+        right:12%;
+    }
+    .glider3 .saladas .clasicas .food div > span{
+        font-size: 8px;
+    }
+    .saladas .clasicas .peso{
+        width: 100%;
+        height: 120vh;
+    }
+    .saladas .clasicas .desc{
+        display: none;
+    }
+    .glider3 .saladas .clasicas .peso .nutri{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column-reverse;
+        position: relative;
+        bottom: -60%;
+    }
+    .glider3 .saladas .clasicas .peso .nutri p{
+        font-size: 10px;
+        padding-top: 10px;
+        text-align: center;
+    }
+}
+@media only screen and (max-width:576px){
+    .carousel{
+        margin-top: 0rem;
+    }
+    .saladas .descri-saladas{
+        width: 90%; 
+        font-size: 16px;
+        height: 130px;
+    }
+    .saladas .descri-candy{
+        
+        padding-top: 30px;
+    }
+    .saladas .clasicas .nutri{
+        display: flex;
+       flex-direction: column;
+    }
+    .saladas .girasol h2{
+        padding-top: 30px;
+        padding-right: 60px;
+        font-size: 22px;
+        color: #ffffff;
+    }
+    .saladas .girasol {
+        position: relative;
+        bottom: -50%;
+        text-align: center;
+        color: #ffffff;
+        font-size: 20px;
+    }
+    .saladas .girasol p{
+        font-weight: lighter;
+        letter-spacing: .5px;
+        margin: 5px 0;
+        color: #ffffff;
+    }
+    .saladas .girasol span{
+        position: relative;
+        left: -35px;
+        top: -20px;
+        color: #ffffff;
+    }
+    .saladas .clasicas .nutri img{
+        padding:10px 0 0px 10px;
+        margin-top: .5rem;
+    }
+    .saladas .clasicas .nutri p{
+        width: 90%;
+    }
+    .dots3{
+        top: -80px;
+    }
+    .glider3 .saladas .clasicas .peso .food{
+        right: -1px;
+        top: 67%;
+        margin: 20px 0;
+    }
+    .glider3 .saladas .clasicas .food{
+        width: 100%;
+    }
+    .glider3 .saladas .clasicas .food div img{
+        width:  90%;
+        height: auto;
+        position: relative;
+        top: -70px;
+        left: 5%;
+        
+        }
+        .glider3 .saladas .clasicas .food div .launch{
+        left: 5%;
+        width: 85%;
+        top: -55%;
+        font-size: 30px;
+        }
+        .glider3 .saladas .clasicas .food div .launchNatu{
+        left: 5%;
+        width: 80%;
+        top: -55%;
+        font-size: 30px;
+        }
+    .glider3 .saladas .pipas{
+        top: -120px;
+        width: 80vw;
+        height: auto;
+        right:12%;
+    }
+    .glider3 .saladas .pipas-gigantes{
+        top: -40px;
+        width: 100vw;
+        height: auto;
+        right:8%;
+    }
+    .glider3 .saladas .pipas-tostadas{
+        top: -120px;
+        width: 80vw;
+        height: auto;
+        right:12%;
+    }
+     .glider3 .saladas .pipas-natural{
+        top: -110px;
+        width: 85vw;
+        height: auto;
+        right:12%;
+    }
+     .glider3 .saladas .pipas-candy{
+        top: -110px;
+        width: 78vw;
+        height: auto;
+        right:12%;
+    }
+     .glider3 .saladas .pipas-skinny{
+        top: -110px;
+        width: 80vw;
+        height: auto;
+        right:12%;
+    }
+    .glider3 .saladas .clasicas .food div > span{
+        font-size: 8px;
+    }
+    .saladas .clasicas .peso{
+        width: 100%;
+        height: 120vh;
+    }
+    .saladas .clasicas .desc{
+        display: none;
+    }
+    .glider3 .saladas .clasicas .peso .nutri{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column-reverse;
+        position: relative;
+        bottom: -60%;
+    }
+    .glider3 .saladas .clasicas .peso .nutri p{
+        font-size: 10px;
+        padding-top: 10px;
+        text-align: center;
+    }
+    .arrows3{
+        display: block;
+        position: relative;
+        top: -550px;
+      }
+}
+
+@media only screen and (max-width:400px){
+    .dots3{
+        top: -50px;
+    }
+}

@@ -1,0 +1,205 @@
+.header{
+    margin-top: 8%;
+}
+.header .item .semillas div{
+    width: 50%;
+}
+.header .item .move{
+    width: 100%;
+    transform: translateX(8%);
+}
+.header .item .semillas div .pack1{
+    width: 800px;
+}
+.header .item .semillas div .pack2{
+    width: 100%;
+}
+.header .item .semillas a .pack3{
+    transform: translateX(-8%);
+}
+.header .item .semillas a .ocultar{
+   display: none;
+}
+.header .item .semillas div .titulo{
+    width: 80%;
+}
+.header .item .semillas div .titulo2{
+    width: 60%;
+}
+.header .item .semillas {
+ display: flex;
+ 
+}
+.header .swipe  {
+   width: 100px;
+   height:auto;
+   z-index:999 ;
+   outline: none;
+   border: none;
+   background: transparent;
+   position: absolute;
+    }
+.header .iconMobile  {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 15%;
+   margin-top: 12%;
+   opacity: 0;
+   visibility: hidden;
+}
+.header .owl-carousel .owl-nav{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: -350px;
+    padding: 0 15px;
+}
+
+.header .owl-carousel .owl-nav .owl-prev{
+    background: url('../assets/icon_prev.svg') no-repeat;
+    width: 25px; 
+    height: 35px;
+}
+.header .owl-carousel .owl-nav .owl-next{
+    background: url('../assets/icon_next.svg') no-repeat;
+    width: 90px;
+    height: 35px;
+    animation: pulse 3s ease-in-out infinite;
+}
+.header .owl-dots{
+    position: relative;
+    top: -100px;
+}
+@keyframes pulse {
+    0%{
+       transform:  translateY(1px) rotate(1deg);
+    }
+    50%{
+        transform:  translateY(-1px) rotate(-1deg);
+    }
+
+    100%{
+        transform:  translateY(0px) rotate(0);
+    }
+}
+/**************************queries**********************************/
+@media only screen and (min-width:1600px){
+    .header .item .semillas div{
+        width: 100%;
+        margin: 0 auto;
+    }
+    .header .item .semillas div .pack2{
+        transform: translateX(25%);
+    }
+    .header .item .semillas div .titulo2{
+        width: 50%;
+        transform: translateX(60%);
+    }
+    .header .item .semillas div .titulo{
+        width: 50%;
+    }
+}
+
+@media screen and (max-width:768px){
+    @keyframes pulse {
+        0%{
+           transform: translateX(0px) rotate(0deg);
+        }
+    
+        100%{
+    transform: translateX(0) rotate(0deg);
+        }
+    }
+    .header .item .semillas div{
+        width: 100%;
+    }
+
+    .header .item .semillas {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .header .item .semillas div .pack1{
+        width: 100%;
+    }
+    .header .item .semillas div .pack2{
+        width: 100%;
+
+    }
+    .header .item .semillas div .titulo{
+        width: 70%;
+        margin: 0 auto;
+    }
+    .header .item .semillas div .titulo2{
+        width: 50%;
+        margin: 0 auto;
+        
+    }
+    .header .owl-carousel .owl-nav{
+        top: -250px;
+    }
+
+   .header .owl-carousel .owl-nav .owl-next{
+        background: url('../assets/icon_next_fcha.svg') no-repeat;
+        width: 25px; 
+        height: 35px;
+    } 
+    .header .item .move div .pack2{
+        transform: translateX(-7%);
+    }
+    .header .item .semillas a .pack3{
+        display: none;
+    }
+    .header .item .semillas a .ocultar{
+        display: block;
+     }
+    .header .iconMobile  {
+        opacity: 1;
+        visibility: visible;
+        width: 15%;
+     }
+     .header .owl-dots{
+        top: 0px;
+    }
+}
+@media screen and (max-width:576px){
+    .header{
+        margin-top: 25%;
+    }
+    .header .item .semillas div{
+        width: 90%;
+    }
+    .header .item .semillas div .pack1{
+        width: 100%;
+    }
+    .header .item .semillas div .pack2{
+        width: 100%;
+    }
+    .header .item .semillas div .titulo{
+        width: 100%;
+    }
+    .header .item .semillas div .titulo2{
+        width: 80%;
+        margin: 0 auto;
+    }
+    .header .owl-carousel .owl-nav{
+        top: -250px;
+    }
+    .header .item .semillas div .titulo2{
+        transform: translateX(-6%) translateY(3%);
+    }
+}
+
+@media screen and (max-width:400px){
+    .header .item .move{
+        transform: translateX(5%);
+    }
+    .header .item .move div .pack2{
+        transform: translateX(-3%);
+    }
+    .header .item .semillas div .titulo2{
+        transform: translateX(-3%) translateY(3%);
+    }
+}

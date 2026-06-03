@@ -1,0 +1,236 @@
+        function formatearHoras(segundos) {
+            const horas = Math.floor(segundos / 3600);
+            const minutos = Math.floor((segundos % 3600) / 60);
+            return `${horas}h ${minutos}m`;
+        }
+
+        function renderResumenDia() {
+            if (!allUsers || allUsers.length === 0) {
+                document.getElementById('resumenTabla').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #86EFAC;">No hay usuarios conectados</td></tr>';
+                updateStatsCards([], []);
+                return;
+            }
+
+            // Agrupar usuarios por nombre y contar conexiones
+            const usuariosMap = {};
+            allUsers.forEach(user => {
+                const username = (user.username || '-').trim().toLowerCase();
+                if (!usuariosMap[username]) {
+                    usuariosMap[username] = {
+                        username: user.username,
+                        daily_first_seen: user.daily_first_seen || '00:00:00',
+                        daily_uptime_seconds: 0,
+                        geo_city: user.geo_city || 'Desconocida',
+                        geo_region: user.geo_region || '',
+                        conexiones: 0,
+                        assigned_ip: user.assigned_ip,
+                        caller_id: user.caller_id,
+                        daily_bytes_in: 0,
+                        daily_bytes_out: 0,
+                        connected_at: user.connected_at,
+                        records: [] // Guardar todos los registros para el modal
+                    };
+                }
+                usuariosMap[username].conexiones++;
+                usuariosMap[username].daily_uptime_seconds += user.daily_uptime_seconds || 0;
+                usuariosMap[username].daily_bytes_in += user.daily_bytes_in || 0;
+                usuariosMap[username].daily_bytes_out += user.daily_bytes_out || 0;
+                usuariosMap[username].records.push(user); // Agregar registro individual
+            });
+
+            // Convertir a array y ordenar por primera conexión
+            const usuariosArray = Object.values(usuariosMap).sort((a, b) => {
+                const timeA = a.daily_first_seen.split(':').join('');
+                const timeB = b.daily_first_seen.split(':').join('');
+                return timeA.localeCompare(timeB);
+            });
+
+            console.log('Usuarios agrupados:', usuariosArray);
+
+            // Construir tabla
+            let html = '';
+            usuariosArray.forEach(user => {
+                const totalHoras = formatearHoras(user.daily_uptime_seconds);
+                const location = user.geo_city + (user.geo_region ? ', ' + user.geo_region : '');
+                
+                html += `<tr onclick="abrirDetalle('${user.username.replace(/'/g, "\\'")}')">
+                    <td class="expand-btn">+</td>
+                    <td class="usuario-cell">${user.username}</td>
+                    <td class="centro">${user.daily_first_seen}</td>
+                    <td class="centro horas-cell">${totalHoras}</td>
+                    <td class="centro conexiones-cell">${user.conexiones}</td>
+                    <td class="centro"><span class="ubicacion-badge">🌍 ${location}</span></td>
+                </tr>`;
+            });
+
+            document.getElementById('resumenTabla').innerHTML = html;
+            updateStatsCards(usuariosArray, allUsers);
+        }
+
+        function updateStatsCards(usuariosArray, allUsersData) {
+            // Usuarios conectados
+            document.getElementById('statUsuarios').textContent = usuariosArray.length;
+            
+            // Total conexiones
+            const totalConexiones = usuariosArray.reduce((sum, u) => sum + u.conexiones, 0);
+            document.getElementById('statConexiones').textContent = totalConexiones;
+            
+            // GB traficado
+            let totalGB = 0;
+            usuariosArray.forEach(u => {
+                totalGB += (u.daily_bytes_in + u.daily_bytes_out) / 1024 / 1024 / 1024;
+            });
+            document.getElementById('statGB').textContent = totalGB.toFixed(0);
+            
+            // Primera conexión del día
+            if (usuariosArray.length > 0) {
+                document.getElementById('statPrimera').textContent = usuariosArray[0].daily_first_seen;
+            }
+            
+            // Fecha info
+            const hoy = new Date();
+            const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+            const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+            const fechaTexto = `${hoy.getDate()} de ${meses[hoy.getMonth()]} de ${hoy.getFullYear()} - ${dias[hoy.getDay()]}`;
+            document.getElementById('fechaInfo').textContent = fechaTexto.charAt(0).toUpperCase() + fechaTexto.slice(1);
+        }
+
+        function abrirDetalle(username) {
+            // Encontrar el usuario agrupado
+            if (!allUsers || allUsers.length === 0) return;
+            
+            const usuariosMap = {};
+            allUsers.forEach(user => {
+                const uname = (user.username || '-').trim().toLowerCase();
+                if (!usuariosMap[uname]) {
+                    usuariosMap[uname] = {
+                        username: user.username,
+                        daily_first_seen: user.daily_first_seen || '00:00:00',
+                        daily_uptime_seconds: 0,
+                        geo_city: user.geo_city || 'Desconocida',
+                        geo_region: user.geo_region || '',
+                        conexiones: 0,
+                        assigned_ip: user.assigned_ip,
+                        caller_id: user.caller_id,
+                        daily_bytes_in: 0,
+                        daily_bytes_out: 0,
+                        connected_at: user.connected_at,
+                        records: []
+                    };
+                }
+                usuariosMap[uname].conexiones++;
+                usuariosMap[uname].daily_uptime_seconds += user.daily_uptime_seconds || 0;
+                usuariosMap[uname].daily_bytes_in += user.daily_bytes_in || 0;
+                usuariosMap[uname].daily_bytes_out += user.daily_bytes_out || 0;
+                usuariosMap[uname].records.push(user);
+            });
+
+            const usuarioNorm = username.trim().toLowerCase();
+            const user = usuariosMap[usuarioNorm];
+            if (!user) return;
+
+            const bytesInGB = (user.daily_bytes_in / 1024 / 1024 / 1024).toFixed(2);
+            const bytesOutGB = (user.daily_bytes_out / 1024 / 1024 / 1024).toFixed(2);
+            const bytesTotalGB = (bytesInGB * 1 + bytesOutGB * 1).toFixed(2);
+            const location = user.geo_city + (user.geo_region ? ', ' + user.geo_region : '');
+            const totalHoras = formatearHoras(user.daily_uptime_seconds);
+            
+            // Obtener primer y último registro
+            const primerRegistro = user.records.length > 0 ? user.records[0] : {};
+            const ultimoRegistro = user.records.length > 0 ? user.records[user.records.length - 1] : {};
+
+            let html = `
+                <div class="detalle-section">
+                    <h3>📋 Información General</h3>
+                    <div class="detalle-row">
+                        <div class="detalle-item">
+                            <div class="detalle-label">Primer Registro</div>
+                            <div class="detalle-value">${primerRegistro.daily_first_seen || '-'}</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Último Registro</div>
+                            <div class="detalle-value">${ultimoRegistro.daily_first_seen || primerRegistro.daily_first_seen || '-'}</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Tiempo Total</div>
+                            <div class="detalle-value">${totalHoras}</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Cantidad de Conexiones</div>
+                            <div class="detalle-value">${user.conexiones}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detalle-section">
+                    <h3>🌐 Red</h3>
+                    <div class="detalle-row">
+                        <div class="detalle-item">
+                            <div class="detalle-label">IP Privada (VPN)</div>
+                            <div class="detalle-value">${user.assigned_ip || '-'}</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">IP Pública</div>
+                            <div class="detalle-value">${user.caller_id || '-'}</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Ubicación</div>
+                            <div class="detalle-value">${location}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detalle-section">
+                    <h3>📡 Datos Traficados</h3>
+                    <div class="detalle-row">
+                        <div class="detalle-item">
+                            <div class="detalle-label">Descargado</div>
+                            <div class="detalle-value">${bytesInGB} GB</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Cargado</div>
+                            <div class="detalle-value">${bytesOutGB} GB</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Total</div>
+                            <div class="detalle-value">${bytesTotalGB} GB</div>
+                        </div>
+                        <div class="detalle-item">
+                            <div class="detalle-label">Promedio/Hora</div>
+                            <div class="detalle-value">${(bytesTotalGB / (user.daily_uptime_seconds / 3600) || 0).toFixed(2)} GB</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detalle-section">
+                    <h3>⏱️ Resumen de Conexiones (${user.conexiones})</h3>
+                    <div class="conexiones-list">
+`;
+            
+            // Agregar lista de conexiones
+            let conexionNum = 1;
+            user.records.forEach(record => {
+                const duracion = formatearHoras(record.daily_uptime_seconds || 0);
+                html += `
+                    <div class="conexion-item">
+                        <span class="conexion-hora">Conexión ${conexionNum}</span>
+                        <span class="conexion-ip">${record.assigned_ip || '-'}</span>
+                        <span style="color: #86EFAC;">${duracion}</span>
+                    </div>
+                `;
+                conexionNum++;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalUsuario').textContent = user.username;
+            document.getElementById('modalData').innerHTML = html;
+            document.getElementById('modalDetalle').classList.add('active');
+        }
+
+        function cerrarDetalle() {
+            document.getElementById('modalDetalle').classList.remove('active');
+        }

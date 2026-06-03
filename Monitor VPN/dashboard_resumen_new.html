@@ -1,0 +1,346 @@
+        <!-- TAB: RESUMEN DEL DÍA -->
+        <div id="resumen" class="tab-content resumen-container">
+            <style>
+                /* RESUMEN DEL DÍA - ESTILOS */
+                .resumen-container {
+                    background: #064E3B;
+                    color: #e0f2fe;
+                    padding: 30px;
+                    border-radius: 12px;
+                    font-family: 'Merriweather', serif;
+                }
+
+                .resumen-container h1 {
+                    text-align: center;
+                    margin-bottom: 15px;
+                    color: #22C55E;
+                    font-family: 'Oxanium', sans-serif;
+                    font-size: 32px;
+                }
+
+                .fecha-info {
+                    text-align: center;
+                    margin-bottom: 30px;
+                    color: #86EFAC;
+                    font-size: 14px;
+                }
+
+                .stats-row {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 20px;
+                    margin-bottom: 40px;
+                }
+
+                .stat-card {
+                    background: #065F46;
+                    border-left: 6px solid #22C55E;
+                    border-radius: 8px;
+                    padding: 20px;
+                    text-align: center;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                }
+
+                .stat-number {
+                    font-size: 48px;
+                    font-weight: 900;
+                    color: #22C55E;
+                    font-family: 'Oxanium', sans-serif;
+                    text-shadow: -2px -2px 0 #059669, -4px -4px 0 rgba(5, 150, 105, 0.5);
+                }
+
+                .stat-label {
+                    font-size: 12px;
+                    color: #86EFAC;
+                    margin-top: 10px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                }
+
+                .tabla-wrapper {
+                    background: #065F46;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                }
+
+                .tabla-wrapper table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                .tabla-wrapper thead {
+                    background: #047857;
+                    border-bottom: 3px solid #22C55E;
+                }
+
+                .tabla-wrapper th {
+                    padding: 18px;
+                    text-align: left;
+                    font-weight: 700;
+                    color: #22C55E;
+                    font-family: 'Oxanium', sans-serif;
+                    font-size: 13px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .tabla-wrapper tbody tr {
+                    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+                    transition: background 0.2s;
+                    cursor: pointer;
+                }
+
+                .tabla-wrapper tbody tr:hover {
+                    background: #047857;
+                }
+
+                .tabla-wrapper td {
+                    padding: 16px 18px;
+                    color: #e0f2fe;
+                    font-size: 14px;
+                }
+
+                .expand-btn {
+                    text-align: center;
+                    color: #22C55E;
+                    font-size: 20px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: transform 0.2s;
+                }
+
+                .tabla-wrapper tbody tr:hover .expand-btn {
+                    transform: scale(1.3);
+                }
+
+                .usuario-cell {
+                    font-weight: 600;
+                    color: #22C55E;
+                    font-family: 'Oxanium', sans-serif;
+                }
+
+                .centro {
+                    text-align: center;
+                }
+
+                .ubicacion-badge {
+                    display: inline-block;
+                    background: rgba(6, 182, 212, 0.2);
+                    color: #06B6D4;
+                    padding: 4px 10px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    font-weight: 600;
+                }
+
+                .horas-cell {
+                    font-weight: 700;
+                    color: #FBBF24;
+                    font-family: 'Oxanium', sans-serif;
+                    font-size: 16px;
+                }
+
+                .conexiones-cell {
+                    background: rgba(34, 197, 94, 0.1);
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    font-weight: 600;
+                    color: #86EFAC;
+                }
+
+                /* MODAL */
+                .modal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    z-index: 1000;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .modal.active {
+                    display: flex;
+                }
+
+                .modal-content {
+                    background: #065F46;
+                    border-radius: 12px;
+                    padding: 30px;
+                    max-width: 900px;
+                    width: 90%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    border: 2px solid #22C55E;
+                    font-family: 'Merriweather', serif;
+                }
+
+                .modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 25px;
+                    border-bottom: 2px solid #22C55E;
+                    padding-bottom: 15px;
+                }
+
+                .modal-header h2 {
+                    color: #22C55E;
+                    font-family: 'Oxanium', sans-serif;
+                    font-size: 28px;
+                    margin: 0;
+                }
+
+                .close-btn {
+                    background: transparent;
+                    border: none;
+                    color: #22C55E;
+                    font-size: 32px;
+                    cursor: pointer;
+                    font-weight: bold;
+                }
+
+                .close-btn:hover {
+                    color: #86EFAC;
+                }
+
+                .detalle-section {
+                    margin-bottom: 25px;
+                }
+
+                .detalle-section h3 {
+                    color: #06B6D4;
+                    font-family: 'Oxanium', sans-serif;
+                    font-size: 16px;
+                    margin-bottom: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.3px;
+                }
+
+                .detalle-row {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 15px;
+                    margin-bottom: 15px;
+                }
+
+                .detalle-item {
+                    background: rgba(34, 197, 94, 0.1);
+                    padding: 12px;
+                    border-radius: 6px;
+                    border-left: 3px solid #22C55E;
+                }
+
+                .detalle-label {
+                    font-size: 11px;
+                    color: #86EFAC;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    margin-bottom: 4px;
+                }
+
+                .detalle-value {
+                    font-size: 16px;
+                    color: #e0f2fe;
+                    font-weight: 600;
+                    font-family: 'Oxanium', sans-serif;
+                }
+
+                .conexiones-list {
+                    background: rgba(34, 197, 94, 0.05);
+                    border-radius: 6px;
+                    padding: 12px;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+
+                .conexion-item {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 8px;
+                    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+                    font-size: 12px;
+                }
+
+                .conexion-item:last-child {
+                    border-bottom: none;
+                }
+
+                .conexion-hora {
+                    color: #FBBF24;
+                    font-weight: 700;
+                }
+
+                .conexion-ip {
+                    color: #06B6D4;
+                }
+
+                @media (max-width: 768px) {
+                    .stats-row {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                    .detalle-row {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+
+            <h1>📊 RESUMEN DEL DÍA</h1>
+            <div class="fecha-info" id="fechaInfo">Cargando fecha...</div>
+
+            <!-- STATS CARDS -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-number" id="statUsuarios">0</div>
+                    <div class="stat-label">Usuarios Conectados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statConexiones">0</div>
+                    <div class="stat-label">Total Conexiones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statGB">0</div>
+                    <div class="stat-label">GB Traficado</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statPrimera">--:--</div>
+                    <div class="stat-label">Primera Conexión</div>
+                </div>
+            </div>
+
+            <!-- TABLA RESUMEN -->
+            <div class="tabla-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;"></th>
+                            <th>Usuario</th>
+                            <th class="centro">Primera Conexión</th>
+                            <th class="centro">Total Horas</th>
+                            <th class="centro">Conexiones</th>
+                            <th class="centro">Ubicación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resumenTabla">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #86EFAC;">Cargando datos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MODAL EXPANDIDO -->
+            <div class="modal" id="modalDetalle" onclick="if(event.target === this) cerrarDetalle()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="modalUsuario">Usuario</h2>
+                        <button class="close-btn" onclick="cerrarDetalle()">✕</button>
+                    </div>
+                    <div id="modalData">Cargando...</div>
+                </div>
+            </div>
+        </div>

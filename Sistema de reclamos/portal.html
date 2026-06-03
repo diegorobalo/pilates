@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Análisis de Reclamos - Argensun</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2E86AB 0%, #1A5276 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .drop-zone {
+            border: 3px dashed #667eea;
+            border-radius: 8px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f0f4ff;
+            text-align: center;
+        }
+
+        .drop-zone:hover {
+            border-color: #764ba2;
+            background: #e8e4f6;
+        }
+
+        .drop-zone.dragover {
+            border-color: #764ba2;
+            background: #d5c9f0;
+            transform: scale(1.02);
+        }
+
+        .drop-zone input {
+            display: none;
+        }
+
+        .drop-zone p {
+            margin: 0;
+            color: #667eea;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .drop-zone small {
+            display: block;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        nav {
+            display: flex;
+            gap: 0;
+            background: white;
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            border: none;
+            background: white;
+            color: #555;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+
+        nav button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .kpi-card h3 {
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+
+        .kpi-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+
+        .kpi-card.danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .kpi-card.warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .kpi-card.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 150px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        .data-table thead {
+            background: #667eea;
+            color: white;
+        }
+
+        .data-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .badge.open {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .badge.closed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge.overdue {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        button.btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-export {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #c82333;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            nav button {
+                font-size: 0.85em;
+                padding: 12px 8px;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Portal de Análisis de Reclamos</h1>
+            <p>Argensun | Reclamos Comerciales</p>
+        </header>
+
+        <div class="upload-section">
+            <div class="drop-zone" id="dropZone">
+                <p>📁 Arrastra y suelta tu archivo CSV aquí</p>
+                <small>O haz clic para seleccionar archivo (tickets-YYYYMMDD.csv)</small>
+                <input type="file" id="fileInput" accept=".csv" />
+            </div>
+            <div class="status" id="status"></div>
+        </div>
+
+        <nav>
+            <button class="tab-btn active" data-tab="dashboard">📈 Dashboard</button>
+            <button class="tab-btn" data-tab="categorias">📋 Categorías</button>
+            <button class="tab-btn" data-tab="clientes">👥 Clientes</button>
+            <button class="tab-btn" data-tab="agentes">👨‍💼 Agentes</button>
+            <button class="tab-btn" data-tab="detalles">🔍 Detalles</button>
+            <button class="tab-btn" data-tab="ayuda">❓ Ayuda</button>
+        </nav>
+
+        <div class="content">
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="section active">
+                <h2>📈 Dashboard Ejecutivo</h2>
+                <div class="kpi-grid" id="kpiGrid"></div>
+                <div class="charts-grid" id="chartsGrid"></div>
+            </div>
+
+            <!-- CATEGORÍAS -->
+            <div id="categorias" class="section">
+                <h2>📋 Análisis por Categorías</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Agrupar por:</label>
+                        <select id="categoryFilter">
+                            <option value="grupo">Grupo de Problemas</option>
+                            <option value="tipo">Tipo de Problema</option>
+                            <option value="producto">Producto</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Distribución</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Estados por Categoría</h3>
+                        <canvas id="categoryStateChart"></canvas>
+                    </div>
+                </div>
+                <table class="data-table" id="categoryTable">
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Total</th>
+                            <th>Abiertos</th>
+                            <th>Cerrados</th>
+                            <th>Vencidos</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- CLIENTES -->
+            <div id="clientes" class="section">
+                <h2>👥 Análisis por Clientes</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Buscar:</label>
+                        <input type="text" id="clientSearch" placeholder="Nombre o email...">
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Top 15 Clientes</h3>
+                        <canvas id="clientChart"></canvas>
+                    </div>
+                </div>
+                <table class="data-table" id="clientTable">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Abiertos</th>
+                            <th>Cerrados</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- AGENTES -->
+            <div id="agentes" class="section">
+                <h2>👨‍💼 Análisis por Agentes</h2>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Carga de Trabajo</h3>
+                        <canvas id="agentChart"></canvas>
+                    </div>
+                </div>
+                <table class="data-table" id="agentTable">
+                    <thead>
+                        <tr>
+                            <th>Agente</th>
+                            <th>Asignados</th>
+                            <th>Abiertos</th>
+                            <th>Cerrados</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- DETALLES -->
+            <div id="detalles" class="section">
+                <h2>🔍 Detalles de Reclamos</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Estado:</label>
+                        <select id="stateFilter">
+                            <option value="">Todos</option>
+                            <option value="abierto">Abiertos</option>
+                            <option value="cerrado">Cerrados</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Búsqueda:</label>
+                        <input type="text" id="searchFilter" placeholder="Número o asunto...">
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="btn btn-export" onclick="exportCSV()">📥 Exportar CSV</button>
+                    <button class="btn btn-clear" onclick="clearData()">🗑️ Limpiar Datos</button>
+                </div>
+                <table class="data-table" id="detailTable">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Fecha</th>
+                            <th>Asunto</th>
+                            <th>Cliente</th>
+                            <th>Estado</th>
+                            <th>Agente</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- AYUDA -->
+            <div id="ayuda" class="section">
+                <h2>❓ Ayuda - Cómo usar</h2>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;">
+                    <h3>1️⃣ Importar archivo CSV</h3>
+                    <p>• Exporta los reclamos desde osTicket (Panel > Tickets > Exportar)</p>
+                    <p>• Arrastra el archivo aquí o haz clic para seleccionar</p>
+                    <p>• El archivo se llamará algo como: tickets-20260527.csv</p>
+                    <p>• Los datos se guardan automáticamente en tu navegador</p>
+
+                    <h3 style="margin-top: 20px;">2️⃣ Ver análisis</h3>
+                    <p>• Dashboard: resumen general con gráficos</p>
+                    <p>• Categorías: desglose por tipo de problema</p>
+                    <p>• Clientes: análisis por cliente</p>
+                    <p>• Agentes: carga de trabajo por agente</p>
+                    <p>• Detalles: tabla completa con filtros</p>
+
+                    <h3 style="margin-top: 20px;">3️⃣ Exportar resultados</h3>
+                    <p>• Ve a la sección "Detalles"</p>
+                    <p>• Filtra los datos como quieras</p>
+                    <p>• Haz clic en "📥 Exportar CSV" para descargar</p>
+
+                    <h3 style="margin-top: 20px;">4️⃣ Actualizar datos</h3>
+                    <p>• Cuando tengas nuevos reclamos, exporta nuevamente desde osTicket</p>
+                    <p>• Importa el nuevo archivo en el portal</p>
+                    <p>• Los datos se reemplazarán automáticamente</p>
+
+                    <h3 style="margin-top: 20px;">⚠️ Notas</h3>
+                    <p>• Los datos se guardan en tu navegador (localStorage)</p>
+                    <p>• No afecta osTicket en absoluto</p>
+                    <p>• Este portal es 100% local y privado</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Portal de Análisis de Reclamos v2.0 | Argensun FOODS © 2026 | Datos cargados: <span id="dataCount">0</span></p>
+        </footer>
+    </div>
+
+    <script>
+        let ticketsData = [];
+        let chartInstances = {};
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadDataFromStorage();
+        });
+
+        function setupEventListeners() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length > 0) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Filtros
+            document.getElementById('categoryFilter').addEventListener('change', updateCategoryView);
+            document.getElementById('clientSearch').addEventListener('input', updateClientView);
+            document.getElementById('stateFilter').addEventListener('change', updateDetailView);
+            document.getElementById('searchFilter').addEventListener('input', updateDetailView);
+        }
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csv = e.target.result;
+                    parseCSV(csv);
+                    showStatus(`✅ ${ticketsData.length} reclamos importados`, 'success');
+                    saveDataToStorage();
+                    updateAllViews();
+                } catch (error) {
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            if (lines.length < 2) throw new Error('Archivo vacío');
+
+            const headers = lines[0].split(',').map(h => h.trim());
+            ticketsData = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (!line.trim()) continue;
+
+                const obj = {};
+                const parts = line.split(',');
+                
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = parts[j]?.trim() || '';
+                }
+
+                if (obj['Número'] || obj['Number'] || Object.keys(obj).length > 0) {
+                    ticketsData.push(obj);
+                }
+            }
+
+            if (ticketsData.length === 0) throw new Error('No se encontraron datos válidos');
+        }
+
+        function saveDataToStorage() {
+            localStorage.setItem('ticketsData', JSON.stringify(ticketsData));
+            document.getElementById('dataCount').textContent = ticketsData.length;
+        }
+
+        function loadDataFromStorage() {
+            const stored = localStorage.getItem('ticketsData');
+            if (stored) {
+                ticketsData = JSON.parse(stored);
+                showStatus(`✅ ${ticketsData.length} reclamos cargados desde navegador`, 'info');
+                updateAllViews();
+            }
+        }
+
+        function showStatus(msg, type) {
+            const status = document.getElementById('status');
+            status.textContent = msg;
+            status.className = `status show ${type}`;
+            setTimeout(() => status.classList.remove('show'), 5000);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            if (tabName === 'dashboard') updateDashboardView();
+            if (tabName === 'categorias') updateCategoryView();
+            if (tabName === 'clientes') updateClientView();
+            if (tabName === 'agentes') updateAgentView();
+            if (tabName === 'detalles') updateDetailView();
+        }
+
+        function updateAllViews() {
+            document.getElementById('dataCount').textContent = ticketsData.length;
+            if (ticketsData.length > 0) {
+                updateDashboardView();
+                updateCategoryView();
+                updateClientView();
+                updateAgentView();
+                updateDetailView();
+            }
+        }
+
+        // DASHBOARD
+        function updateDashboardView() {
+            if (ticketsData.length === 0) {
+                document.getElementById('kpiGrid').innerHTML = '<div class="alert warning">No hay datos. Importa un archivo CSV.</div>';
+                return;
+            }
+
+            const total = ticketsData.length;
+            const closed = ticketsData.filter(t => isClosed(t)).length;
+            const open = total - closed;
+            const overdue = ticketsData.filter(t => isOverdue(t)).length;
+
+            const html = `
+                <div class="kpi-card">
+                    <p>Total Reclamos</p>
+                    <h3>${total}</h3>
+                </div>
+                <div class="kpi-card success">
+                    <p>Cerrados</p>
+                    <h3>${closed}</h3>
+                    <p style="font-size: 0.85em;">${((closed/total)*100).toFixed(1)}%</p>
+                </div>
+                <div class="kpi-card warning">
+                    <p>Abiertos</p>
+                    <h3>${open}</h3>
+                </div>
+                <div class="kpi-card danger">
+                    <p>Vencidos</p>
+                    <h3>${overdue}</h3>
+                </div>
+            `;
+            document.getElementById('kpiGrid').innerHTML = html;
+
+            createStateChart();
+            createClientChart();
+            createProductChart();
+        }
+
+        function createStateChart() {
+            const ctx = getOrCreateCanvas('stateChart', 'Estado de Reclamos');
+            if (chartInstances.state) chartInstances.state.destroy();
+
+            const closed = ticketsData.filter(t => isClosed(t)).length;
+            const open = ticketsData.filter(t => !isClosed(t) && !isOverdue(t)).length;
+            const overdue = ticketsData.filter(t => isOverdue(t)).length;
+
+            chartInstances.state = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Abiertos', 'Cerrados', 'Vencidos'],
+                    datasets: [{
+                        data: [open, closed, overdue],
+                        backgroundColor: ['#667eea', '#4facfe', '#f5576c']
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        function createClientChart() {
+            const ctx = getOrCreateCanvas('clientChart', 'Top 10 Clientes');
+            if (chartInstances.client) chartInstances.client.destroy();
+
+            const clients = {};
+            ticketsData.forEach(t => {
+                const client = getFieldValue(t, 'De', 'Customer', 'Sin asignar');
+                clients[client] = (clients[client] || 0) + 1;
+            });
+
+            const sorted = Object.entries(clients)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            chartInstances.client = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(c => c[0].substring(0, 25)),
+                    datasets: [{
+                        label: 'Reclamos',
+                        data: sorted.map(c => c[1]),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: { 
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createProductChart() {
+            const ctx = getOrCreateCanvas('productChart', 'Productos Más Reclamados');
+            if (chartInstances.product) chartInstances.product.destroy();
+
+            const products = {};
+            ticketsData.forEach(t => {
+                const product = getFieldValue(t, 'Producto', 'Product', 'Sin asignar');
+                products[product] = (products[product] || 0) + 1;
+            });
+
+            const sorted = Object.entries(products)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+
+            chartInstances.product = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: sorted.map(p => p[0].substring(0, 20)),
+                    datasets: [{
+                        data: sorted.map(p => p[1]),
+                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b', '#fa709a', '#fee140']
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        // CATEGORÍAS
+        function updateCategoryView() {
+            if (ticketsData.length === 0) return;
+
+            const filterType = document.getElementById('categoryFilter').value;
+            const categories = {};
+
+            ticketsData.forEach(t => {
+                let cat;
+                if (filterType === 'grupo') cat = getFieldValue(t, 'Grupo de Problemas', 'Group', 'Sin asignar');
+                else if (filterType === 'tipo') cat = getFieldValue(t, 'Tipo de Problema', 'Type', 'Sin asignar');
+                else cat = getFieldValue(t, 'Producto', 'Product', 'Sin asignar');
+
+                if (!categories[cat]) categories[cat] = { total: 0, open: 0, closed: 0, overdue: 0 };
+                categories[cat].total++;
+                if (!isClosed(t)) categories[cat].open++;
+                else categories[cat].closed++;
+                if (isOverdue(t)) categories[cat].overdue++;
+            });
+
+            const sorted = Object.entries(categories).sort((a, b) => b[1].total - a[1].total);
+
+            // Gráfico
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            if (chartInstances.category) chartInstances.category.destroy();
+            chartInstances.category = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(c => c[0].substring(0, 20)),
+                    datasets: [{
+                        label: 'Total',
+                        data: sorted.map(c => c[1].total),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: { 
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Tabla
+            const tbody = document.querySelector('#categoryTable tbody');
+            tbody.innerHTML = sorted.map(([cat, data]) => `
+                <tr>
+                    <td>${cat}</td>
+                    <td>${data.total}</td>
+                    <td>${data.open}</td>
+                    <td>${data.closed}</td>
+                    <td>${data.overdue}</td>
+                </tr>
+            `).join('');
+        }
+
+        // CLIENTES
+        function updateClientView() {
+            if (ticketsData.length === 0) return;
+
+            const search = document.getElementById('clientSearch').value.toLowerCase();
+            const clients = {};
+
+            ticketsData.forEach(t => {
+                const client = getFieldValue(t, 'De', 'Customer', 'Sin asignar');
+                if (!clients[client]) clients[client] = { total: 0, open: 0, closed: 0 };
+                clients[client].total++;
+                if (!isClosed(t)) clients[client].open++;
+                else clients[client].closed++;
+            });
+
+            let sorted = Object.entries(clients).sort((a, b) => b[1].total - a[1].total);
+            if (search) sorted = sorted.filter(c => c[0].toLowerCase().includes(search));
+
+            // Gráfico
+            const ctx = document.getElementById('clientChart').getContext('2d');
+            if (chartInstances.clientDetail) chartInstances.clientDetail.destroy();
+            chartInstances.clientDetail = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.slice(0, 15).map(c => c[0].substring(0, 20)),
+                    datasets: [{
+                        label: 'Reclamos',
+                        data: sorted.slice(0, 15).map(c => c[1].total),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: { 
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Tabla
+            const tbody = document.querySelector('#clientTable tbody');
+            tbody.innerHTML = sorted.slice(0, 50).map(([client, data]) => `
+                <tr>
+                    <td>${client}</td>
+                    <td>${data.total}</td>
+                    <td>${data.open}</td>
+                    <td>${data.closed}</td>
+                </tr>
+            `).join('');
+        }
+
+        // AGENTES
+        function updateAgentView() {
+            if (ticketsData.length === 0) return;
+
+            const agents = {};
+            ticketsData.forEach(t => {
+                const agent = getFieldValue(t, 'Asignado a', 'Assigned', 'Sin asignar');
+                if (!agents[agent]) agents[agent] = { total: 0, open: 0, closed: 0 };
+                agents[agent].total++;
+                if (!isClosed(t)) agents[agent].open++;
+                else agents[agent].closed++;
+            });
+
+            const sorted = Object.entries(agents).sort((a, b) => b[1].total - a[1].total);
+
+            // Gráfico
+            const ctx = document.getElementById('agentChart').getContext('2d');
+            if (chartInstances.agent) chartInstances.agent.destroy();
+            chartInstances.agent = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(a => a[0].substring(0, 20)),
+                    datasets: [{
+                        label: 'Asignados',
+                        data: sorted.map(a => a[1].total),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: { 
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Tabla
+            const tbody = document.querySelector('#agentTable tbody');
+            tbody.innerHTML = sorted.map(([agent, data]) => `
+                <tr>
+                    <td>${agent}</td>
+                    <td>${data.total}</td>
+                    <td>${data.open}</td>
+                    <td>${data.closed}</td>
+                </tr>
+            `).join('');
+        }
+
+        // DETALLES
+        function updateDetailView() {
+            if (ticketsData.length === 0) return;
+
+            const state = document.getElementById('stateFilter').value;
+            const search = document.getElementById('searchFilter').value.toLowerCase();
+
+            let filtered = ticketsData.filter(t => {
+                if (state === 'abierto' && isClosed(t)) return false;
+                if (state === 'cerrado' && !isClosed(t)) return false;
+                if (search) {
+                    const numero = getFieldValue(t, 'Número', 'Number', '');
+                    const asunto = getFieldValue(t, 'Asunto', 'Subject', '');
+                    return numero.includes(search) || asunto.toLowerCase().includes(search);
+                }
+                return true;
+            });
+
+            const tbody = document.querySelector('#detailTable tbody');
+            tbody.innerHTML = filtered.slice(0, 100).map(t => {
+                const status = isClosed(t) ? 'closed' : 'open';
+                const statusText = isClosed(t) ? 'Cerrado' : 'Abierto';
+                return `
+                    <tr>
+                        <td><strong>${getFieldValue(t, 'Número', 'Number', '-')}</strong></td>
+                        <td>${getFieldValue(t, 'Última actualización', 'Updated', '-').substring(0, 10)}</td>
+                        <td>${getFieldValue(t, 'Asunto', 'Subject', '-').substring(0, 40)}</td>
+                        <td>${getFieldValue(t, 'De', 'Customer', '-').substring(0, 25)}</td>
+                        <td><span class="badge ${status}">${statusText}</span></td>
+                        <td>${getFieldValue(t, 'Asignado a', 'Assigned', '-').substring(0, 15)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Utilidades
+        function isClosed(ticket) {
+            const estado = getFieldValue(ticket, 'Estado del Ticket', 'Status', '').toLowerCase();
+            const asunto = getFieldValue(ticket, 'Asunto', 'Subject', '').toLowerCase();
+            return

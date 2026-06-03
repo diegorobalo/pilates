@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen del Día - VPN Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Merriweather', serif;
+            background: #064E3B;
+            color: #e0f2fe;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 36px;
+        }
+
+        .fecha-info {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #86EFAC;
+            font-size: 16px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #065F46;
+            border-left: 6px solid #22C55E;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+            text-shadow: -2px -2px 0 #059669, -4px -4px 0 rgba(5, 150, 105, 0.5);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #86EFAC;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .tabla-wrapper {
+            background: #065F46;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #047857;
+            border-bottom: 3px solid #22C55E;
+        }
+
+        th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        tbody tr:hover {
+            background: #047857;
+        }
+
+        td {
+            padding: 16px 18px;
+            color: #e0f2fe;
+            font-size: 14px;
+        }
+
+        .expand-btn {
+            text-align: center;
+            color: #22C55E;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        tbody tr:hover .expand-btn {
+            transform: scale(1.3);
+        }
+
+        .usuario-cell {
+            font-weight: 600;
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+        }
+
+        .centro {
+            text-align: center;
+        }
+
+        .ubicacion-badge {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.2);
+            color: #06B6D4;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .horas-cell {
+            font-weight: 700;
+            color: #FBBF24;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 16px;
+        }
+
+        .conexiones-cell {
+            background: rgba(34, 197, 94, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #86EFAC;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #065F46;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #22C55E;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #22C55E;
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 28px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #22C55E;
+            font-size: 32px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .detalle-section {
+            margin-bottom: 25px;
+        }
+
+        .detalle-section h3 {
+            color: #06B6D4;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 16px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .detalle-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detalle-item {
+            background: rgba(34, 197, 94, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #22C55E;
+        }
+
+        .detalle-label {
+            font-size: 11px;
+            color: #86EFAC;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .detalle-value {
+            font-size: 16px;
+            color: #e0f2fe;
+            font-weight: 600;
+            font-family: 'Oxanium', sans-serif;
+        }
+
+        .conexiones-list {
+            background: rgba(34, 197, 94, 0.05);
+            border-radius: 6px;
+            padding: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .conexion-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+            font-size: 12px;
+        }
+
+        .conexion-item:last-child {
+            border-bottom: none;
+        }
+
+        .conexion-hora {
+            color: #FBBF24;
+            font-weight: 700;
+        }
+
+        .conexion-ip {
+            color: #06B6D4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 RESUMEN DEL DÍA</h1>
+        <div class="fecha-info">14 de Mayo de 2026 - Jueves</div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number">18</div>
+                <div class="stat-label">Usuarios Conectados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">156</div>
+                <div class="stat-label">Total Conexiones</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">847</div>
+                <div class="stat-label">GB Traficado</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">9:47 AM</div>
+                <div class="stat-label">Primera Conexión del Día</div>
+            </div>
+        </div>
+
+        <!-- Tabla Resumen -->
+        <div class="tabla-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;"></th>
+                        <th>Usuario</th>
+                        <th class="centro">Primera Conexión</th>
+                        <th class="centro">Total Horas</th>
+                        <th class="centro">Conexiones</th>
+                        <th class="centro">Ubicación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="abrirDetalle('diego.robalo')">
+                        <td class="expand-btn">+</td>
+                        <td class="usuario-cell">diego.robalo</td>
+                        <td class="centro">9:47 AM</td>
+                        <td class="centro horas-cell">8h 32m</td>
+                        <td class="centro conexiones-cell">4</td>
+                        <td class="centro"><span class="ubicacion-badge">🌍 Escobar</span></td>
+                    </tr>
+                    <tr onclick="abrirDetalle('jbasso')">
+                        <td class="expand-btn">+</td>
+                        <td class="usuario-cell">jbasso</td>
+                        <td class="centro">8:15 AM</td>
+                        <td class="centro horas-cell">7h 18m</td>
+                        <td class="centro conexiones-cell">3</td>
+                        <td class="centro"><span class="ubicacion-badge">🌍 Buenos Aires</span></td>
+                    </tr>
+                    <tr onclick="abrirDetalle('felipe.tacacho')">
+                        <td class="expand-btn">+</td>
+                        <td class="usuario-cell">felipe.tacacho</td>
+                        <td class="centro">10:22 AM</td>
+                        <td class="centro horas-cell">6h 45m</td>
+                        <td class="centro conexiones-cell">5</td>
+                        <td class="centro"><span class="ubicacion-badge">🌍 La Plata</span></td>
+                    </tr>
+                    <tr onclick="abrirDetalle('scugliari')">
+                        <td class="expand-btn">+</td>
+                        <td class="usuario-cell">scugliari</td>
+                        <td class="centro">7:30 AM</td>
+                        <td class="centro horas-cell">9h 12m</td>
+                        <td class="centro conexiones-cell">2</td>
+                        <td class="centro"><span class="ubicacion-badge">🌍 Oficinas</span></td>
+                    </tr>
+                    <tr onclick="abrirDetalle('fernando.turienzo')">
+                        <td class="expand-btn">+</td>
+                        <td class="usuario-cell">fernando.turienzo</td>
+                        <td class="centro">11:05 AM</td>
+                        <td class="centro horas-cell">5h 28m</td>
+                        <td class="centro conexiones-cell">3</td>
+                        <td class="centro"><span class="ubicacion-badge">🌍 San Fernando</span></td>
+                    </tr>
+                    <tr onclick="abrirDetalle('alusardi')">
+                        <td class="expand-btn">+</td>
+                        <td class="usuario-cell">alusardi</td>
+                        <td class="centro">9:10 AM</td>
+                        <td class="centro horas-cell">7h 55m</td>
+                        <td class="centro conexiones-cell">4</td>
+                        <td class="centro"><span class="ubicacion-badge">🌍 Morón</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Detalle -->
+    <div class="modal" id="modalDetalle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalUsuario">diego.robalo</h2>
+                <button class="close-btn" onclick="cerrarDetalle()">&times;</button>
+            </div>
+
+            <div class="detalle-section">
+                <h3>📊 Resumen</h3>
+                <div class="detalle-row">
+                    <div class="detalle-item">
+                        <div class="detalle-label">Primera Conexión</div>
+                        <div class="detalle-value">9:47 AM</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Última Desconexión</div>
+                        <div class="detalle-value">6:19 PM</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Total de Horas</div>
+                        <div class="detalle-value">8h 32m</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Cantidad de Conexiones</div>
+                        <div class="detalle-value">4</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detalle-section">
+                <h3>🌐 Red</h3>
+                <div class="detalle-row">
+                    <div class="detalle-item">
+                        <div class="detalle-label">IP Privada (VPN)</div>
+                        <div class="detalle-value">10.90.0.47</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">IP Pública</div>
+                        <div class="detalle-value">181.117.10.228</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Ubicación</div>
+                        <div class="detalle-value">Escobar, Buenos Aires</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">País</div>
+                        <div class="detalle-value">Argentina</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detalle-section">
+                <h3>📡 Datos Traficados</h3>
+                <div class="detalle-row">
+                    <div class="detalle-item">
+                        <div class="detalle-label">Descargado</div>
+                        <div class="detalle-value">425.3 MB</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Cargado</div>
+                        <div class="detalle-value">189.7 MB</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Total</div>
+                        <div class="detalle-value">615.0 MB</div>
+                    </div>
+                    <div class="detalle-item">
+                        <div class="detalle-label">Promedio/Hora</div>
+                        <div class="detalle-value">72.1 MB</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detalle-section">
+                <h3>⏱️ Detalles de Conexiones</h3>
+                <div class="conexiones-list">
+                    <div class="conexion-item">
+                        <span class="conexion-hora">9:47 AM - 11:32 AM</span>
+                        <span class="conexion-ip">10.90.0.47 → 181.117.10.228</span>
+                        <span style="color: #86EFAC;">1h 45m</span>
+                    </div>
+                    <div class="conexion-item">
+                        <span class="conexion-hora">12:15 PM - 1:08 PM</span>
+                        <span class="conexion-ip">10.90.0.47 → 181.117.10.228</span>
+                        <span style="color: #86EFAC;">53m</span>
+                    </div>
+                    <div class="conexion-item">
+                        <span class="conexion-hora">2:30 PM - 5:22 PM</span>
+                        <span class="conexion-ip">10.90.0.47 → 181.117.10.228</span>
+                        <span style="color: #86EFAC;">2h 52m</span>
+                    </div>
+                    <div class="conexion-item">
+                        <span class="conexion-hora">5:45 PM - 6:19 PM</span>
+                        <span class="conexion-ip">10.90.0.47 → 181.117.10.228</span>
+                        <span style="color: #86EFAC;">34m</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirDetalle(usuario) {
+            document.getElementById('modalUsuario').textContent = usuario;
+            document.getElementById('modalDetalle').classList.add('active');
+        }
+
+        function cerrarDetalle() {
+            document.getElementById('modalDetalle').classList.remove('active');
+        }
+
+        document.getElementById('modalDetalle').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarDetalle();
+            }
+        });
+    </script>
+</body>
+</html>

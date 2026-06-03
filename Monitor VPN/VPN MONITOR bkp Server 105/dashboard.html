@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Monitor Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-info p {
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 16px;
+        }
+        
+        .user-role {
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        .logout-btn:hover {
+            background: #ee5a52;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            color: #999;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .stat-change.up {
+            color: #51cf66;
+        }
+        
+        .stat-change.down {
+            color: #ff6b6b;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .chart-card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .table-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-active {
+            color: #51cf66;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+        
+        .error {
+            background: #ffe0e0;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .refresh-info {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🌐 VPN Monitor Dashboard</h1>
+            </div>
+            <div class="user-info">
+                <p class="user-name" id="userName">Cargando...</p>
+                <p class="user-role" id="userRole">Viewer</p>
+                <a href="/logout" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Conexiones Activas</h3>
+                <div class="stat-value" id="activeSessions">-</div>
+                <div class="stat-change" id="activeChange"></div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Conexiones (Hoy)</h3>
+                <div class="stat-value" id="totalSessions">-</div>
+                <div class="stat-change" id="sessionsChange"></div>
+            </div>
+            <div class="stat-card">
+                <h3>Disponibilidad (24h)</h3>
+                <div class="stat-value" id="uptime">-</div>
+                <div class="stat-change" id="uptimeChange"></div>
+            </div>
+            <div class="stat-card">
+                <h3>Estado MikroTik</h3>
+                <div class="stat-value" id="mikrotikStatus">-</div>
+                <div class="stat-change" id="statusChange"></div>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Conexiones por Hora</h3>
+                <canvas id="sessionsChart"></canvas>
+                <div class="refresh-info">Actualiza cada 60 segundos</div>
+            </div>
+            <div class="chart-card">
+                <h3>Conexiones Activas en Tiempo Real</h3>
+                <canvas id="activeChart"></canvas>
+                <div class="refresh-info">Actualiza cada 10 segundos</div>
+            </div>
+        </div>
+        
+        <div class="table-card">
+            <h3>Sesiones VPN Activas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Dirección IP</th>
+                        <th>Interfaz</th>
+                        <th>Inicio de Sesión</th>
+                        <th>Duración</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="sessionsTable">
+                    <tr><td colspan="6" class="loading">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+            <div class="refresh-info">Actualiza cada 30 segundos</div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let sessionsChart = null;
+        let activeChart = null;
+        let lastUpdate = new Date();
+        
+        // Cargar información del usuario desde la página (inyectada por el servidor)
+        function initUserInfo() {
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            
+            // El servidor inyecta esta información en el HTML
+            if (userName && userName.textContent === 'Cargando...') {
+                fetchUserInfo();
+            }
+        }
+        
+        // Obtener información del usuario
+        async function fetchUserInfo() {
+            try {
+                const response = await fetch('/api/user-info');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('userName').textContent = data.username || 'Usuario';
+                    document.getElementById('userRole').textContent = (data.role || 'viewer').charAt(0).toUpperCase() + (data.role || 'viewer').slice(1);
+                }
+            } catch (error) {
+                console.log('User info injected by server');
+            }
+        }
+        
+        // Obtener conexiones activas
+        async function fetchActiveSessions() {
+            try {
+                const response = await fetch('/api/active');
+                if (!response.ok) throw new Error('Error fetching active sessions');
+                
+                const data = await response.json();
+                const count = data.length || 0;
+                
+                document.getElementById('activeSessions').textContent = count;
+                document.getElementById('activeChange').textContent = `${count > 0 ? '✓' : '✗'} Monitoreo activo`;
+                document.getElementById('activeChange').className = count > 0 ? 'stat-change up' : 'stat-change down';
+                
+                // Actualizar tabla
+                updateSessionsTable(data);
+                
+                // Actualizar gráfico
+                updateActiveChart(data);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('activeSessions').textContent = 'Error';
+            }
+        }
+        
+        // Obtener resumen de sesiones
+        async function fetchSummary() {
+            try {
+                const response = await fetch('/api/summary');
+                if (!response.ok) throw new Error('Error fetching summary');
+                
+                const data = await response.json();
+                
+                document.getElementById('totalSessions').textContent = data.total_sessions || 0;
+                document.getElementById('mikrotikStatus').textContent = data.mikrotik_connected ? '🟢 En línea' : '🔴 Desconectado';
+                document.getElementById('statusChange').textContent = data.mikrotik_connected ? 'Conexión exitosa' : 'Sin conexión';
+                document.getElementById('statusChange').className = data.mikrotik_connected ? 'stat-change up' : 'stat-change down';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Obtener datos diarios
+        async function fetchDailyData() {
+            try {
+                const response = await fetch('/api/daily');
+                if (!response.ok) throw new Error('Error fetching daily data');
+                
+                const data = await response.json();
+                
+                let totalTime = 0;
+                let uptime = 0;
+                
+                if (data.length > 0) {
+                    data.forEach(day => {
+                        totalTime += day.total_uptime_minutes || 0;
+                    });
+                    uptime = (totalTime / (24 * 60)) * 100;
+                    if (uptime > 100) uptime = 100;
+                }
+                
+                document.getElementById('uptime').textContent = uptime.toFixed(1) + '%';
+                document.getElementById('uptimeChange').textContent = '24 últimas horas';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Actualizar tabla de sesiones
+        function updateSessionsTable(sessions) {
+            const tbody = document.getElementById('sessionsTable');
+            
+            if (!sessions || sessions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="loading">No hay sesiones activas</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = sessions.map(session => {
+                const startTime = new Date(session.timestamp);
+                const now = new Date();
+                const duration = Math.floor((now - startTime) / 1000);
+                
+                let durationStr = '';
+                if (duration < 60) {
+                    durationStr = duration + 's';
+                } else if (duration < 3600) {
+                    durationStr = Math.floor(duration / 60) + 'm';
+                } else {
+                    durationStr = Math.floor(duration / 3600) + 'h ' + Math.floor((duration % 3600) / 60) + 'm';
+                }
+                
+                return `
+                    <tr>
+                        <td>${session.username || 'N/A'}</td>
+                        <td>${session.client_ip || 'N/A'}</td>
+                        <td>${session.interface || 'N/A'}</td>
+                        <td>${startTime.toLocaleString('es-ES')}</td>
+                        <td>${durationStr}</td>
+                        <td><span class="status-active">✓ Activa</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Actualizar gráfico de conexiones activas
+        function updateActiveChart(sessions) {
+            const count = sessions.length || 0;
+            const protocolCounts = {};
+            
+            sessions.forEach(session => {
+                const proto = session.protocol || 'Desconocido';
+                protocolCounts[proto] = (protocolCounts[proto] || 0) + 1;
+            });
+            
+            const labels = Object.keys(protocolCounts);
+            const data = Object.values(protocolCounts);
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe'];
+            
+            if (activeChart) {
+                activeChart.data.labels = labels;
+                activeChart.data.datasets[0].data = data;
+                activeChart.update();
+            } else {
+                const ctx = document.getElementById('activeChart').getContext('2d');
+                activeChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: colors.slice(0, labels.length)
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Obtener datos de sesiones para gráfico
+        async function fetchSessionsData() {
+            try {
+                const response = await fetch('/api/sessions?limit=24');
+                if (!response.ok) throw new Error('Error fetching sessions data');
+                
+                const sessions = await response.json();
+                
+                // Agrupar por hora
+                const hourlyData = {};
+                const now = new Date();
+                
+                // Inicializar últimas 24 horas
+                for (let i = 23; i >= 0; i--) {
+                    const hour = new Date(now);
+                    hour.setHours(hour.getHours() - i);
+                    const key = hour.getHours().toString().padStart(2, '0') + ':00';
+                    hourlyData[key] = 0;
+                }
+                
+                // Contar sesiones por hora
+                sessions.forEach(session => {
+                    const time = new Date(session.timestamp);
+                    const key = time.getHours().toString().padStart(2, '0') + ':00';
+                    if (hourlyData.hasOwnProperty(key)) {
+                        hourlyData[key]++;
+                    }
+                });
+                
+                const labels = Object.keys(hourlyData);
+                const data = Object.values(hourlyData);
+                
+                if (sessionsChart) {
+                    sessionsChart.data.labels = labels;
+                    sessionsChart.data.datasets[0].data = data;
+                    sessionsChart.update();
+                } else {
+                    const ctx = document.getElementById('sessionsChart').getContext('2d');
+                    sessionsChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Conexiones por Hora',
+                                data: data,
+                                borderColor: '#667eea',
+                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Función de actualización principal
+        async function updateDashboard() {
+            await Promise.all([
+                fetchActiveSessions(),
+                fetchSummary(),
+                fetchDailyData(),
+                fetchSessionsData()
+            ]);
+            lastUpdate = new Date();
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            initUserInfo();
+            updateDashboard();
+            
+            // Actualizar datos activos cada 10 segundos
+            setInterval(fetchActiveSessions, 10000);
+            
+            // Actualizar resumen cada 30 segundos
+            setInterval(fetchSummary, 30000);
+            
+            // Actualizar datos diarios cada 60 segundos
+            setInterval(fetchDailyData, 60000);
+            
+            // Actualizar gráficos cada 60 segundos
+            setInterval(fetchSessionsData, 60000);
+        });
+    </script>
+</body>
+</html>

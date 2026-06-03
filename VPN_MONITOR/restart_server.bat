@@ -1,0 +1,9 @@
+@echo off
+echo Deteniendo web_server.py...
+taskkill /F /IM python.exe /T >nul 2>&1
+echo Esperando 3 segundos...
+timeout /t 3 /nobreak
+echo Iniciando web_server.py...
+cd C:\VPN_MONITOR
+python web_server.py
+pause

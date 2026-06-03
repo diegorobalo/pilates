@@ -1,0 +1,89 @@
+/***********Nav************/
+.logo{
+    width: 70px;
+    height: auto;
+}
+.nav{
+    background-color: rgba(242, 242, 242, .98);
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+.navbar .social a{
+    color: #a09d84;
+    padding-right: 10px;
+}
+.navbar .social a:hover{
+    filter: brightness(50%);
+}
+.menu {
+    background-color: #3c3c3c;
+    width: 30%;
+    z-index: 999999;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: all ease-in .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.active{
+    transition: all ease-out .2s;
+    transform: translateX(0%);
+}
+.menu .logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   margin-top: 30px;
+}
+.menu .list-menu{
+    margin-left: 80px;
+}
+.menu .list-menu li a{
+color: #fff;
+font-size: 20px;
+}
+.menu .list-menu li a:hover{
+    filter: brightness(90%);
+}
+.menu .list-menu li{
+padding: 15px 0;
+}
+.menu .social-menu{
+    margin-top: 20px;
+}
+.menu .social-menu a{
+    color: #fff;
+    padding: 15px;
+}
+.menu .social-menu a:hover{
+    filter: brightness(0%);
+}
+/**************************queries**********************************/
+@media screen and (max-width:768px){
+    #hambu{
+        padding-left: 10px;
+        z-index: 9999999998;
+    }
+    .menu{
+        width: 60%;
+        z-index: 9999999999;
+    }
+    .navbar .social a{
+       opacity: 0;
+       visibility: hidden;
+    }
+    .logo{
+        margin-left: 10%;
+    }
+}

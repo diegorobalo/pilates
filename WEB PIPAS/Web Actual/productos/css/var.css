@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'dk-canoodle';
+    src: url(../assets/fonts/DK-Canoodle.otf);
+  }
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+:root{
+    --red:#D52026;
+    --red-opacity:#E8575A;
+    --red-light:#de4043;
+    --blue-light-1:#73D9F1;
+    --blue-light-2:#58C5E1;
+    --blue-light-3:#34BADA;
+    --gray:#515151;
+    --gray-light:#6c6c6c;
+    --gray-light-2:#888888;
+    --color-fonts:#615032;
+    --color-fonts-2:#3F3F64;
+    --color-fonts-footer:#6d6d6d;
+    --color-footer:#171717;
+    --primary-fonts:'dk-canoodle';
+    --second-fonts:'Oswald', sans-serif;
+    --third-fonts:'Nanum Gothic', sans-serif;
+    
+}

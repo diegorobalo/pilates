@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opción 2 Final - Tarjetas VPN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;900&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Merriweather', serif;
+            background: #064E3B;
+            color: #e0f2fe;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+        }
+
+        .grid-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        /* ===== OPCIÓN 2 MEJORADA ===== */
+        .card-style2-final {
+            background: #065F46;
+            border-left: 6px solid #22C55E;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            aspect-ratio: 16/9;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            gap: 10px;
+        }
+
+        .card-style2-final .username {
+            font-size: 20px;
+            font-weight: 900;
+            color: #22C55E;
+            font-family: 'Oxanium', sans-serif;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .card-style2-final .info-row {
+            font-size: 11px;
+            color: #86EFAC;
+            line-height: 1.4;
+        }
+
+        .card-style2-final .location {
+            font-size: 14px;
+            font-weight: 600;
+            color: #06B6D4;
+            font-family: 'Oxanium', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin: 5px 0;
+        }
+
+        .card-style2-final .time-section {
+            display: flex;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        .card-style2-final .time-block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-style2-final .time-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: #86EFAC;
+        }
+
+        .card-style2-final .time-value {
+            font-size: 16px;
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 700;
+            color: #FBBF24;
+            text-shadow: -1px -1px 0 #059669, -2px -2px 0 rgba(5, 150, 105, 0.5);
+        }
+
+        .card-style2-final .first-connection {
+            flex: 1;
+            background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .card-style2-final .first-conn-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #FEE2E2;
+        }
+
+        .card-style2-final .first-conn-time {
+            font-size: 22px;
+            font-family: 'Oxanium', sans-serif;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .card-style2-final .data-info {
+            font-size: 11px;
+            color: #86EFAC;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ OPCIÓN 2 FINAL - Tarjetas VPN</h1>
+
+        <div class="grid-demo">
+            <!-- Card 1 -->
+            <div class="card-style2-final">
+                <div class="username">Florencia.galeano</div>
+
+                <div class="info-row">
+                    IP Asignada: 10.90.0.88 | Pública: 186.128.88.72
+                </div>
+
+                <div class="location">🌍 SAN FERNANDO, ARGENTINA</div>
+
+                <div class="time-section">
+                    <div class="time-block">
+                        <div class="time-label">Tiempo total de conexión</div>
+                        <div class="time-value">1h 1m</div>
+                    </div>
+                    <div class="first-connection">
+                        <div class="first-conn-label">Primera conexión del día</div>
+                        <div class="first-conn-time">9:10 am</div>
+                    </div>
+                </div>
+
+                <div class="data-info">
+                    ↓ 2.5 MB | ↑ 10.3 MB
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card-style2-final">
+                <div class="username">Juan.dominguez</div>
+
+                <div class="info-row">
+                    IP Asignada: 10.90.0.45 | Pública: 189.245.33.91
+                </div>
+
+                <div class="location">🌍 BUENOS AIRES, ARGENTINA</div>
+
+                <div class="time-section">
+                    <div class="time-block">
+                        <div class="time-label">Tiempo total de conexión</div>
+                        <div class="time-value">4h 23m</div>
+                    </div>
+                    <div class="first-connection">
+                        <div class="first-conn-label">Primera conexión del día</div>
+                        <div class="first-conn-time">7:35 am</div>
+                    </div>
+                </div>
+
+                <div class="data-info">
+                    ↓ 145.8 MB | ↑ 67.2 MB
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card-style2-final">
+                <div class="username">María.rodríguez</div>
+
+                <div class="info-row">
+                    IP Asignada: 10.90.0.67 | Pública: 190.114.55.22
+                </div>
+
+                <div class="location">🌍 LA PLATA, ARGENTINA</div>
+
+                <div class="time-section">
+                    <div class="time-block">
+                        <div class="time-label">Tiempo total de conexión</div>
+                        <div class="time-value">2h 44m</div>
+                    </div>
+                    <div class="first-connection">
+                        <div class="first-conn-label">Primera conexión del día</div>
+                        <div class="first-conn-time">8:45 am</div>
+                    </div>
+                </div>
+
+                <div class="data-info">
+                    ↓ 89.3 MB | ↑ 42.1 MB
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

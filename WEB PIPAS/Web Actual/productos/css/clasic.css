@@ -1,0 +1,252 @@
+.clasic{
+    height: 90vh;
+}
+.clasic .slider .item .titulo{
+    height: 100px;
+    width: 58%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+.clasic .slider .item .clasicas{
+    width: 22%;
+}
+.clasic .slider .item .gigantes{
+    width: 18%; 
+}
+.clasic .slider .item .peladas{
+    width: 23%;
+}
+.clasic .slider .item .candy{
+    width: 15%;
+}
+.clasic .slider .item .espacio{
+    height: 50px;
+    width: 100%;
+    position: relative;
+}
+.clasic .slider .item .espacio img{
+    width: 40%;
+    position: absolute;
+    transform: translateY(-60%);
+}
+
+
+.clasic .slider .item .espacio img{
+    width: 40%;
+    position: absolute;
+    transform: translateY(-60%);
+}
+.clasic .slider .item .content{
+    display: flex;
+}
+.clasic .slider .item .content .content-img{
+    height: 50vh;
+    width: 50%;
+    display: flex;
+    align-items: flex-end;
+}
+.clasic .slider .item .content .content-img img{
+    width: 20%;
+    margin-left: auto;
+    padding: 15px;
+}
+.clasic .slider .item .content .content-img .visible{
+    display: none;
+}
+.clasic .slider .item .content .desc{
+    height: 50vh;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: #ffffff;
+}
+.clasic .slider .item .content .desc .description,
+.clasic .slider .item .content .desc span{
+font-size: 28px;
+padding: 0 15px;
+font-weight: 100;
+}
+.clasic .slider .item .content .desc .valores{
+    font-size: 14px;
+    width: 60%;
+    padding: 0 15px;
+    font-family: var(--second-fonts);
+}
+.clasic .owl-carousel .owl-nav{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: -180px;
+    padding: 0 15px;
+}
+.clasic .owl-carousel .owl-nav .owl-prev{
+    background: url('../assets/icon_prev.svg') no-repeat;
+    width: 25px; 
+    height: 35px;
+}
+.clasic .owl-carousel .owl-nav .owl-next{
+    background: url('../assets/icon_next.svg') no-repeat;
+    width: 90px;
+    height: 35px;
+    animation: pulse 3s ease-in-out infinite;
+}
+/**************************queries**********************************/
+@media screen and (min-width:1600px){}
+@media only screen and (max-width: 1100px){
+    .clasic .slider .item .espacio img{
+        width: 50%;
+
+        transform: translateY(-10%);
+    }
+}
+@media screen and (max-width:992px){
+    .clasic .slider .item .espacio img{
+        width: 50%;
+        transform: translateY(-20%);
+    }
+}
+@media screen and (max-width:768px){
+    .clasic{
+        height: 100vh;
+    }
+    .clasic .slider .item .content .content-img img{
+        width: 20%;
+        margin-left: 0;
+        padding: 0px;
+    }
+ 
+    .clasic .slider .item .desc.ocultar{
+        display: none;
+    }
+    .clasic .slider .item .titulo.ocultar{
+        display: none;
+    }
+    .clasic .slider .item .content .content-img{
+        width: 100%;
+        height: 70vh;
+    }
+    .clasic .slider .item .espacio{
+        margin-top: 15rem;
+    }
+    .clasic .slider .item .content .content-img .nutri{
+        display: none;
+       }
+    .clasic .slider .item .espacio img{
+        width: 80%;
+        transform: translateY(-40%);
+       }
+    .clasic .slider .item .espacio img.giant{
+        width: 80%;
+        transform: translateY(-40%) translateX(10%);
+       }
+    .clasic .slider .item .espacio img.peladas{
+           width: 80%;
+           transform: translateY(-40%) translateX(8%);
+       }
+    .clasic .slider .item .espacio img.candy{
+           width: 80%;
+           transform: translateY(-40%) translateX(8%);
+       }
+    .clasic .slider .item .content .content-img .valores{
+        font-size: 10px;
+        width: 60%;
+        font-family: var(--second-fonts);
+    }
+    .clasic .owl-carousel .owl-nav .owl-next{
+        background: url('../assets/icon_next_fcha.svg') no-repeat;
+        width: 25px; 
+        height: 35px;
+    } 
+    /*******************visible************************/
+    .clasic .slider .item .content .content-img .visible{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        width: 100%;
+        position: absolute;
+        top: 65%;
+        font-size: 20px;
+    }
+    .clasic .slider .item .content .content-img .visiblePeladas{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        width: 100%;
+        position: absolute;
+        top:70%;
+        font-size: 20px;
+    }
+
+    .clasic .slider .item .content .content-img .visible .info img{
+        width: 90px;
+    }
+    .clasic .slider .item .content .content-img .visible .info{
+         width: 100%;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+    }
+    .clasic .slider .item .content .content-img .visible .txt-white img{
+        width: 180px;
+        position: relative;
+        left: -20%;
+        top: -10px;
+    }
+    .clasic .slider .item .content .content-img .visibleGigante .txt-white img{
+        width: 180px;
+        position: relative;
+        left: -15%;
+        top: -10px;
+    }
+    .clasic .slider .item .content .content-img .visiblePeladas .txt-white img{
+        width: 220px;
+        position: relative;
+        left: -10%;
+        top: -10px;
+    }
+   
+}
+@media screen and (max-width:576px){
+    .clasic .slider .item .content .content-img .visible .txt-white img{
+        width: 120px;
+    }
+    .clasic .slider .item .content .content-img .visible .txt-white .pelada-blc{
+        width: 170px;
+    }
+    .clasic .slider .item .content .content-img .visible{
+        top: 55%;
+        font-size: 14px;
+    }
+    .clasic .slider .item .content .content-img .visible .info img{
+        width: 70px;
+        }
+.clasic .slider .item .content .content-img .visible .info p.valores{
+    font-size: 8px;
+}
+.clasic .slider .item .espacio{
+    margin-top: 8rem;
+}
+.clasic .slider .item .content .content-img .visiblePeladas{
+    top:56%;
+}
+.clasic .slider .item .content .content-img .visibleGigante{
+    top:53%;
+}
+}
+@media screen and (max-width:320px){
+    .clasic .slider .item .content .content-img .visible{
+        font-size: 10px;
+    }
+}
+@media (min-height:700px) and (max-height:823px){
+    .clasic .slider .item .content .content-img .visible{
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,8 @@
+<!-- start Simple Custom CSS and JS -->
+<style type="text/css">
+* {
+  /* 👇 PNG fallback */
+  cursor: -webkit-image-set(url("") 1x, url("") 2x) 32 32, pointer;
+}
+</style>
+<!-- end Simple Custom CSS and JS -->

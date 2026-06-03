@@ -1,0 +1,1 @@
+<?php die(); ?>{"headers":{"Vary":"Vary: Accept-Encoding, Cookie","Content-type":"Content-type: application\/xml; charset=UTF-8","Last-Modified":"Last-Modified: Mon, 31 Jul 2023 17:23:17 GMT"},"uri":"pipas.com.ar\/wp-sitemap-taxonomies-category-1.xml","blog_id":1,"post":0,"key":"pipas.com.ar443\/wp-sitemap-taxonomies-category-1.xml"}

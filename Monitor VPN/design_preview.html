@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Monitor - Design Concepts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600&family=Space+Mono:wght@400;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        h1 { 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-size: 32px;
+            background: linear-gradient(135deg, #16A34A, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 50px;
+            font-size: 14px;
+        }
+
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .design-card {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .design-card:hover {
+            border-color: #16A34A;
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.1);
+        }
+
+        .design-preview {
+            background: #f5f5f5;
+            aspect-ratio: 16/9;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .design-info {
+            padding: 25px;
+        }
+
+        .design-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .design-description {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .design-specs {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #888;
+            font-family: 'Space Mono', monospace;
+            line-height: 1.6;
+        }
+
+        /* ========== OPCIÓN 1: REFINED MINIMALISM ========== */
+        .preview-1 {
+            background: linear-gradient(135deg, #F0FDF4 0%, #ffffff 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .preview-1-header {
+            background: linear-gradient(135deg, #16A34A 0%, #059669 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-1-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .preview-1-stat {
+            background: white;
+            border-top: 3px solid #16A34A;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .preview-1-stat-num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #16A34A;
+        }
+
+        .preview-1-stat-label {
+            font-size: 9px;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .preview-1-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .preview-1-card {
+            background: white;
+            border-left: 4px solid #16A34A;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 10px;
+        }
+
+        .preview-1-card-name {
+            font-weight: 700;
+            color: #16A34A;
+            margin-bottom: 3px;
+        }
+
+        .preview-1-card-info {
+            color: #999;
+            line-height: 1.4;
+        }
+
+        /* ========== OPCIÓN 2: ORGANIC MODERN ========== */
+        .preview-2 {
+            background: linear-gradient(135deg, #F0FDF4 0%, #E8F5E9 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+        }
+
+        .preview-2::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .preview-2-header {
+            background: linear-gradient(135deg, #16A34A 0%, #10b981 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-2-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-2-stat {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+
+        .preview-2-stat-num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #16A34A;
+        }
+
+        .preview-2-stat-label {
+            font-size: 9px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
+        /* ========== OPCIÓN 3: DARK MODERN ========== */
+        .preview-3 {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .preview-3-header {
+            background: linear-gradient(135deg, #16A34A 0%, #059669 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .preview-3-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .preview-3-stat {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #16A34A;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .preview-3-stat-num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .preview-3-stat-label {
+            font-size: 9px;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        /* ========== OPCIÓN 4: LUXURY ELEGANCE ========== */
+        .preview-4 {
+            background: linear-gradient(135deg, #1a1f0f 0%, #0f2f1a 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .preview-4-header {
+            background: linear-gradient(135deg, #16A34A 0%, #b8860b 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 2px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .preview-4-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .preview-4-stat {
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid #b8860b;
+            border-radius: 2px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .preview-4-stat-num {
+            font-size: 18px;
+            font-weight: 700;
+            color: #b8860b;
+            font-family: 'IBM Plex Serif', serif;
+        }
+
+        .preview-4-stat-label {
+            font-size: 9px;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* ========== OPCIÓN 5: BRUTALIST TECH ========== */
+        .preview-5 {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid #16A34A;
+            padding: 15px;
+        }
+
+        .preview-5-header {
+            background: #000;
+            color: #16A34A;
+            padding: 15px;
+            border: 1px solid #16A34A;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        .preview-5-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .preview-5-stat {
+            background: #000;
+            border: 1px solid #16A34A;
+            padding: 10px;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .preview-5-stat-num {
+            font-size: 16px;
+            font-weight: 700;
+            color: #16A34A;
+        }
+
+        .preview-5-stat-label {
+            font-size: 8px;
+            color: #16A34A;
+            text-transform: uppercase;
+            margin-top: 3px;
+            letter-spacing: 1px;
+        }
+
+        .legend {
+            margin-top: 80px;
+            padding: 30px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            border-left: 6px solid #16A34A;
+        }
+
+        .legend h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .legend-item h4 {
+            color: #16A34A;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .legend-item p {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 VPN Monitor Design Concepts</h1>
+        <p class="subtitle">5 opciones visuales para el dashboard de Argensun Foods</p>
+
+        <div class="designs-grid">
+            <!-- OPCIÓN 1 -->
+            <div class="design-card">
+                <div class="design-preview preview-1">
+                    <div class="preview-1-header">VPN Monitor Dashboard</div>
+                    <div class="preview-1-stats">
+                        <div class="preview-1-stat">
+                            <div class="preview-1-stat-num">5</div>
+                            <div class="preview-1-stat-label">Conectados</div>
+                        </div>
+                        <div class="preview-1-stat">
+                            <div class="preview-1-stat-num">7</div>
+                            <div class="preview-1-stat-label">Hoy</div>
+                        </div>
+                        <div class="preview-1-stat">
+                            <div class="preview-1-stat-num">0.24</div>
+                            <div class="preview-1-stat-label">Tráfico GB</div>
+                        </div>
+                        <div class="preview-1-stat">
+                            <div class="preview-1-stat-num">1559</div>
+                            <div class="preview-1-stat-label">Sesiones</div>
+                        </div>
+                    </div>
+                    <div class="preview-1-cards">
+                        <div class="preview-1-card">
+                            <div class="preview-1-card-name">CF</div>
+                            <div class="preview-1-card-info">cecilia.fiorda<br>San Miguel</div>
+                        </div>
+                        <div class="preview-1-card">
+                            <div class="preview-1-card-name">DI</div>
+                            <div class="preview-1-card-info">diego.robalo<br>Luján</div>
+                        </div>
+                        <div class="preview-1-card">
+                            <div class="preview-1-card-name">FL</div>
+                            <div class="preview-1-card-info">florencia.meroni<br>Buenos Aires</div>
+                        </div>
+                        <div class="preview-1-card">
+                            <div class="preview-1-card-name">LO</div>
+                            <div class="preview-1-card-info">lorena.perrucci<br>Unknown</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="design-info">
+                    <div class="design-title">1️⃣ Refined Minimalism</div>
+                    <p class="design-description">Limpio, profesional, con líneas nítidas. Border-top en stats, jerarquía clara. Ideal para empresas corporativas tradicionales.</p>
+                    <div class="design-specs">
+Paleta: Blanco + Verde #16A34A
+Tipografía: Inter + IBM Plex Serif
+Efectos: Ninguno (ultra limpio)
+Caso ideal: Corporativo tradicional
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 2 -->
+            <div class="design-card">
+                <div class="design-preview preview-2">
+                    <div class="preview-2-header">🌱 VPN Monitor</div>
+                    <div class="preview-2-stats">
+                        <div class="preview-2-stat">
+                            <div class="preview-2-stat-num">5</div>
+                            <div class="preview-2-stat-label">En línea</div>
+                        </div>
+                        <div class="preview-2-stat">
+                            <div class="preview-2-stat-num">7</div>
+                            <div class="preview-2-stat-label">Hoy</div>
+                        </div>
+                        <div class="preview-2-stat">
+                            <div class="preview-2-stat-num">0.24</div>
+                            <div class="preview-2-stat-label">Tráfico</div>
+                        </div>
+                        <div class="preview-2-stat">
+                            <div class="preview-2-stat-num">1559</div>
+                            <div class="preview-2-stat-label">Sesiones</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="design-info">
+                    <div class="design-title">2️⃣ Organic Modern</div>
+                    <p class="design-description">Suave, natural, con gradientes sutiles y elementos orgánicos. Backdrop blur. Perfecto para Argensun (alimentos naturales).</p>
+                    <div class="design-specs">
+Paleta: Greens + Transparencias
+Tipografía: Inter
+Efectos: Blur, gradientes, formas orgánicas
+Caso ideal: Empresas de alimentos/naturaleza
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 3 -->
+            <div class="design-card">
+                <div class="design-preview preview-3">
+                    <div class="preview-3-header">📊 VPN Monitor</div>
+                    <div class="preview-3-stats">
+                        <div class="preview-3-stat">
+                            <div class="preview-3-stat-num">5</div>
+                            <div class="preview-3-stat-label">Conectados</div>
+                        </div>
+                        <div class="preview-3-stat">
+                            <div class="preview-3-stat-num">7</div>
+                            <div class="preview-3-stat-label">Usuarios</div>
+                        </div>
+                        <div class="preview-3-stat">
+                            <div class="preview-3-stat-num">0.24</div>
+                            <div class="preview-3-stat-label">Tráfico GB</div>
+                        </div>
+                        <div class="preview-3-stat">
+                            <div class="preview-3-stat-num">1559</div>
+                            <div class="preview-3-stat-label">Sesiones</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="design-info">
+                    <div class="design-title">3️⃣ Dark Modern</div>
+                    <p class="design-description">Oscuro, tech-forward, bordes nítidos. Mejor para ambientes con luz artificial o salas de control. Menos cansancio visual.</p>
+                    <div class="design-specs">
+Paleta: Dark Navy + Verde bright
+Tipografía: Inter
+Efectos: Borders, gradientes oscuros
+Caso ideal: Control rooms, ambientes oscuros
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 4 -->
+            <div class="design-card">
+                <div class="design-preview preview-4">
+                    <div class="preview-4-header">✨ VPN MONITOR ✨</div>
+                    <div class="preview-4-stats">
+                        <div class="preview-4-stat">
+                            <div class="preview-4-stat-num">5</div>
+                            <div class="preview-4-stat-label">Conectados</div>
+                        </div>
+                        <div class="preview-4-stat">
+                            <div class="preview-4-stat-num">7</div>
+                            <div class="preview-4-stat-label">Usuarios</div>
+                        </div>
+                        <div class="preview-4-stat">
+                            <div class="preview-4-stat-num">0.24</div>
+                            <div class="preview-4-stat-label">Tráfico GB</div>
+                        </div>
+                        <div class="preview-4-stat">
+                            <div class="preview-4-stat-num">1559</div>
+                            <div class="preview-4-stat-label">Sesiones</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="design-info">
+                    <div class="design-title">4️⃣ Luxury Elegance</div>
+                    <p class="design-description">Sofisticado, con toques de oro. Minimalista pero lujoso. Transmite autoridad y premium. Detalles refinados.</p>
+                    <div class="design-specs">
+Paleta: Dark Green + Oro (#b8860b)
+Tipografía: Inter + IBM Plex Serif
+Efectos: Bordes dorados, tipografía serif
+Caso ideal: Ejecutivos, presentaciones premium
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPCIÓN 5 -->
+            <div class="design-card">
+                <div class="design-preview preview-5">
+                    <div class="preview-5-header">> VPN_MONITOR_SYSTEM.exe</div>
+                    <div class="preview-5-stats">
+                        <div class="preview-5-stat">
+                            <div class="preview-5-stat-num">5</div>
+                            <div class="preview-5-stat-label">ONLINE</div>
+                        </div>
+                        <div class="preview-5-stat">
+                            <div class="preview-5-stat-num">7</div>
+                            <div class="preview-5-stat-label">TODAY</div>
+                        </div>
+                        <div class="preview-5-stat">
+                            <div class="preview-5-stat-num">0.24</div>
+                            <div class="preview-5-stat-label">TRAFFIC</div>
+                        </div>
+                        <div class="preview-5-stat">
+                            <div class="preview-5-stat-num">1559</div>
+                            <div class="preview-5-stat-label">SESSIONS</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="design-info">
+                    <div class="design-title">5️⃣ Brutalist Tech</div>
+                    <p class="design-description">Radical, minimalista, sin decoración. Bordes nítidos, monospace. Para amantes del diseño austero y técnico.</p>
+                    <div class="design-specs">
+Paleta: Negro + Verde #16A34A (puro)
+Tipografía: Space Mono (monospace)
+Efectos: Bordes, nada más
+Caso ideal: Developers, data centers, tech geeks
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>📋 Resumen de Opciones</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <h4>1️⃣ Refined Minimalism</h4>
+                    <p>Lo que tienes ahora mejorado. Limpio, profesional. Mantiene toda la identidad verde.</p>
+                </div>
+                <div class="legend-item">
+                    <h4>2️⃣ Organic Modern ⭐</h4>
+                    <p><strong>RECOMENDADO</strong> para Argensun. Natural, moderno. Refleja naturaleza + alimentos frescos.</p>
+                </div>
+                <div class="legend-item">
+                    <h4>3️⃣ Dark Modern</h4>
+                    <p>Ideal si la tele está en ambiente oscuro. Tech-forward, no causa fatiga visual.</p>
+                </div>
+                <div class="legend-item">
+                    <h4>4️⃣ Luxury Elegance</h4>
+                    <p>Premium, sofisticado. Para presentaciones con directivos. Toque de oro/lujo.</p>
+                </div>
+                <div class="legend-item">
+                    <h4>5️⃣ Brutalist Tech</h4>
+                    <p>Ultra minimalista. Para IT/devs. Radical, sin decoración, puro código.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Monitor - Final Design Confirmation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 1600px; margin: 0 auto; }
+
+        h1 { 
+            text-align: center; 
+            margin-bottom: 10px; 
+            font-size: 32px;
+            background: linear-gradient(135deg, #16A34A, #84cc16);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 50px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .preview-section {
+            background: rgba(20, 30, 60, 0.4);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .preview-title {
+            color: #84cc16;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* STATS CARDS - Similar al mockup pero más compacto */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(20, 40, 30, 0.6));
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.2) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -20px); }
+        }
+
+        .stat-card:hover {
+            background: rgba(22, 163, 74, 0.15);
+            border-color: rgba(22, 163, 74, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 
+                -2px -2px 0px #16A34A,
+                -4px -4px 0px rgba(22, 163, 74, 0.6),
+                0px 4px 15px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            animation: fade-in-num 0.8s ease-out;
+        }
+
+        @keyframes fade-in-num {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #84cc16;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* USER CARDS - Grid más compacto */
+        .users-title {
+            color: #84cc16;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 40px 0 25px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .user-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(20, 40, 30, 0.6));
+            border: 1px solid rgba(22, 163, 74, 0.2);
+            border-left: 4px solid #16A34A;
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 20px;
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.15) 0%, transparent 70%);
+            animation: float 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .user-card:hover {
+            background: rgba(22, 163, 74, 0.1);
+            border-color: rgba(22, 163, 74, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.15);
+        }
+
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16A34A, #10b981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .user-info {
+            font-size: 11px;
+            color: #aaa;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+        }
+
+        .user-info-label {
+            color: #888;
+        }
+
+        .user-info-value {
+            color: #84cc16;
+            font-weight: 500;
+        }
+
+        .first-conn {
+            background: rgba(132, 204, 22, 0.1);
+            border-left: 3px solid #84cc16;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #84cc16;
+            position: relative;
+            z-index: 1;
+        }
+
+        .confirmation-box {
+            background: linear-gradient(135deg, rgba(132, 204, 22, 0.1), rgba(22, 163, 74, 0.1));
+            border: 2px solid rgba(132, 204, 22, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .confirmation-box h3 {
+            color: #84cc16;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .confirmation-box p {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .spec-list {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            display: inline-block;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #aaa;
+            line-height: 2;
+        }
+
+        .spec-list strong {
+            color: #84cc16;
+        }
+
+        .btn-apply {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #16A34A, #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(22, 163, 74, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ VPN Monitor - Final Design Preview</h1>
+        <p class="subtitle">Tipografía Shadow Depth + Tarjetas Compactas</p>
+
+        <div class="preview-section">
+            <div class="preview-title">📊 Stats Cards (4️⃣ Shadow Depth Typography)</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">En línea</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Usuarios hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0.24</div>
+                    <div class="stat-label">Tráfico GB</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1559</div>
+                    <div class="stat-label">Sesiones período</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Conexiones máx</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
+
+            <div class="users-title">👥 Usuarios Conectados (Tarjetas Compactas - 5-6 por fila)</div>
+            
+            <div class="users-grid">
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">CE</div>
+                        <div class="user-name">cecilia.fiorda</div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-info-row">
+                            <span class="user-info-label">IP:</span>
+                            <span class="user-info-value">10.90.0.58</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Ubicación:</span>
+                            <span class="user-info-value">San Miguel</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Conectado:</span>
+                            <span class="user-info-value">34m32s</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Tráfico:</span>
+                            <span class="user-info-value">2.0 MB</span>
+                        </div>
+                        <div class="first-conn">🕐 Primera: 7:53 am</div>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">DI</div>
+                        <div class="user-name">diego.robalo</div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-info-row">
+                            <span class="user-info-label">IP:</span>
+                            <span class="user-info-value">10.90.0.60</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Ubicación:</span>
+                            <span class="user-info-value">Luján</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Conectado:</span>
+                            <span class="user-info-value">9m1s</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Tráfico:</span>
+                            <span class="user-info-value">3.8 MB</span>
+                        </div>
+                        <div class="first-conn">🕐 Primera: 8:18 am</div>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">FL</div>
+                        <div class="user-name">florencia.meroni</div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-info-row">
+                            <span class="user-info-label">IP:</span>
+                            <span class="user-info-value">10.90.0.59</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Ubicación:</span>
+                            <span class="user-info-value">Buenos Aires</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Conectado:</span>
+                            <span class="user-info-value">33m4s</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Tráfico:</span>
+                            <span class="user-info-value">0.5 MB</span>
+                        </div>
+                        <div class="first-conn">🕐 Primera: 7:54 am</div>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">LO</div>
+                        <div class="user-name">lorena.perrucci</div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-info-row">
+                            <span class="user-info-label">IP:</span>
+                            <span class="user-info-value">10.90.0.63</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Ubicación:</span>
+                            <span class="user-info-value">Unknown</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Conectado:</span>
+                            <span class="user-info-value">2h15m</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Tráfico:</span>
+                            <span class="user-info-value">1.2 MB</span>
+                        </div>
+                        <div class="first-conn">🕐 Primera: 6:30 am</div>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">MA</div>
+                        <div class="user-name">mariajose.malfagon</div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-info-row">
+                            <span class="user-info-label">IP:</span>
+                            <span class="user-info-value">10.90.0.72</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Ubicación:</span>
+                            <span class="user-info-value">La Plata</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Conectado:</span>
+                            <span class="user-info-value">45m20s</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Tráfico:</span>
+                            <span class="user-info-value">0.9 MB</span>
+                        </div>
+                        <div class="first-conn">🕐 Primera: 7:10 am</div>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-avatar">JL</div>
+                        <div class="user-name">juan.lopez</div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-info-row">
+                            <span class="user-info-label">IP:</span>
+                            <span class="user-info-value">10.90.0.65</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Ubicación:</span>
+                            <span class="user-info-value">Morón</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Conectado:</span>
+                            <span class="user-info-value">1h22m</span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="user-info-label">Tráfico:</span>
+                            <span class="user-info-value">2.3 MB</span>
+                        </div>
+                        <div class="first-conn">🕐 Primera: 7:00 am</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="confirmation-box">
+            <h3>✨ Confirmación Final</h3>
+            <p>Esta es la configuración que vamos a aplicar al dashboard completo:</p>
+            
+            <div class="spec-list">
+                <div><strong>Tipografía Numbers:</strong> Shadow Depth (Outfit 800)</div>
+                <div><strong>Text Shadow:</strong> 3D offset (-2px -2px, -4px -4px, 0px 4px 15px)</div>
+                <div><strong>Cards Width:</strong> minmax(280px, 1fr) - 5-6 tarjetas por fila en 1920px</div>
+                <div><strong>Aspect Ratio:</strong> 16/9 (alargadas, no cuadradas)</div>
+                <div><strong>Efectos:</strong> Glassmorphism + Blur + Gradientes flotantes</div>
+                <div><strong>Interacción:</strong> Hover smooth, animations en entrada</div>
+                <div><strong>TV Optimization:</strong> ✅ Zoom automático según usuarios</div>
+                <div><strong>Modal:</strong> ✅ Click en tarjeta + Copiar info/imagen</div>
+            </div>
+
+            <p style="margin-top: 20px;">¿Confirmamos con esta dirección? Si está ok, aplico todos estos cambios al dashboard real ahora.</p>
+            
+            <button class="btn-apply">✅ CONFIRMAR Y APLICAR</button>
+        </div>
+    </div>
+</body>
+</html>

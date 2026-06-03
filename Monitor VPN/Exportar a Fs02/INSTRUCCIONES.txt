@@ -1,0 +1,90 @@
+================================================================================
+                    MIGRACIÓN VPN MONITOR A fs02
+                        INSTRUCCIONES
+================================================================================
+
+CARPETA: C:\Users\diego.robalo\Documents\CLAUDIA\Monitor VPN\Exportar a Fs02\
+
+ARCHIVOS EN ESTA CARPETA (2):
+-----------------------------
+1. vpn_monitor.py       ✅ Con 3 bug fixes aplicados
+2. web_server.py        ✅ Con fix de LIMIT configurable
+
+
+PASO 1: EN EL SERVIDOR ACTUAL (10.90.0.105)
+============================================
+Localiza las bases de datos. Están en el servidor que ejecuta vpn_monitor.
+
+Busca estas dos carpetas/archivos:
+  • vpn_sessions.db  (historial de conexiones VPN)
+  • users.db         (usuarios del dashboard)
+
+Típicamente están en:
+  • C:\VPN_Monitor\data\  (si fue instalado en disco local)
+  • O en la carpeta donde se ejecuta vpn_monitor.py
+
+Haz BACKUP de estos 2 archivos .db
+
+
+PASO 2: EN fs02 (10.90.0.47)
+=============================
+
+A) CREAR CARPETAS:
+   └─ C:\VPN_Monitor\
+      └─ C:\VPN_Monitor\data\
+
+B) COPIAR ESTOS 2 ARCHIVOS:
+   • vpn_monitor.py  → C:\VPN_Monitor\
+   • web_server.py   → C:\VPN_Monitor\
+
+C) COPIAR LAS BASES DE DATOS:
+   • vpn_sessions.db → C:\VPN_Monitor\data\
+   • users.db        → C:\VPN_Monitor\data\
+
+
+PASO 3: INSTALACIÓN EN fs02
+============================
+
+Abre PowerShell en C:\VPN_Monitor\ y ejecuta:
+
+A) INSTALAR DEPENDENCIAS:
+   pip install librouteros flask flask-cors cryptography geoip2
+
+B) SETUP INICIAL (primera vez):
+   python vpn_monitor.py --setup
+   
+   Te pedirá:
+   - MikroTik Host: 10.90.0.105
+   - MikroTik Port: 8728
+   - MikroTik User: api_monitor
+   - MikroTik Password: [contraseña del screenshot anterior]
+   
+   ⚠️ Sistema validará credenciales automáticamente
+
+C) INICIAR SERVICIOS (en 2 terminales):
+   
+   Terminal 1:
+   python vpn_monitor.py
+   
+   Terminal 2:
+   python web_server.py
+   
+   Dashboard: http://10.90.0.47:5000
+
+
+VERIFICACIÓN
+============
+✓ Dashboard carga sin errores
+✓ Usuarios aparecen en la lista
+✓ Sesiones > 1000 se muestran todas
+✓ Horario de primera conexión persiste en reconexiones
+
+
+DUDAS O PROBLEMAS
+=================
+Si algo no funciona, ejecuta:
+  python vpn_monitor.py --test
+
+Esto probará la conexión a MikroTik.
+
+================================================================================

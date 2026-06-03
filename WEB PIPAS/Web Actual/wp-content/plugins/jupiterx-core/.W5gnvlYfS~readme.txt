@@ -1,0 +1,38 @@
+=== Jupiter X Core ===
+Contributors: artbees
+Tags: jupiter, jupiterx
+Requires at least: 4.7
+Tested up to: 5.8
+Requires PHP: 5.6
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+
+Core functionalities for Jupiter X theme.
+
+== Description ==
+
+Jupiter X Core plugin provides the necessary core functionality for [Jupiter X](https://jupiterx.artbees.net/) theme. All Jupiter X users need to install and activate this plugin to use the full feature of the theme.
+
+- Advanced Control Panel to handle template and plugin installation, manage settings, and more.
+- Advanced Customizer to customize different parts of the website.
+- Header, footer, single, archive builders.
+- New Elementor widgets.
+- New Elementor Dynamic tags.
+- and more.
+
+It's worth mentioning that, some of the features are disabled for the Jupiter X Lite theme.
+
+== Installation ==
+
+1. Install using the WordPress built-in Plugin installer, or Extract the zip file and drop the contents in the `wp-content/plugins/` directory of your WordPress installation.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+
+== Changelog ==
+
+= 2.0.9 =
+* Fixed security issues
+* Improved control panel
+* Improved customizer
+
+= 1.0.0 =
+* Initial release

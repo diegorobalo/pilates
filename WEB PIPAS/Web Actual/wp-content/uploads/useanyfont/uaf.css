@@ -1,0 +1,13 @@
+				@font-face {
+					font-family: 'dkcanoodle';
+					src: url('/wp-content/uploads/useanyfont/3917DKCanoodle.woff2') format('woff2'),
+						url('/wp-content/uploads/useanyfont/3917DKCanoodle.woff') format('woff');
+					  font-display: auto;
+				}
+
+				.dkcanoodle{font-family: 'dkcanoodle' !important;}
+
+						h1, h2, h3, h4, h5, h6, entry-title, menu-principal-container-li-a-menu-principal-container-li-span-menu-principal-li-a-menu-principal-li-span{
+					font-family: 'dkcanoodle' !important;
+				}
+		

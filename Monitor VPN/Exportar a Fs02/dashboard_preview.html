@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa - Dashboard VPN Monitor Mejorado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #B45309 0%, #92400e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Oxanium', sans-serif;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #ddd;
+            background: #f9f9f9;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'Oxanium', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+            color: #B45309;
+        }
+
+        .tab.active {
+            background: white;
+            color: #B45309;
+            border-bottom: 3px solid #B45309;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #F8F4EE 0%, #f0ebe0 100%);
+            border-left: 4px solid #B45309;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-family: 'Oxanium', sans-serif;
+            color: #B45309;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .detail {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .section-title {
+            font-family: 'Oxanium', sans-serif;
+            color: #B45309;
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #B45309;
+            padding-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        thead {
+            background: #f0ebe0;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            color: #B45309;
+            font-family: 'Oxanium', sans-serif;
+            font-weight: bold;
+            border-bottom: 2px solid #B45309;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .btn {
+            background: #B45309;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #92400e;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            font-family: 'Oxanium', sans-serif;
+            color: #B45309;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Merriweather', serif;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .btn-secondary {
+            background: #999;
+        }
+
+        .btn-secondary:hover {
+            background: #777;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 30px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .preview-note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            color: #1565c0;
+            font-size: 0.9em;
+        }
+
+        .feature-highlight {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #2e7d32;
+        }
+
+        .footer {
+            background: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .tab {
+                padding: 12px 15px;
+                font-size: 0.9em;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Vista Previa - Dashboard VPN Monitor</h1>
+            <p>Mejoras integradas en el dashboard existente - Aprobación antes de implementación</p>
+        </div>
+
+        <div class="preview-note">
+            <strong>ℹ️ IMPORTANTE:</strong> Esta es una vista previa para revisión. El dashboard final integrará todas estas mejoras en la versión actual manteniendo TODAS las 7 pestañas originales y sus funcionalidades.
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('conectados')">Conectados</button>
+            <button class="tab" onclick="switchTab('tabla')">Tabla Detalle</button>
+            <button class="tab" onclick="switchTab('historial')">Historial</button>
+            <button class="tab" onclick="switchTab('auditoria')">Auditoría</button>
+            <button class="tab" onclick="switchTab('informe')">Informe Usuario</button>
+            <button class="tab" onclick="switchTab('rrhh')">RRHH/Gestión</button>
+            <button class="tab" onclick="switchTab('it')">IT/Seguridad</button>
+        </div>
+
+        <!-- PESTAÑA 1: CONECTADOS -->
+        <div id="conectados" class="content active">
+            <h2>Usuarios Conectados Hoy</h2>
+            <p style="color: #999; margin-bottom: 20px;">Se mantienen todas las características existentes: tarjetas de usuarios, avatares, estado, geolocalización con Leaflet, etc.</p>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h3>Usuarios Hoy</h3>
+                    <div class="value">12</div>
+                    <div class="detail">
+                        Conectados ahora<br>
+                        <strong style="color: #B45309;">Primera conexión: 9:15 am</strong>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Sesiones Activas</h3>
+                    <div class="value">18</div>
+                    <div class="detail">
+                        Sesiones en progreso
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Desconexiones Hoy</h3>
+                    <div class="value">5</div>
+                    <div class="detail">
+                        Desde las 12:30 pm
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-highlight">
+                <strong>✓ MEJORA 1:</strong> Se agrega "Primera conexión: 9:15 am" en la tarjeta de "Usuarios Hoy" para que RRHH pueda identificar el horario de la primera conexión del día.
+            </div>
+
+            <div class="section-title">Tarjetas de Usuarios (Funcionalidad Existente)</div>
+            <p style="color: #999;">Las tarjetas con avatares, status indicadores, ubicación geográfica (mapa Leaflet) y otros datos se mantienen igual.</p>
+        </div>
+
+        <!-- PESTAÑA 2: TABLA DETALLE -->
+        <div id="tabla" class="content">
+            <h2>Tabla Detalle de Sesiones</h2>
+            <p style="color: #999; margin-bottom: 20px;">Se mantiene la tabla completa con todas las columnas originales.</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>IP Asignada</th>
+                            <th>IP Pública</th>
+                            <th>1ª Conexión Hoy</th>
+                            <th>Ubicación</th>
+                            <th>Uptime Diario</th>
+                            <th>Uptime Sesión</th>
+                            <th>Descarga</th>
+                            <th>Subida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan Pérez</td>
+                            <td>192.168.1.10</td>
+                            <td>203.45.67.89</td>
+                            <td><strong style="color: #B45309;">9:15 am</strong></td>
+                            <td>Buenos Aires, AR</td>
+                            <td>8h 45m</td>
+                            <td>2h 15m</td>
+                            <td>2.5 GB</td>
+                            <td>850 MB</td>
+                        </tr>
+                        <tr>
+                            <td>María García</td>
+                            <td>192.168.1.11</td>
+                            <td>203.45.67.90</td>
+                            <td><strong style="color: #B45309;">9:45 am</strong></td>
+                            <td>La Plata, AR</td>
+                            <td>7h 30m</td>
+                            <td>1h 50m</td>
+                            <td>1.8 GB</td>
+                            <td>620 MB</td>
+                        </tr>
+                        <tr>
+                            <td>Carlos López</td>
+                            <td>192.168.1.12</td>
+                            <td>203.45.67.91</td>
+                            <td><strong style="color: #B45309;">10:20 am</strong></td>
+                            <td>Rosario, AR</td>
+                            <td>6h 15m</td>
+                            <td>1h 30m</td>
+                            <td>3.2 GB</td>
+                            <td>950 MB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="feature-highlight">
+                <strong>✓ NOTA:</strong> La columna "1ª Conexión Hoy" ahora muestra la hora exacta en formato "9:15 am" para facilitar control de asistencia en RRHH.
+            </div>
+        </div>
+
+        <!-- PESTAÑA 3: HISTORIAL -->
+        <div id="historial" class="content">
+            <h2>Historial de Sesiones</h2>
+            <p style="color: #999; margin-bottom: 20px;">Se mantiene el historial completo con tiempos de conexión/desconexión.</p>
+
+            <div class="warning-box">
+                <strong>Funcionalidad Existente:</strong> Visualización de historial de sesiones con información detallada de conexiones y desconexiones.
+            </div>
+        </div>
+
+        <!-- PESTAÑA 4: AUDITORÍA -->
+        <div id="auditoria" class="content">
+            <h2>Auditoría</h2>
+            <p style="color: #999; margin-bottom: 20px;">Se mantiene la búsqueda de auditoría con filtros de rango de fechas.</p>
+
+            <div class="warning-box">
+                <strong>Funcionalidad Existente:</strong> Sistema de auditoría con filtros avanzados de fecha para seguimiento y revisión de eventos.
+            </div>
+        </div>
+
+        <!-- PESTAÑA 5: INFORME USUARIO -->
+        <div id="informe" class="content">
+            <h2>Informe de Usuario</h2>
+            <p style="color: #999; margin-bottom: 20px;">Se mantiene la generación de reportes con estadísticas y gráficos por usuario.</p>
+
+            <div class="warning-box">
+                <strong>Funcionalidad Existente:</strong> Reportes detallados por usuario con estadísticas y visualización de datos mediante gráficos (Chart.js).
+            </div>
+        </div>
+
+        <!-- PESTAÑA 6: RRHH/GESTIÓN -->
+        <div id="rrhh" class="content">
+            <h2>RRHH / Gestión</h2>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h3>Usuarios Sin Asignar</h3>
+                    <div class="value">14</div>
+                    <div class="detail">
+                        Requieren departamento
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Departamentos</h3>
+                    <div class="value">7</div>
+                    <div class="detail">
+                        Sectores activos
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Horas Totales</h3>
+                    <div class="value">256.5h</div>
+                    <div class="detail">
+                        Últimos 30 días
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEJORA 2: USUARIOS SIN ASIGNAR -->
+            <div class="section-title">👥 Usuarios Sin Asignar (MEJORA 2)</div>
+            <div class="feature-highlight">
+                <strong>✓ NUEVA FUNCIONALIDAD:</strong> Tabla de usuarios sin departamento asignado con estadísticas individuales y botón de asignación rápida. Permite asignarlos al departamento correspondiente sin salir de la vista.
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Sesiones</th>
+                            <th>Horas</th>
+                            <th>MB Descargados</th>
+                            <th>Última Conexión</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Roberto Martínez</td>
+                            <td>23</td>
+                            <td>45.5h</td>
+                            <td>2,340 MB</td>
+                            <td>Hoy 2:15 pm</td>
+                            <td><button class="btn" onclick="openAssignModal('Roberto Martínez')">Asignar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Ana Rodríguez</td>
+                            <td>18</td>
+                            <td>38.2h</td>
+                            <td>1,890 MB</td>
+                            <td>Hoy 1:45 pm</td>
+                            <td><button class="btn" onclick="openAssignModal('Ana Rodríguez')">Asignar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Fernando Díaz</td>
+                            <td>31</td>
+                            <td>62.8h</td>
+                            <td>3,120 MB</td>
+                            <td>Ayer 4:30 pm</td>
+                            <td><button class="btn" onclick="openAssignModal('Fernando Díaz')">Asignar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Catalina Flores</td>
+                            <td>12</td>
+                            <td>24.5h</td>
+                            <td>980 MB</td>
+                            <td>Hace 2 días</td>
+                            <td><button class="btn" onclick="openAssignModal('Catalina Flores')">Asignar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MEJORA 3: ACTIVIDAD MENSUAL MEJORADA -->
+            <div class="section-title">📊 Actividad Mensual - Últimos 30 Días (MEJORA 3)</div>
+            <div class="feature-highlight">
+                <strong>✓ MEJORA:</strong> Visualización mejorada con gráfico de actividad diaria, tabla de resumen y estadísticas útiles. Se reemplaza la vista anterior poco clara por una representación visual clara.
+            </div>
+
+            <div class="chart-container">
+                <canvas id="activityChart"></canvas>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Usuarios Activos</th>
+                            <th>Horas Totales</th>
+                            <th>GB Descargados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12/05/2026</td>
+                            <td>12</td>
+                            <td>95.5h</td>
+                            <td>8.2 GB</td>
+                        </tr>
+                        <tr>
+                            <td>11/05/2026</td>
+                            <td>10</td>
+                            <td>78.2h</td>
+                            <td>6.9 GB</td>
+                        </tr>
+                        <tr>
+                            <td>10/05/2026</td>
+                            <td>14</td>
+                            <td>112.8h</td>
+                            <td>10.1 GB</td>
+                        </tr>
+                        <tr>
+                            <td>09/05/2026</td>
+                            <td>11</td>
+                            <td>85.3h</td>
+                            <td>7.5 GB</td>
+                        </tr>
+                        <tr>
+                            <td>08/05/2026</td>
+                            <td>9</td>
+                            <td>62.1h</td>
+                            <td>5.2 GB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background: #f0ebe0; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <strong style="color: #B45309;">Resumen de Actividad Mensual:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                    <li><strong>Días con actividad:</strong> 28 de 30</li>
+                    <li><strong>Usuarios únicos:</strong> 47</li>
+                    <li><strong>Horas totales:</strong> 2,456.7h</li>
+                    <li><strong>Total descargado:</strong> 234.8 GB</li>
+                </ul>
+            </div>
+
+            <!-- FUNCIONALIDADES EXISTENTES -->
+            <div class="section-title">Top 10 Usuarios (Funcionalidad Existente)</div>
+            <p style="color: #999;">Se mantienen todos los gráficos y reportes existentes.</p>
+
+            <div class="section-title">Sectores (Funcionalidad Existente)</div>
+            <p style="color: #999;">Se mantiene la visualización de usuarios por departamento/sector.</p>
+
+            <div class="section-title">Ausencias (Funcionalidad Existente)</div>
+            <p style="color: #999;">Se mantiene el sistema de alertas y avisos de ausencias.</p>
+        </div>
+
+        <!-- PESTAÑA 7: IT/SEGURIDAD -->
+        <div id="it" class="content">
+            <h2>IT / Seguridad</h2>
+            <p style="color: #999; margin-bottom: 20px;">Se mantienen todas las características de seguridad y monitoreo.</p>
+
+            <div class="warning-box">
+                <strong>Funcionalidad Existente:</strong> Monitoreo de conexiones fuera de horario, detección de IPs múltiples, distribución de ISP, picos horarios, y otras métricas de seguridad.
+            </div>
+        </div>
+
+        <!-- MODAL DE ASIGNACIÓN -->
+        <div id="assignModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">Asignar Departamento</div>
+                <div class="form-group">
+                    <label>Usuario:</label>
+                    <input type="text" id="userName" readonly style="background: #f5f5f5;">
+                </div>
+                <div class="form-group">
+                    <label>Seleccionar Departamento:</label>
+                    <select id="sectorSelect">
+                        <option value="">-- Seleccionar --</option>
+                        <option value="IT">IT/Seguridad</option>
+                        <option value="RRHH">RRHH</option>
+                        <option value="Directorio">Directorio</option>
+                        <option value="Finanzas">Finanzas</option>
+                        <option value="Operaciones">Operaciones</option>
+                        <option value="Ventas">Ventas</option>
+                        <option value="Marketing">Marketing</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button class="btn" onclick="assignUser()">Asignar Departamento</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>RESUMEN DE MEJORAS INTEGRADAS:</strong><br>
+            ✓ Mejora 1: Primera conexión con hora exacta (9:15 am) en stats cards<br>
+            ✓ Mejora 2: Tabla de usuarios sin asignar con botón de asignación rápida<br>
+            ✓ Mejora 3: Gráfico y tabla mejorada de actividad mensual<br>
+            ✓ Adición: Opción "Directorio" en selector de departamentos<br>
+            ✓ Preservado: Todas las 7 pestañas originales con funcionalidades intactas
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all content
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Initialize chart when RRHH tab is opened
+            if (tabName === 'rrhh') {
+                setTimeout(() => {
+                    if (document.getElementById('activityChart').chart) {
+                        document.getElementById('activityChart').chart.resize();
+                    } else {
+                        initActivityChart();
+                    }
+                }, 100);
+            }
+        }
+
+        function openAssignModal(userName) {
+            document.getElementById('userName').value = userName;
+            document.getElementById('assignModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('assignModal').classList.remove('show');
+        }
+
+        function assignUser() {
+            const userName = document.getElementById('userName').value;
+            const sector = document.getElementById('sectorSelect').value;
+            
+            if (!sector) {
+                alert('Por favor selecciona un departamento');
+                return;
+            }
+            
+            alert(`✓ ${userName} ha sido asignado a ${sector}`);
+            closeModal();
+        }
+
+        function initActivityChart() {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['08/05', '09/05', '10/05', '11/05', '12/05'],
+                    datasets: [
+                        {
+                            label: 'Usuarios Activos',
+                            data: [9, 11, 14, 10, 12],
+                            backgroundColor: 'rgba(180, 83, 9, 0.7)',
+                            borderColor: '#B45309',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Horas Totales',
+                            data: [62, 85, 113, 78, 96],
+                            backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                            borderColor: '#667eea',
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Usuarios Activos'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Horas Totales'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize chart on page load
+        window.addEventListener('load', initActivityChart);
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('assignModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
