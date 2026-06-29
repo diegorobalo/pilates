@@ -2,11 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "dashboard-preview",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["serve.py"],
-      "port": 9999,
-      "autoPort": false
+      "name": "piletero-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--port", "5174"],
+      "cwd": "PILETERO/frontend",
+      "port": 5174
     }
   ]
 }
