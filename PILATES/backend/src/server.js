@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import authRoutes from './routes/auth.js';
+import usersRoutes from './routes/users.js';
 
 dotenv.config();
 
@@ -42,6 +43,9 @@ app.get('/api/health', (req, res) => {
 
 // Authentication routes
 app.use('/api/auth', authRoutes);
+
+// User management routes
+app.use('/api/users', usersRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
