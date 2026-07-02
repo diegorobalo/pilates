@@ -5,29 +5,36 @@ import morgan from 'morgan';
 
 dotenv.config();
 
-const app = express();
-
 // Validate required environment variables
-if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'your-secret-key-change-in-production') {
-  console.error('ERROR: JWT_SECRET is not set or is using the default insecure value. Please set a secure JWT_SECRET in your .env file.');
-  process.exit(1);
+const requiredEnvVars = ['JWT_SECRET'];
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.error(`❌ FATAL: Missing required environment variable: ${envVar}`);
+    process.exit(1);
+  }
+  // Prevent using insecure default value
+  if (process.env[envVar] === 'your-secure-secret-key-here' || process.env[envVar] === 'your-secret-key-change-in-production') {
+    console.error(`❌ FATAL: JWT_SECRET is using insecure placeholder value. Set a real secret in .env`);
+    process.exit(1);
+  }
 }
 
-// Validate and parse PORT
-const PORT_ENV = process.env.PORT || '3000';
-const PORT = parseInt(PORT_ENV, 10);
-
+// Validate PORT
+const portString = process.env.PORT || '3000';
+const PORT = parseInt(portString, 10);
 if (isNaN(PORT) || PORT < 1 || PORT > 65535) {
-  console.error(`ERROR: Invalid PORT value "${PORT_ENV}". PORT must be a number between 1 and 65535.`);
+  console.error(`❌ FATAL: Invalid PORT value. Must be 1-65535, got: ${portString}`);
   process.exit(1);
 }
+
+const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan('combined')); // Request logging
 
-// Health check
+// Routes
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -40,18 +47,19 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Handle uncaught exceptions
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+// Process error handlers
+process.on('uncaughtException', (err) => {
+  console.error('❌ UNCAUGHT EXCEPTION:', err);
   process.exit(1);
 });
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('❌ UNHANDLED REJECTION at:', promise, 'reason:', reason);
   process.exit(1);
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`📋 NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
 });
