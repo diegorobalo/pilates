@@ -120,10 +120,52 @@ Crear una plataforma que permita:
 1. **Brainstorming:** ✅ COMPLETADO
 2. **Design Spec:** ✅ COMPLETADO
 3. **Mockups:** ✅ COMPLETADO
-4. **Implementación Frontend:** ⏳ POR HACER
-5. **Implementación Backend:** ⏳ POR HACER
-6. **Testing & QA:** ⏳ POR HACER
-7. **Deployment:** ⏳ POR HACER
+4. **Implementación Frontend:** ✅ COMPLETADO
+5. **Implementación Backend:** ✅ COMPLETADO
+6. **Testing & QA:** ✅ COMPLETADO
+7. **Deployment Configuration:** ✅ COMPLETADO
+
+---
+
+## 📦 Deployment
+
+The application is configured for deployment across multiple platforms:
+
+- **Frontend**: Vercel (automatic deployment from GitHub)
+- **Backend**: Railway (Node.js hosting)
+- **Database**: Turso (SQLite Cloud)
+
+### Quick Start Deployment
+
+See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for complete deployment instructions including:
+- Database setup with Turso
+- Backend deployment to Railway
+- Frontend deployment to Vercel
+- Environment configuration
+- Troubleshooting guide
+
+### Environment Setup
+
+Create environment files:
+
+**Backend** (`.env.production`):
+```
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=libsql://YOUR_ACCOUNT.turso.io/PILATES-DB?authToken=YOUR_TOKEN
+JWT_SECRET=your_very_strong_random_secret_here
+JWT_EXPIRE=7d
+PHONE_VERIFICATION_ENABLED=false
+```
+
+**Frontend** (`.env.production`):
+```
+VITE_API_URL=https://pilates-backend.railway.app/api
+VITE_APP_NAME=PILATES
+VITE_PUBLIC_URL=https://pilates-app.vercel.app
+```
+
+See `.env.production.example` files for more options.
 
 ---
 
