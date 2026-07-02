@@ -1,0 +1,170 @@
+import { v4 as uuidv4 } from 'uuid';
+import { runAsync, getAsync, allAsync } from '../db/connection.js';
+
+class Schedule {
+  /**
+   * Create a new class schedule
+   * @param {Object} data - Schedule data
+   * @param {string} data.fecha - Date (YYYY-MM-DD format)
+   * @param {string} data.hora - Time (HH:MM format)
+   * @param {number} [data.capacidad] - Capacity (default: 6)
+   * @param {string} [data.estado] - Status: ABIERTA, CERRADA, CANCELADA (default: ABIERTA)
+   * @param {string} data.creada_por - User ID who created this schedule
+   * @returns {Promise<Object>} Created schedule object with id
+   */
+  static async create(data) {
+    const id = uuidv4();
+    const {
+      fecha,
+      hora,
+      capacidad = 6,
+      estado = 'ABIERTA',
+      creada_por
+    } = data;
+
+    try {
+      await runAsync(
+        `INSERT INTO horarios_clases (
+          id, fecha, hora, capacidad, estado, creada_por
+        ) VALUES (?, ?, ?, ?, ?, ?)`,
+        [id, fecha, hora, capacidad, estado, creada_por]
+      );
+
+      return await Schedule.findById(id);
+    } catch (error) {
+      throw new Error(`Error creating schedule: ${error.message}`);
+    }
+  }
+
+  /**
+   * Find schedule by ID
+   * @param {string} id - Schedule ID
+   * @returns {Promise<Object|null>} Schedule object or null if not found
+   */
+  static async findById(id) {
+    try {
+      return await getAsync('SELECT * FROM horarios_clases WHERE id = ?', [id]);
+    } catch (error) {
+      throw new Error(`Error finding schedule by ID: ${error.message}`);
+    }
+  }
+
+  /**
+   * Find all schedules for a specific date
+   * @param {string} fecha - Date (YYYY-MM-DD format)
+   * @returns {Promise<Array>} Array of schedule objects for that date
+   */
+  static async findByDate(fecha) {
+    try {
+      return await allAsync(
+        'SELECT * FROM horarios_clases WHERE fecha = ? ORDER BY hora ASC',
+        [fecha]
+      );
+    } catch (error) {
+      throw new Error(`Error finding schedules by date: ${error.message}`);
+    }
+  }
+
+  /**
+   * Find all schedules within a date range
+   * @param {string} fechaInicio - Start date (YYYY-MM-DD format)
+   * @param {string} fechaFin - End date (YYYY-MM-DD format)
+   * @returns {Promise<Array>} Array of schedule objects within the range
+   */
+  static async findByDateRange(fechaInicio, fechaFin) {
+    try {
+      return await allAsync(
+        'SELECT * FROM horarios_clases WHERE fecha BETWEEN ? AND ? ORDER BY fecha ASC, hora ASC',
+        [fechaInicio, fechaFin]
+      );
+    } catch (error) {
+      throw new Error(`Error finding schedules by date range: ${error.message}`);
+    }
+  }
+
+  /**
+   * Update a schedule
+   * @param {string} id - Schedule ID
+   * @param {Object} data - Data to update
+   * @returns {Promise<Object>} Updated schedule object
+   */
+  static async update(id, data) {
+    try {
+      const schedule = await Schedule.findById(id);
+      if (!schedule) {
+        throw new Error('Schedule not found');
+      }
+
+      const {
+        fecha = schedule.fecha,
+        hora = schedule.hora,
+        capacidad = schedule.capacidad,
+        estado = schedule.estado
+      } = data;
+
+      await runAsync(
+        `UPDATE horarios_clases SET
+          fecha = ?, hora = ?, capacidad = ?, estado = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?`,
+        [fecha, hora, capacidad, estado, id]
+      );
+
+      return await Schedule.findById(id);
+    } catch (error) {
+      throw new Error(`Error updating schedule: ${error.message}`);
+    }
+  }
+
+  /**
+   * Get available bed numbers for a specific schedule
+   * Returns array of available bed numbers (1-6) that haven't been reserved yet
+   * @param {string} horarioId - Schedule ID
+   * @returns {Promise<Array>} Array of available bed numbers
+   */
+  static async getAvailableBeds(horarioId) {
+    try {
+      const schedule = await Schedule.findById(horarioId);
+      if (!schedule) {
+        throw new Error('Schedule not found');
+      }
+
+      // Get all reserved bed numbers for this schedule
+      const reservedBeds = await allAsync(
+        `SELECT cama_numero FROM reservas
+         WHERE horario_id = ? AND estado IN ('PENDIENTE', 'CONFIRMADA')`,
+        [horarioId]
+      );
+
+      const reservedNumbers = reservedBeds.map(r => r.cama_numero);
+
+      // All available beds are those not in the reserved list
+      const allBeds = Array.from({ length: schedule.capacidad }, (_, i) => i + 1);
+      const availableBeds = allBeds.filter(bed => !reservedNumbers.includes(bed));
+
+      return availableBeds;
+    } catch (error) {
+      throw new Error(`Error getting available beds: ${error.message}`);
+    }
+  }
+
+  /**
+   * Delete a schedule
+   * @param {string} id - Schedule ID
+   * @returns {Promise<boolean>} True if deletion was successful
+   */
+  static async delete(id) {
+    try {
+      const schedule = await Schedule.findById(id);
+      if (!schedule) {
+        throw new Error('Schedule not found');
+      }
+
+      const result = await runAsync('DELETE FROM horarios_clases WHERE id = ?', [id]);
+      return result.changes > 0;
+    } catch (error) {
+      throw new Error(`Error deleting schedule: ${error.message}`);
+    }
+  }
+}
+
+export default Schedule;
