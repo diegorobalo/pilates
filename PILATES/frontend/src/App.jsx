@@ -4,6 +4,7 @@ import LoginPage from './components/Auth/LoginPage'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import AlumnaPortal from './pages/AlumnaPortal'
 import InstructorDashboard from './pages/InstructorDashboard'
+import FinanceDashboard from './pages/FinanceDashboard'
 import ClassAttendance from './pages/ClassAttendance'
 
 export default function App() {
@@ -25,6 +26,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <InstructorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/finance"
+            element={
+              <ProtectedRoute>
+                <FinanceDashboard />
               </ProtectedRoute>
             }
           />

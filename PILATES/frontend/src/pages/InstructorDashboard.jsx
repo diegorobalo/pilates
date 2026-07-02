@@ -44,6 +44,10 @@ export default function InstructorDashboard() {
     navigate('/login', { replace: true })
   }
 
+  const handleFinancesClick = () => {
+    navigate('/finance')
+  }
+
   const tabs = [
     { id: 'alumnas', label: 'Alumnas', icon: Users },
     { id: 'horarios', label: 'Horarios', icon: Calendar },
@@ -123,7 +127,26 @@ export default function InstructorDashboard() {
           <PendingReservations onCountChange={setPendingCount} />
         )}
         {activeTab === 'asistencia' && <AttendanceManagement />}
-        {activeTab === 'finanzas' && <FinancesManagement />}
+        {activeTab === 'finanzas' && (
+          <div className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">
+                Dashboard Financiero Mejorado
+              </h3>
+              <p className="text-blue-800 mb-4">
+                Accede a un dashboard financiero completo con reportes avanzados,
+                seguimiento de pagos por alumna, y análisis detallados.
+              </p>
+              <button
+                onClick={handleFinancesClick}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                Ir al Dashboard Financiero
+              </button>
+            </div>
+            <FinancesManagement />
+          </div>
+        )}
       </main>
     </div>
   )
