@@ -1,22 +1,26 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { LogOut, Calendar, BookMarked, History } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import ClassCalendar from '../components/Alumna/ClassCalendar'
 import MyReservations from '../components/Alumna/MyReservations'
 import AttendanceHistory from '../components/Alumna/AttendanceHistory'
 
 export default function AlumnaPortal() {
   const [activeTab, setActiveTab] = useState('calendar')
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
-  // Mock alumna data - in real app, would come from auth/state management
+  // Default alumna data if user info not available
   const alumnaInfo = {
-    name: 'María García',
-    plan: 'Plan Semanal',
-    status: 'Activo'
+    name: user?.name || 'Alumna',
+    plan: user?.plan || 'Plan Semanal',
+    status: user?.status || 'Activo'
   }
 
-  const handleLogout = () => {
-    // Handle logout logic
-    console.log('Logout clicked')
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login', { replace: true })
   }
 
   return (

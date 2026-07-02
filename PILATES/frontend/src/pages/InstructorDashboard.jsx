@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Users,
   Calendar,
@@ -8,6 +9,7 @@ import {
   DollarSign,
   UserCheck,
 } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import StudentManagement from '../components/Instructor/StudentManagement'
 import ScheduleManagement from '../components/Instructor/ScheduleManagement'
 import PendingReservations from '../components/Instructor/PendingReservations'
@@ -17,13 +19,12 @@ import FinancesManagement from '../components/Instructor/FinancesManagement'
 export default function InstructorDashboard() {
   const [activeTab, setActiveTab] = useState('alumnas')
   const [pendingCount, setPendingCount] = useState(0)
-  const [instructorName, setInstructorName] = useState('Instructor')
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const instructorName = user?.name || 'Instructor'
 
   useEffect(() => {
-    // Get instructor name from session/localStorage
-    const name = localStorage.getItem('instructorName') || 'Instructor'
-    setInstructorName(name)
-
     // Fetch pending reservations count
     fetchPendingCount()
   }, [])
@@ -38,11 +39,9 @@ export default function InstructorDashboard() {
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('instructorName')
-    localStorage.removeItem('instructorId')
-    localStorage.removeItem('token')
-    window.location.href = '/login'
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login', { replace: true })
   }
 
   const tabs = [
