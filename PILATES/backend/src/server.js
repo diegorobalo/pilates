@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
+import schedulesRoutes from './routes/schedules.js';
 
 dotenv.config();
 
@@ -46,6 +47,9 @@ app.use('/api/auth', authRoutes);
 
 // User management routes
 app.use('/api/users', usersRoutes);
+
+// Schedule management routes
+app.use('/api/schedules', schedulesRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

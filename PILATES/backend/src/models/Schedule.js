@@ -96,6 +96,21 @@ class Schedule {
   }
 
   /**
+   * Find all schedules
+   * @returns {Promise<Array>} Array of all schedule objects
+   */
+  static async findAll() {
+    try {
+      return await allAsync(
+        'SELECT * FROM horarios_clases ORDER BY fecha ASC, hora ASC',
+        []
+      );
+    } catch (error) {
+      throw new Error(`Error finding all schedules: ${error.message}`);
+    }
+  }
+
+  /**
    * Update a schedule
    * @param {string} id - Schedule ID
    * @param {Object} data - Data to update
