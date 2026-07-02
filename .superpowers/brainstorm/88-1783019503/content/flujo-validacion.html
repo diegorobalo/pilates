@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flujo de Validación de Reservas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 32px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .interfaces {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .panel-header h2 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .panel-header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .panel-content {
+      padding: 30px;
+    }
+
+    /* Notificación de pedido */
+    .notification-banner {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    }
+
+    .notification-banner h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .notification-banner p {
+      font-size: 13px;
+      opacity: 0.95;
+    }
+
+    .badge-alert {
+      background: rgba(255,255,255,0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Pedidos pendientes */
+    .pedidos-section h3 {
+      color: #333;
+      font-size: 16px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .pedido-item {
+      background: #fff8f0;
+      border: 2px solid #ffb74d;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pedido-info h4 {
+      color: #333;
+      font-size: 15px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .pedido-info p {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .pedido-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-confirmar {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-confirmar:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .btn-rechazar {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-rechazar:hover {
+      background: #da190b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(244, 67, 54, 0.3);
+    }
+
+    /* Camas confirmadas */
+    .camas-confirmadas {
+      margin-top: 25px;
+    }
+
+    .camas-confirmadas h3 {
+      color: #333;
+      font-size: 16px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #4CAF50;
+    }
+
+    .cama-confirmada {
+      background: #e8f5e9;
+      border: 2px solid #4CAF50;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cama-confirmada-info h4 {
+      color: #2e7d32;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .cama-confirmada-info p {
+      color: #558b2f;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .badge-confirmada {
+      background: #4CAF50;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Portal Alumnas */
+    .clase-item {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .clase-item.pendiente {
+      background: #fff3e0;
+      border-color: #ffb74d;
+    }
+
+    .clase-item.confirmada {
+      background: #f0f4ff;
+      border-color: #667eea;
+    }
+
+    .clase-info h4 {
+      color: #333;
+      font-size: 15px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .clase-info p {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge.pendiente {
+      background: #fff0e6;
+      color: #e65100;
+      border: 1px solid #ffb74d;
+    }
+
+    .badge.confirmada {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .btn-cancelar {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-cancelar:hover {
+      background: #da190b;
+    }
+
+    .btn-reservar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-reservar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 12px;
+      color: #1565c0;
+    }
+
+    @media (max-width: 1024px) {
+      .interfaces {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 Flujo de Validación de Reservas</h1>
+    <p class="subtitle">La dueña confirma/rechaza cada reserva que solicita la alumna</p>
+
+    <div class="interfaces">
+      <!-- DASHBOARD DUEÑA -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>👑 Dashboard Instructora</h2>
+          <p>Gestión de reservas pendientes</p>
+        </div>
+        <div class="panel-content">
+          <!-- Notificación roja de pedidos pendientes -->
+          <div class="notification-banner">
+            <div>
+              <h3>🔔 2 Solicitudes Pendientes</h3>
+              <p>Hay alumnas esperando validación de reservas</p>
+            </div>
+            <span class="badge-alert">⚠️ Acción requerida</span>
+          </div>
+
+          <!-- Sección de pedidos pendientes -->
+          <div class="pedidos-section">
+            <h3>📋 Pedidos de Reserva Pendientes</h3>
+
+            <!-- Pedido 1 -->
+            <div class="pedido-item">
+              <div class="pedido-info">
+                <h4>Valentina Romero</h4>
+                <p>📅 Viernes 5 • 10:00 hs</p>
+                <p>🕐 Solicitado hace 5 minutos</p>
+              </div>
+              <div class="pedido-actions">
+                <button class="btn btn-confirmar">✓ Confirmar</button>
+                <button class="btn btn-rechazar">✕ Rechazar</button>
+              </div>
+            </div>
+
+            <!-- Pedido 2 -->
+            <div class="pedido-item">
+              <div class="pedido-info">
+                <h4>Martina González</h4>
+                <p>📅 Jueves 11 • 19:00 hs</p>
+                <p>🕐 Solicitado hace 12 minutos</p>
+              </div>
+              <div class="pedido-actions">
+                <button class="btn btn-confirmar">✓ Confirmar</button>
+                <button class="btn btn-rechazar">✕ Rechazar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Camas confirmadas para hoy -->
+          <div class="camas-confirmadas">
+            <h3>✓ Confirmadas (Lunes 17:00)</h3>
+
+            <div class="cama-confirmada">
+              <div class="cama-confirmada-info">
+                <h4>María García</h4>
+                <p>Cama 1</p>
+              </div>
+              <span class="badge-confirmada">Confirmada</span>
+            </div>
+
+            <div class="cama-confirmada">
+              <div class="cama-confirmada-info">
+                <h4>Laura Pérez</h4>
+                <p>Cama 2</p>
+              </div>
+              <span class="badge-confirmada">Confirmada</span>
+            </div>
+
+            <div class="cama-confirmada">
+              <div class="cama-confirmada-info">
+                <h4>Sofia López</h4>
+                <p>Cama 3</p>
+              </div>
+              <span class="badge-confirmada">Confirmada</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            💡 Tip: Confirma o rechaza rápidamente para que las alumnas sepan el estado de su reserva
+          </div>
+        </div>
+      </div>
+
+      <!-- PORTAL ALUMNAS -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>👤 Mi Calendario</h2>
+          <p>Estado de tus reservas</p>
+        </div>
+        <div class="panel-content">
+          <!-- Clase confirmada (plan) -->
+          <div class="clase-item confirmada">
+            <div class="clase-info">
+              <h4>Lunes 1 • 17:00</h4>
+              <p>Tu plan semanal</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="badge confirmada">✓ Confirmada</span>
+              <button class="btn btn-cancelar">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- Clase confirmada (plan) -->
+          <div class="clase-item confirmada">
+            <div class="clase-info">
+              <h4>Miércoles 3 • 17:00</h4>
+              <p>Tu plan semanal</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="badge confirmada">✓ Confirmada</span>
+              <button class="btn btn-cancelar">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- Reserva pendiente de validación -->
+          <div class="clase-item pendiente">
+            <div class="clase-info">
+              <h4>Viernes 5 • 10:00</h4>
+              <p>Solicitado hace 5 minutos • Esperando confirmación</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="badge pendiente">⏳ Pendiente</span>
+              <button class="btn btn-cancelar">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- Clase disponible -->
+          <div class="clase-item">
+            <div class="clase-info">
+              <h4>Jueves 11 • 19:00</h4>
+              <p>Disponible • 2 camas libres</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn btn-reservar">Solicitar Reserva</button>
+            </div>
+          </div>
+
+          <!-- Clase con reserva rechazada -->
+          <div class="clase-item" style="background: #ffebee; border-color: #f44336;">
+            <div class="clase-info">
+              <h4>Jueves 11 • 17:00</h4>
+              <p>Tu reserva fue rechazada</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="badge" style="background: #ffcdd2; color: #c62828; border: 1px solid #f44336;">✕ Rechazada</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            💡 Estados: ✓ Confirmada (puedes asistir), ⏳ Pendiente (esperando validación de la instructora), ✕ Rechazada
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: white; font-size: 14px; margin-top: 40px;">
+      <p>✨ La dueña tiene control total • Las alumnas ven el estado en tiempo real</p>
+    </div>
+  </div>
+</body>
+</html>

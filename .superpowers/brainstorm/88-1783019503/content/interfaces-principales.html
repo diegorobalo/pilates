@@ -1,0 +1,118 @@
+<h2>Diseño Visual: Dos Interfaces</h2>
+<p class="subtitle">Dashboard de la dueña vs Portal de alumnas</p>
+
+<div class="split">
+  <!-- DASHBOARD DUEÑA -->
+  <div class="mockup">
+    <div class="mockup-header">Dashboard Dueña - Vista Clase</div>
+    <div class="mockup-body" style="padding: 20px; background: #f5f5f5;">
+      <div style="font-weight: bold; margin-bottom: 15px;">Lunes 2 Julio | 17:00</div>
+
+      <!-- Grilla de camas -->
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
+        <!-- Cama 1: Reservada -->
+        <div style="border: 2px solid #4CAF50; border-radius: 8px; padding: 12px; background: #e8f5e9; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 5px;">🛏️</div>
+          <div style="font-size: 12px; font-weight: bold;">Cama 1</div>
+          <div style="font-size: 11px; color: #4CAF50;">María García</div>
+          <div style="font-size: 10px; color: #666;">Reservada</div>
+        </div>
+
+        <!-- Cama 2: Reservada -->
+        <div style="border: 2px solid #4CAF50; border-radius: 8px; padding: 12px; background: #e8f5e9; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 5px;">🛏️</div>
+          <div style="font-size: 12px; font-weight: bold;">Cama 2</div>
+          <div style="font-size: 11px; color: #4CAF50;">Laura Pérez</div>
+          <div style="font-size: 10px; color: #666;">Reservada</div>
+        </div>
+
+        <!-- Cama 3: Vacía -->
+        <div style="border: 2px dashed #999; border-radius: 8px; padding: 12px; background: #fff; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 5px;">🛏️</div>
+          <div style="font-size: 12px; font-weight: bold;">Cama 3</div>
+          <div style="font-size: 10px; color: #999;">Disponible</div>
+        </div>
+
+        <!-- Cama 4: Vacía -->
+        <div style="border: 2px dashed #999; border-radius: 8px; padding: 12px; background: #fff; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 5px;">🛏️</div>
+          <div style="font-size: 12px; font-weight: bold;">Cama 4</div>
+          <div style="font-size: 10px; color: #999;">Disponible</div>
+        </div>
+
+        <!-- Cama 5: Vacía -->
+        <div style="border: 2px dashed #999; border-radius: 8px; padding: 12px; background: #fff; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 5px;">🛏️</div>
+          <div style="font-size: 12px; font-weight: bold;">Cama 5</div>
+          <div style="font-size: 10px; color: #999;">Disponible</div>
+        </div>
+
+        <!-- Cama 6: Vacía -->
+        <div style="border: 2px dashed #999; border-radius: 8px; padding: 12px; background: #fff; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 5px;">🛏️</div>
+          <div style="font-size: 12px; font-weight: bold;">Cama 6</div>
+          <div style="font-size: 10px; color: #999;">Disponible</div>
+        </div>
+      </div>
+
+      <div style="font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 10px;">
+        <strong>Resumen:</strong> 2 reservadas, 4 disponibles
+      </div>
+      <button class="mock-button" style="width: 100%; margin-top: 10px;">Marcar Asistencia (Post-clase)</button>
+    </div>
+  </div>
+
+  <!-- PORTAL ALUMNAS -->
+  <div class="mockup">
+    <div class="mockup-header">Portal Alumnas - Calendario</div>
+    <div class="mockup-body" style="padding: 20px; background: #f5f5f5;">
+      <div style="font-weight: bold; margin-bottom: 10px;">Julio 2026 - Mis Clases</div>
+
+      <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: bold;">Lunes 1 - 17:00</div>
+            <div style="font-size: 12px; color: #666;">Tu plan semanal</div>
+          </div>
+          <span style="font-size: 12px; background: #4CAF50; color: white; padding: 4px 8px; border-radius: 4px;">✓ Reservada</span>
+        </div>
+      </div>
+
+      <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: bold;">Miércoles 3 - 17:00</div>
+            <div style="font-size: 12px; color: #666;">Tu plan semanal</div>
+          </div>
+          <span style="font-size: 12px; background: #4CAF50; color: white; padding: 4px 8px; border-radius: 4px;">✓ Reservada</span>
+        </div>
+      </div>
+
+      <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: bold;">Viernes 5 - 10:00</div>
+            <div style="font-size: 12px; color: #666;">Disponible</div>
+          </div>
+          <button class="mock-button" style="padding: 4px 8px; font-size: 12px;">Reservar</button>
+        </div>
+      </div>
+
+      <div style="background: white; border-radius: 8px; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: bold;">Jueves 11 - 17:00</div>
+            <div style="font-size: 12px; color: #666;">Tu plan semanal</div>
+          </div>
+          <button class="mock-button" style="padding: 4px 8px; font-size: 12px; background: #f44336;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>¿Cómo se ve?</h3>
+  <p><strong>Izquierda (Dueña):</strong> Ve todas las 6 camas, quién está reservado (verde), quién está disponible (gris). Después de la clase, marca asistencia.</p>
+  <p><strong>Derecha (Alumnas):</strong> Ve sus próximas clases (según su plan) y puede reservar/cancelar clases adicionales (hasta 1h antes).</p>
+</div>

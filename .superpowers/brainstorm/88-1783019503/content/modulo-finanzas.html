@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo Finanzas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 32px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+    }
+
+    .panel-header h2 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .panel-header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .panel-content {
+      padding: 30px;
+    }
+
+    /* KPIs */
+    .kpis-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 35px;
+    }
+
+    .kpi {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border-left: 4px solid #667eea;
+    }
+
+    .kpi.al-dia {
+      border-left-color: #4CAF50;
+    }
+
+    .kpi.vencido {
+      border-left-color: #f44336;
+    }
+
+    .kpi.pendiente {
+      border-left-color: #ffb74d;
+    }
+
+    .kpi-valor {
+      font-size: 28px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+
+    .kpi.al-dia .kpi-valor {
+      color: #4CAF50;
+    }
+
+    .kpi.vencido .kpi-valor {
+      color: #f44336;
+    }
+
+    .kpi.pendiente .kpi-valor {
+      color: #ffb74d;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tabla de alumnas */
+    .tabla-section h3 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .tabla-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #f5f7fa;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .alumna-nombre {
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .estado-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-al-dia {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .badge-vencido {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .badge-pendiente {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .acciones {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-registrar {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-registrar:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    }
+
+    .btn-ver {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-ver:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-enviar {
+      background: #2196F3;
+      color: white;
+    }
+
+    .btn-enviar:hover {
+      background: #1976D2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+    }
+
+    /* Modal/Detalle */
+    .detalle-alumna {
+      background: #f5f7fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 4px solid #667eea;
+    }
+
+    .detalle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .detalle-header h4 {
+      color: #333;
+      font-size: 16px;
+    }
+
+    .historial-pagos {
+      margin-top: 15px;
+    }
+
+    .historial-pagos h5 {
+      color: #333;
+      font-size: 12px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pago-item {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .pago-fecha {
+      color: #666;
+    }
+
+    .pago-monto {
+      font-weight: 600;
+      color: #4CAF50;
+    }
+
+    .filtros {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filtro-btn {
+      padding: 8px 16px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .filtro-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    .filtro-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    @media (max-width: 768px) {
+      .kpis-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💰 Módulo Finanzas</h1>
+    <p class="subtitle">Control de pagos y estado de cuentas de alumnas</p>
+
+    <!-- Panel KPIs -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Resumen Financiero - Julio 2026</h2>
+        <p>Estado general de cuentas</p>
+      </div>
+      <div class="panel-content">
+        <div class="kpis-grid">
+          <div class="kpi">
+            <div class="kpi-valor">$8,500</div>
+            <div class="kpi-label">Total Cobrado</div>
+          </div>
+          <div class="kpi al-dia">
+            <div class="kpi-valor">12</div>
+            <div class="kpi-label">Alumnas Al Día</div>
+          </div>
+          <div class="kpi vencido">
+            <div class="kpi-valor">3</div>
+            <div class="kpi-label">Pagos Vencidos</div>
+          </div>
+          <div class="kpi pendiente">
+            <div class="kpi-valor">$1,200</div>
+            <div class="kpi-label">Pendiente de Cobro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Control de Alumnas -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>👥 Control de Alumnas</h2>
+        <p>Estado de pago y acciones rápidas</p>
+      </div>
+      <div class="panel-content">
+        <!-- Filtros -->
+        <div class="filtros">
+          <button class="filtro-btn active">Todas</button>
+          <button class="filtro-btn">Al Día ✓</button>
+          <button class="filtro-btn">Vencidas ⚠️</button>
+          <button class="filtro-btn">Pendientes ⏳</button>
+        </div>
+
+        <!-- Tabla -->
+        <div class="tabla-section">
+          <h3>Lista de Alumnas</h3>
+          <div class="tabla-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Alumna</th>
+                  <th>Teléfono</th>
+                  <th>Plan</th>
+                  <th>Monto Mensual</th>
+                  <th>Último Pago</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Alumna 1 - Al día -->
+                <tr>
+                  <td class="alumna-nombre">
+                    👤 María García
+                  </td>
+                  <td>+54 9 11 2345-6789</td>
+                  <td>Lunes y Miércoles</td>
+                  <td>$500</td>
+                  <td>30 Jun 2026</td>
+                  <td>
+                    <span class="estado-badge badge-al-dia">✓ Al Día</span>
+                  </td>
+                  <td class="acciones">
+                    <button class="btn btn-ver">Ver Detalle</button>
+                  </td>
+                </tr>
+
+                <!-- Alumna 2 - Al día -->
+                <tr>
+                  <td class="alumna-nombre">
+                    👤 Laura Pérez
+                  </td>
+                  <td>+54 9 11 3456-7890</td>
+                  <td>Martes a Viernes</td>
+                  <td>$700</td>
+                  <td>28 Jun 2026</td>
+                  <td>
+                    <span class="estado-badge badge-al-dia">✓ Al Día</span>
+                  </td>
+                  <td class="acciones">
+                    <button class="btn btn-ver">Ver Detalle</button>
+                  </td>
+                </tr>
+
+                <!-- Alumna 3 - Vencida -->
+                <tr>
+                  <td class="alumna-nombre">
+                    👤 Sofia López
+                  </td>
+                  <td>+54 9 11 4567-8901</td>
+                  <td>Lunes y Viernes</td>
+                  <td>$450</td>
+                  <td>15 Jun 2026</td>
+                  <td>
+                    <span class="estado-badge badge-vencido">⚠️ Vencida</span>
+                  </td>
+                  <td class="acciones">
+                    <button class="btn btn-registrar">Registrar Pago</button>
+                    <button class="btn btn-enviar">Recordar</button>
+                  </td>
+                </tr>
+
+                <!-- Alumna 4 - Pendiente -->
+                <tr>
+                  <td class="alumna-nombre">
+                    👤 Ana Martínez
+                  </td>
+                  <td>+54 9 11 5678-9012</td>
+                  <td>Diario</td>
+                  <td>$1,000</td>
+                  <td>—</td>
+                  <td>
+                    <span class="estado-badge badge-pendiente">⏳ Pendiente</span>
+                  </td>
+                  <td class="acciones">
+                    <button class="btn btn-registrar">Registrar Pago</button>
+                  </td>
+                </tr>
+
+                <!-- Alumna 5 - Al día -->
+                <tr>
+                  <td class="alumna-nombre">
+                    👤 Valentina Romero
+                  </td>
+                  <td>+54 9 11 6789-0123</td>
+                  <td>Martes y Jueves</td>
+                  <td>$600</td>
+                  <td>01 Jul 2026</td>
+                  <td>
+                    <span class="estado-badge badge-al-dia">✓ Al Día</span>
+                  </td>
+                  <td class="acciones">
+                    <button class="btn btn-ver">Ver Detalle</button>
+                  </td>
+                </tr>
+
+                <!-- Alumna 6 - Vencida -->
+                <tr>
+                  <td class="alumna-nombre">
+                    👤 Martina González
+                  </td>
+                  <td>+54 9 11 7890-1234</td>
+                  <td>Lunes, Miércoles y Viernes</td>
+                  <td>$800</td>
+                  <td>20 Jun 2026</td>
+                  <td>
+                    <span class="estado-badge badge-vencido">⚠️ Vencida</span>
+                  </td>
+                  <td class="acciones">
+                    <button class="btn btn-registrar">Registrar Pago</button>
+                    <button class="btn btn-enviar">Recordar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Detalle Alumna (ejemplo expandido) -->
+        <div class="detalle-alumna">
+          <div class="detalle-header">
+            <div>
+              <h4>📋 Detalle: María García</h4>
+              <p style="font-size: 12px; color: #666; margin-top: 3px;">+54 9 11 2345-6789 • Teléfono vinculado</p>
+            </div>
+            <span class="estado-badge badge-al-dia">✓ Al Día</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+            <div>
+              <div style="font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 5px;">Plan Actual</div>
+              <div style="font-weight: 600; color: #333;">Lunes y Miércoles 17:00</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 5px;">Monto Mensual</div>
+              <div style="font-weight: 600; color: #333;">$500</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 5px;">Registrada desde</div>
+              <div style="font-weight: 600; color: #333;">01 Ene 2026</div>
+            </div>
+          </div>
+
+          <div class="historial-pagos">
+            <h5>Historial de Pagos (últimos 3 meses)</h5>
+            <div class="pago-item">
+              <span class="pago-fecha">30 Jun 2026</span>
+              <span class="pago-monto">+ $500</span>
+            </div>
+            <div class="pago-item">
+              <span class="pago-fecha">30 May 2026</span>
+              <span class="pago-monto">+ $500</span>
+            </div>
+            <div class="pago-item">
+              <span class="pago-fecha">30 Apr 2026</span>
+              <span class="pago-monto">+ $500</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: white; font-size: 14px; margin-top: 40px;">
+      <p>✨ Control completo de finanzas • Estados visuales • Recordatorios automáticos</p>
+    </div>
+  </div>
+</body>
+</html>

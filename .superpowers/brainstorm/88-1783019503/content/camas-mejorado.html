@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vista de Camas - Diseño Mejorado</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h2 {
+      font-size: 24px;
+    }
+
+    .clase-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .clase-info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+
+    .panel-content {
+      padding: 40px;
+    }
+
+    /* Grid de 6 camas -->
+    .camas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    /* CAMA CARD - CONTENEDOR -->
+    .cama-card {
+      border-radius: 14px;
+      padding: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 280px;
+      border: 3px solid #e0e0e0;
+    }
+
+    .cama-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+    }
+
+    /* CAMA OCUPADA -->
+    .cama-card.ocupada {
+      border: 3px solid #4CAF50;
+      background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+    }
+
+    .cama-card.ocupada:hover {
+      box-shadow: 0 16px 40px rgba(76, 175, 80, 0.3);
+    }
+
+    /* CAMA VACÍA -->
+    .cama-card.vacia {
+      border: 3px dashed #bbb;
+      background: #fafafa;
+      opacity: 0.8;
+    }
+
+    /* CAMA AUSENTE -->
+    .cama-card.ausente {
+      border: 3px solid #f44336;
+      background: linear-gradient(135deg, #ffebee 0%, #ffe0e3 100%);
+    }
+
+    .cama-card.ausente:hover {
+      box-shadow: 0 16px 40px rgba(244, 67, 54, 0.3);
+    }
+
+    /* ENCABEZADO DE CAMA -->
+    .cama-header {
+      padding: 16px;
+      background: rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(0,0,0,0.08);
+    }
+
+    .cama-numero {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #666;
+    }
+
+    .cama-estado-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ocupada .cama-estado-badge {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .ausente .cama-estado-badge {
+      background: #f44336;
+      color: white;
+    }
+
+    .vacia .cama-estado-badge {
+      background: #bbb;
+      color: white;
+    }
+
+    /* CONTENIDO DE CAMA -->
+    .cama-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cama-info {
+      margin-bottom: 16px;
+    }
+
+    .cama-icon {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .cama-nombre {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .ocupada .cama-nombre {
+      color: #2e7d32;
+    }
+
+    .ausente .cama-nombre {
+      color: #c62828;
+      text-decoration: line-through;
+    }
+
+    .vacia .cama-nombre {
+      color: #999;
+      font-style: italic;
+    }
+
+    .cama-detalle {
+      font-size: 11px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* BOTONES DE ACCIÓN -->
+    .cama-acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      padding: 10px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .btn-presente {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-presente:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .btn-ausente {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-ausente:hover {
+      background: #da190b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(244, 67, 54, 0.3);
+    }
+
+    /* RESUMEN -->
+    .resumen-section {
+      background: #f5f7fa;
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .resumen-item {
+      text-align: center;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .resumen-item.presentes {
+      border-left-color: #4CAF50;
+    }
+
+    .resumen-item.ausentes {
+      border-left-color: #f44336;
+    }
+
+    .resumen-item.vacias {
+      border-left-color: #bbb;
+    }
+
+    .resumen-valor {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .resumen-item.presentes .resumen-valor {
+      color: #4CAF50;
+    }
+
+    .resumen-item.ausentes .resumen-valor {
+      color: #f44336;
+    }
+
+    .resumen-item.vacias .resumen-valor {
+      color: #bbb;
+    }
+
+    .resumen-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE -->
+    @media (max-width: 1024px) {
+      .camas-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .camas-grid {
+        grid-template-columns: 1fr;
+      }
+      .panel-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .clase-info {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .resumen-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧘 Vista de Camas - Clase en Vivo</h1>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2>📍 Sala de Pilates - Martes 17:00</h2>
+        <div class="clase-info">
+          <div class="clase-info-item">📅 02 Julio 2026</div>
+          <div class="clase-info-item">🕔 17:00 hs</div>
+          <div class="clase-info-item">👥 4 de 6 Camas</div>
+        </div>
+      </div>
+
+      <div class="panel-content">
+        <!-- GRID DE 6 CAMAS -->
+        <div class="camas-grid">
+
+          <!-- CAMA 1 - OCUPADA -->
+          <div class="cama-card ocupada">
+            <div class="cama-header">
+              <div class="cama-numero">Cama 1</div>
+              <div class="cama-estado-badge">✓ Presente</div>
+            </div>
+            <div class="cama-body">
+              <div class="cama-info">
+                <div class="cama-icon">🛏️</div>
+                <div class="cama-nombre">María García</div>
+                <div class="cama-detalle">Lunes y Miércoles 17:00</div>
+              </div>
+              <div class="cama-acciones">
+                <button class="btn btn-ausente">⚠️ Marcar Ausente</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAMA 2 - OCUPADA -->
+          <div class="cama-card ocupada">
+            <div class="cama-header">
+              <div class="cama-numero">Cama 2</div>
+              <div class="cama-estado-badge">✓ Presente</div>
+            </div>
+            <div class="cama-body">
+              <div class="cama-info">
+                <div class="cama-icon">🛏️</div>
+                <div class="cama-nombre">Laura Pérez</div>
+                <div class="cama-detalle">Martes a Viernes 17:00</div>
+              </div>
+              <div class="cama-acciones">
+                <button class="btn btn-ausente">⚠️ Marcar Ausente</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAMA 3 - AUSENTE -->
+          <div class="cama-card ausente">
+            <div class="cama-header">
+              <div class="cama-numero">Cama 3</div>
+              <div class="cama-estado-badge">✕ Ausente</div>
+            </div>
+            <div class="cama-body">
+              <div class="cama-info">
+                <div class="cama-icon">🛏️</div>
+                <div class="cama-nombre">Sofia López</div>
+                <div class="cama-detalle">Lunes y Viernes 17:00</div>
+              </div>
+              <div class="cama-acciones">
+                <button class="btn btn-presente">✓ Marcar Presente</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAMA 4 - OCUPADA -->
+          <div class="cama-card ocupada">
+            <div class="cama-header">
+              <div class="cama-numero">Cama 4</div>
+              <div class="cama-estado-badge">✓ Presente</div>
+            </div>
+            <div class="cama-body">
+              <div class="cama-info">
+                <div class="cama-icon">🛏️</div>
+                <div class="cama-nombre">Ana Martínez</div>
+                <div class="cama-detalle">Diario 17:00</div>
+              </div>
+              <div class="cama-acciones">
+                <button class="btn btn-ausente">⚠️ Marcar Ausente</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAMA 5 - VACÍA -->
+          <div class="cama-card vacia">
+            <div class="cama-header">
+              <div class="cama-numero">Cama 5</div>
+              <div class="cama-estado-badge">Vacía</div>
+            </div>
+            <div class="cama-body">
+              <div class="cama-info">
+                <div class="cama-icon">🛏️</div>
+                <div class="cama-nombre">—</div>
+                <div class="cama-detalle">Sin reserva</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAMA 6 - VACÍA -->
+          <div class="cama-card vacia">
+            <div class="cama-header">
+              <div class="cama-numero">Cama 6</div>
+              <div class="cama-estado-badge">Vacía</div>
+            </div>
+            <div class="cama-body">
+              <div class="cama-info">
+                <div class="cama-icon">🛏️</div>
+                <div class="cama-nombre">—</div>
+                <div class="cama-detalle">Sin reserva</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="resumen-section">
+          <div class="resumen-item presentes">
+            <div class="resumen-valor">4</div>
+            <div class="resumen-label">Presentes</div>
+          </div>
+          <div class="resumen-item ausentes">
+            <div class="resumen-valor">1</div>
+            <div class="resumen-label">Ausentes</div>
+          </div>
+          <div class="resumen-item vacias">
+            <div class="resumen-valor">1</div>
+            <div class="resumen-label">No Confirmada</div>
+          </div>
+          <div class="resumen-item vacias">
+            <div class="resumen-valor">2</div>
+            <div class="resumen-label">Vacías</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: white; font-size: 14px; margin-top: 40px;">
+      <p>✨ Cada cama es una tarjeta independiente • Toda la información contenida • Un click para cambiar estado</p>
+    </div>
+  </div>
+</body>
+</html>

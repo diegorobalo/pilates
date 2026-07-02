@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vista de Camas - Clase en Vivo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 28px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h2 {
+      font-size: 24px;
+    }
+
+    .clase-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .clase-info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.2);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .panel-content {
+      padding: 30px;
+    }
+
+    /* Selector de clase -->
+    .selector-clase {
+      background: #f5f7fa;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .selector-clase button {
+      padding: 10px 16px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .selector-clase button:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    .selector-clase button.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    /* Sala de pilates - Vista Aérea -->
+    .sala-container {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+      border: 3px solid #667eea;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 30px;
+      position: relative;
+      min-height: 500px;
+    }
+
+    .sala-titulo {
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    /* Instructora (frente) -->
+    .instructora-area {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      border-radius: 12px;
+      color: white;
+    }
+
+    .instructora-area h4 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .instructora-area p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    /* Grid de camas -->
+    .camas-sala {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .cama-box {
+      background: white;
+      border: 3px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cama-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    /* Cama ocupada -->
+    .cama-box.ocupada {
+      background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+      border: 3px solid #4CAF50;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    }
+
+    .cama-box.ocupada:hover {
+      box-shadow: 0 12px 24px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Cama vacía -->
+    .cama-box.vacia {
+      background: white;
+      border: 3px dashed #bbb;
+    }
+
+    /* Cama con ausencia -->
+    .cama-box.ausente {
+      background: linear-gradient(135deg, #ffebee 0%, #ffe0e3 100%);
+      border: 3px solid #f44336;
+      opacity: 0.7;
+    }
+
+    .cama-numero {
+      font-size: 11px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .cama-icon {
+      font-size: 50px;
+      margin: 10px 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .cama-alumna {
+      font-weight: 700;
+      color: #333;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .cama-ocupada .cama-alumna {
+      color: #2e7d32;
+    }
+
+    .cama-ausente .cama-alumna {
+      color: #c62828;
+      text-decoration: line-through;
+    }
+
+    .cama-estado {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .cama-ocupada .cama-estado {
+      color: #4CAF50;
+      font-weight: 600;
+    }
+
+    .cama-ausente .cama-estado {
+      color: #f44336;
+      font-weight: 600;
+    }
+
+    /* Botones de acción en camas -->
+    .cama-acciones {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-asistencia {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-presente {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-presente:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+    }
+
+    .btn-ausente {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-ausente:hover {
+      background: #da190b;
+      transform: translateY(-2px);
+    }
+
+    .btn-cambiar {
+      background: #2196F3;
+      color: white;
+    }
+
+    .btn-cambiar:hover {
+      background: #1976D2;
+      transform: translateY(-2px);
+    }
+
+    /* Resumen -->
+    .resumen-clase {
+      background: #f5f7fa;
+      border-radius: 12px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .resumen-item {
+      text-align: center;
+    }
+
+    .resumen-valor {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+
+    .resumen-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .resumen-item.presentes .resumen-valor {
+      color: #4CAF50;
+    }
+
+    .resumen-item.ausentes .resumen-valor {
+      color: #f44336;
+    }
+
+    .resumen-item.pendientes .resumen-valor {
+      color: #ffb74d;
+    }
+
+    /* Leyenda -->
+    .leyenda {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+      border-left: 4px solid #667eea;
+    }
+
+    .leyenda h4 {
+      color: #333;
+      font-size: 12px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .leyenda-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .leyenda-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .leyenda-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .leyenda-color.verde {
+      background: #e8f5e9;
+      border: 2px solid #4CAF50;
+    }
+
+    .leyenda-color.blanca {
+      background: white;
+      border: 2px dashed #bbb;
+    }
+
+    .leyenda-color.roja {
+      background: #ffebee;
+      border: 2px solid #f44336;
+    }
+
+    @media (max-width: 1024px) {
+      .camas-sala {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .camas-sala {
+        grid-template-columns: 1fr;
+      }
+      .resumen-clase {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧘 Vista de Camas - Clase en Vivo</h1>
+    <p class="subtitle">Visualización completa de la sala y estado de asistencia</p>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2>📍 Sala de Pilates</h2>
+        <div class="clase-info">
+          <div class="clase-info-item">📅 Martes 02 Julio</div>
+          <div class="clase-info-item">🕔 17:00 hs</div>
+          <div class="clase-info-item">👥 4 Presentes</div>
+        </div>
+      </div>
+
+      <div class="panel-content">
+        <!-- Selector de otras clases del día -->
+        <div class="selector-clase">
+          <div style="color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Otras clases hoy:</div>
+          <div style="display: flex; gap: 8px;">
+            <button>📅 10:00</button>
+            <button class="active">📅 17:00</button>
+            <button>📅 19:00</button>
+          </div>
+        </div>
+
+        <!-- SALA DE PILATES -->
+        <div class="sala-container">
+          <div class="sala-titulo">Vista Aérea de la Sala</div>
+
+          <!-- Instructora (frente) -->
+          <div class="instructora-area">
+            <h4>👩‍🏫 Instructora</h4>
+            <p>Frente de la Sala</p>
+          </div>
+
+          <!-- Grid de camas -->
+          <div class="camas-sala">
+            <!-- CAMA 1 - Ocupada -->
+            <div class="cama-box ocupada">
+              <div class="cama-numero">Cama 1</div>
+              <div class="cama-icon">🛏️</div>
+              <div class="cama-alumna">María García</div>
+              <div class="cama-estado">✓ Presente</div>
+              <div class="cama-acciones">
+                <button class="btn-asistencia btn-ausente">Marcar Ausente</button>
+              </div>
+            </div>
+
+            <!-- CAMA 2 - Ocupada -->
+            <div class="cama-box ocupada">
+              <div class="cama-numero">Cama 2</div>
+              <div class="cama-icon">🛏️</div>
+              <div class="cama-alumna">Laura Pérez</div>
+              <div class="cama-estado">✓ Presente</div>
+              <div class="cama-acciones">
+                <button class="btn-asistencia btn-ausente">Marcar Ausente</button>
+              </div>
+            </div>
+
+            <!-- CAMA 3 - Ausente -->
+            <div class="cama-box ausente">
+              <div class="cama-numero">Cama 3</div>
+              <div class="cama-icon">🛏️</div>
+              <div class="cama-alumna">Sofia López</div>
+              <div class="cama-estado">✕ Ausente</div>
+              <div class="cama-acciones">
+                <button class="btn-asistencia btn-presente">Marcar Presente</button>
+              </div>
+            </div>
+
+            <!-- CAMA 4 - Ocupada -->
+            <div class="cama-box ocupada">
+              <div class="cama-numero">Cama 4</div>
+              <div class="cama-icon">🛏️</div>
+              <div class="cama-alumna">Ana Martínez</div>
+              <div class="cama-estado">✓ Presente</div>
+              <div class="cama-acciones">
+                <button class="btn-asistencia btn-ausente">Marcar Ausente</button>
+              </div>
+            </div>
+
+            <!-- CAMA 5 - Vacía -->
+            <div class="cama-box vacia">
+              <div class="cama-numero">Cama 5</div>
+              <div class="cama-icon">🛏️</div>
+              <div class="cama-alumna">—</div>
+              <div class="cama-estado">Vacía</div>
+            </div>
+
+            <!-- CAMA 6 - Vacía -->
+            <div class="cama-box vacia">
+              <div class="cama-numero">Cama 6</div>
+              <div class="cama-icon">🛏️</div>
+              <div class="cama-alumna">—</div>
+              <div class="cama-estado">Vacía</div>
+            </div>
+          </div>
+
+          <!-- Resumen de clase -->
+          <div class="resumen-clase">
+            <div class="resumen-item presentes">
+              <div class="resumen-valor">4</div>
+              <div class="resumen-label">Presentes</div>
+            </div>
+            <div class="resumen-item ausentes">
+              <div class="resumen-valor">1</div>
+              <div class="resumen-label">Ausentes</div>
+            </div>
+            <div class="resumen-item pendientes">
+              <div class="resumen-valor">1</div>
+              <div class="resumen-label">No Confirmada</div>
+            </div>
+            <div class="resumen-item">
+              <div class="resumen-valor">2</div>
+              <div class="resumen-label">Vacías</div>
+            </div>
+          </div>
+
+          <!-- Leyenda -->
+          <div class="leyenda">
+            <h4>📋 Leyenda de Estados</h4>
+            <div class="leyenda-items">
+              <div class="leyenda-item">
+                <div class="leyenda-color verde"></div>
+                <span>✓ Presente</span>
+              </div>
+              <div class="leyenda-item">
+                <div class="leyenda-color roja"></div>
+                <span>✕ Ausente</span>
+              </div>
+              <div class="leyenda-item">
+                <div class="leyenda-color blanca"></div>
+                <span>Vacía</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: white; font-size: 14px; margin-top: 40px;">
+      <p>✨ Vista en tiempo real • Un click para marcar asistencia • Resumen de clase automático</p>
+    </div>
+  </div>
+</body>
+</html>

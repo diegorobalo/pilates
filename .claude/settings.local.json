@@ -278,7 +278,9 @@
       "Bash(curl -s http://localhost:3001/api/health)",
       "Bash(npx vite *)",
       "Bash(curl -s http://localhost:4173/index.html)",
-      "Bash(cd /c/Users/diego.robalo/Documents/CLAUDIA/PILETERO && sed -n '/POST.*\\\\/visitas/,/^router\\\\./p' backend/api/routes.js | head -80)"
+      "Bash(cd /c/Users/diego.robalo/Documents/CLAUDIA/PILETERO && sed -n '/POST.*\\\\/visitas/,/^router\\\\./p' backend/api/routes.js | head -80)",
+      "mcp__Claude_in_Chrome__form_input",
+      "Bash(find \"C:\\\\Users\\\\diego.robalo\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\" -name \"start-server.sh\" -type f)"
     ]
   }
 }
