@@ -26,6 +26,11 @@ class Payment {
       notas = null
     } = data;
 
+    // Validate monto is greater than 0
+    if (!monto || monto <= 0) {
+      throw new Error('Invalid monto: must be greater than 0');
+    }
+
     try {
       await runAsync(
         `INSERT INTO pagos (
@@ -36,6 +41,9 @@ class Payment {
 
       return await Payment.findById(id);
     } catch (error) {
+      if (error.message.includes('Invalid monto')) {
+        throw error;
+      }
       throw new Error(`Error creating payment: ${error.message}`);
     }
   }
@@ -160,6 +168,9 @@ class Payment {
       const result = await runAsync('DELETE FROM pagos WHERE id = ?', [id]);
       return result.changes > 0;
     } catch (error) {
+      if (error.message === 'Payment not found') {
+        throw error;
+      }
       throw new Error(`Error deleting payment: ${error.message}`);
     }
   }

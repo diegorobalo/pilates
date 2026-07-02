@@ -22,6 +22,16 @@ class Schedule {
       creada_por
     } = data;
 
+    // Validate date format (YYYY-MM-DD)
+    if (!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+      throw new Error('Invalid fecha format: must be YYYY-MM-DD');
+    }
+
+    // Validate time format (HH:MM)
+    if (!hora || !/^\d{2}:\d{2}$/.test(hora)) {
+      throw new Error('Invalid hora format: must be HH:MM');
+    }
+
     try {
       await runAsync(
         `INSERT INTO horarios_clases (
@@ -32,6 +42,9 @@ class Schedule {
 
       return await Schedule.findById(id);
     } catch (error) {
+      if (error.message.includes('Invalid fecha format') || error.message.includes('Invalid hora format')) {
+        throw error;
+      }
       throw new Error(`Error creating schedule: ${error.message}`);
     }
   }
@@ -111,6 +124,9 @@ class Schedule {
 
       return await Schedule.findById(id);
     } catch (error) {
+      if (error.message === 'Schedule not found') {
+        throw error;
+      }
       throw new Error(`Error updating schedule: ${error.message}`);
     }
   }

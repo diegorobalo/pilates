@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import bcryptjs from 'bcryptjs';
 import { runAsync, getAsync, allAsync } from '../db/connection.js';
 
 class User {
@@ -33,6 +32,11 @@ class User {
       restricciones_medicas = null
     } = data;
 
+    // Validate telefono format (basic validation: digits and symbols)
+    if (!telefono || !/^[\d\s\-\+\(\)]+$/.test(telefono)) {
+      throw new Error('Invalid telefono format: must contain only numbers, spaces, dashes, plus, or parentheses');
+    }
+
     try {
       await runAsync(
         `INSERT INTO users (
@@ -49,6 +53,9 @@ class User {
 
       return await User.findById(id);
     } catch (error) {
+      if (error.message.includes('Invalid telefono format')) {
+        throw error;
+      }
       throw new Error(`Error creating user: ${error.message}`);
     }
   }
@@ -136,6 +143,9 @@ class User {
 
       return await User.findById(id);
     } catch (error) {
+      if (error.message === 'User not found') {
+        throw error;
+      }
       throw new Error(`Error updating user: ${error.message}`);
     }
   }
@@ -159,6 +169,9 @@ class User {
 
       return await User.findById(id);
     } catch (error) {
+      if (error.message === 'User not found') {
+        throw error;
+      }
       throw new Error(`Error deactivating user: ${error.message}`);
     }
   }

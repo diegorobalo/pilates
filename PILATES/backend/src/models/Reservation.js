@@ -20,6 +20,11 @@ class Reservation {
       estado = 'PENDIENTE'
     } = data;
 
+    // Validate cama_numero is between 1 and 6
+    if (!cama_numero || cama_numero < 1 || cama_numero > 6) {
+      throw new Error('Invalid cama_numero: must be between 1 and 6');
+    }
+
     try {
       await runAsync(
         `INSERT INTO reservas (
@@ -30,6 +35,9 @@ class Reservation {
 
       return await Reservation.findById(id);
     } catch (error) {
+      if (error.message.includes('Invalid cama_numero')) {
+        throw error;
+      }
       throw new Error(`Error creating reservation: ${error.message}`);
     }
   }
@@ -116,6 +124,9 @@ class Reservation {
 
       return await Reservation.findById(id);
     } catch (error) {
+      if (error.message === 'Reservation not found') {
+        throw error;
+      }
       throw new Error(`Error confirming reservation: ${error.message}`);
     }
   }
@@ -143,6 +154,9 @@ class Reservation {
 
       return await Reservation.findById(id);
     } catch (error) {
+      if (error.message === 'Reservation not found') {
+        throw error;
+      }
       throw new Error(`Error rejecting reservation: ${error.message}`);
     }
   }
