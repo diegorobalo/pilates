@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
 import schedulesRoutes from './routes/schedules.js';
 import reservationsRoutes from './routes/reservations.js';
+import attendanceRoutes from './routes/attendance.js';
 
 dotenv.config();
 
@@ -54,6 +55,9 @@ app.use('/api/schedules', schedulesRoutes);
 
 // Reservation management routes
 app.use('/api/reservations', reservationsRoutes);
+
+// Attendance management routes
+app.use('/api/attendance', attendanceRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
