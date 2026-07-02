@@ -4,6 +4,7 @@ import LoginPage from './components/Auth/LoginPage'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import AlumnaPortal from './pages/AlumnaPortal'
 import InstructorDashboard from './pages/InstructorDashboard'
+import ClassAttendance from './pages/ClassAttendance'
 
 export default function App() {
   return (
@@ -24,6 +25,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <InstructorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/class-attendance/:scheduleId"
+            element={
+              <ProtectedRoute>
+                <ClassAttendance />
               </ProtectedRoute>
             }
           />

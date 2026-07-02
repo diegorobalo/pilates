@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Check, X, Calendar, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Check, X, Calendar, Search, Edit2 } from 'lucide-react'
 
 export default function AttendanceManagement() {
+  const navigate = useNavigate()
+  const [schedules, setSchedules] = useState([])
   const [attendances, setAttendances] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -25,6 +28,14 @@ export default function AttendanceManagement() {
   const fetchAttendances = async () => {
     try {
       setLoading(true)
+      // Fetch schedules for the filtered date
+      const schedulesResponse = await fetch(`/api/schedules?fecha=${filterDate}`)
+      if (schedulesResponse.ok) {
+        const schedulesData = await schedulesResponse.json()
+        setSchedules(schedulesData || [])
+      }
+
+      // Fetch attendance records
       const response = await fetch(`/api/attendances?fecha=${filterDate}`)
       if (!response.ok) throw new Error('Error fetching attendances')
       const data = await response.json()
@@ -74,10 +85,59 @@ export default function AttendanceManagement() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}
+        </div>
+      )}
+
+      {/* Quick Access to Classes - New Visual Component */}
+      {schedules.length > 0 && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-6 mb-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-primary" />
+            Clases del {filterDate}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {schedules.map((schedule) => {
+              const scheduleReservations = attendances.filter(
+                (att) => att.schedule_id === schedule.id
+              )
+              const presentCount = scheduleReservations.filter((r) => r.asistio).length
+              const totalCount = scheduleReservations.length
+
+              return (
+                <div
+                  key={schedule.id}
+                  className="bg-white rounded-lg p-4 shadow hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <p className="font-bold text-gray-900">{schedule.hora}</p>
+                      <p className="text-sm text-gray-600">
+                        {totalCount} alumnas confirmadas
+                      </p>
+                    </div>
+                    <span className="text-2xl font-bold text-primary">
+                      {presentCount}/{totalCount}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() =>
+                      navigate(`/class-attendance/${schedule.id}`, {
+                        state: { scheduleId: schedule.id },
+                      })
+                    }
+                    className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                    Marcar Asistencia
+                  </button>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )}
 
