@@ -103,6 +103,20 @@ class Reservation {
   }
 
   /**
+   * Find all reservations
+   * @returns {Promise<Array>} Array of all reservation objects
+   */
+  static async findAll() {
+    try {
+      return await allAsync(
+        'SELECT * FROM reservas ORDER BY fecha_solicitud DESC'
+      );
+    } catch (error) {
+      throw new Error(`Error finding all reservations: ${error.message}`);
+    }
+  }
+
+  /**
    * Confirm a reservation
    * @param {string} id - Reservation ID
    * @param {string} duenaId - Owner/Admin user ID confirming the reservation
