@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
@@ -38,6 +39,9 @@ app.use(morgan('combined')); // Request logging
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Authentication routes
+app.use('/api/auth', authRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
