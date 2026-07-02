@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS users (
   alergias TEXT,
   restricciones_medicas TEXT,
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -28,9 +27,9 @@ CREATE TABLE IF NOT EXISTS planes_semanales (
   dia_semana INTEGER NOT NULL CHECK (dia_semana >= 0 AND dia_semana <= 6),
   hora TEXT NOT NULL,
   activo BOOLEAN DEFAULT 1,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (alumna_id) REFERENCES users(id),
+  FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE (alumna_id, dia_semana, hora)
 );
 
@@ -40,13 +39,12 @@ CREATE TABLE IF NOT EXISTS horarios_clases (
   id TEXT PRIMARY KEY,
   fecha DATE NOT NULL,
   hora TEXT NOT NULL,
-  capacidad INTEGER NOT NULL DEFAULT 6 CHECK (capacidad > 0),
+  capacidad INTEGER NOT NULL DEFAULT 6 CHECK (capacidad = 6),
   estado TEXT NOT NULL DEFAULT 'ABIERTA' CHECK (estado IN ('ABIERTA', 'CERRADA', 'CANCELADA')),
   creada_por TEXT NOT NULL,
-  fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (creada_por) REFERENCES users(id),
+  FOREIGN KEY (creada_por) REFERENCES users(id) ON DELETE RESTRICT,
   UNIQUE (fecha, hora)
 );
 
@@ -62,11 +60,10 @@ CREATE TABLE IF NOT EXISTS reservas (
   fecha_confirmacion DATETIME,
   confirmada_por TEXT,
   razon_rechazo TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (alumna_id) REFERENCES users(id),
-  FOREIGN KEY (horario_id) REFERENCES horarios_clases(id),
-  FOREIGN KEY (confirmada_por) REFERENCES users(id),
+  FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (horario_id) REFERENCES horarios_clases(id) ON DELETE CASCADE,
+  FOREIGN KEY (confirmada_por) REFERENCES users(id) ON DELETE RESTRICT,
   UNIQUE (horario_id, cama_numero)
 );
 
@@ -79,11 +76,10 @@ CREATE TABLE IF NOT EXISTS asistencia (
   presente BOOLEAN NOT NULL DEFAULT 0,
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   registrada_por TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (alumna_id) REFERENCES users(id),
-  FOREIGN KEY (horario_id) REFERENCES horarios_clases(id),
-  FOREIGN KEY (registrada_por) REFERENCES users(id),
+  FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (horario_id) REFERENCES horarios_clases(id) ON DELETE CASCADE,
+  FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT,
   UNIQUE (alumna_id, horario_id)
 );
 
@@ -92,22 +88,22 @@ CREATE TABLE IF NOT EXISTS asistencia (
 CREATE TABLE IF NOT EXISTS pagos (
   id TEXT PRIMARY KEY,
   alumna_id TEXT NOT NULL,
-  monto DECIMAL(10, 2) NOT NULL CHECK (monto > 0),
+  monto DECIMAL(10, 2) NOT NULL CHECK (monto > 0 AND monto <= 999999.99),
   fecha_pago DATE NOT NULL,
   mes_referencia TEXT NOT NULL,
   metodo TEXT NOT NULL CHECK (metodo IN ('EFECTIVO', 'TRANSFERENCIA', 'OTRO')),
   registrada_por TEXT NOT NULL,
   notas TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (alumna_id) REFERENCES users(id),
-  FOREIGN KEY (registrada_por) REFERENCES users(id)
+  FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT
 );
 
 -- Create indexes for performance optimization
 CREATE INDEX IF NOT EXISTS idx_users_tipo ON users(tipo);
 CREATE INDEX IF NOT EXISTS idx_users_estado ON users(estado);
-CREATE INDEX IF NOT EXISTS idx_usuarios_telefono ON users(telefono);
+CREATE INDEX IF NOT EXISTS idx_users_telefono ON users(telefono);
 
 CREATE INDEX IF NOT EXISTS idx_planes_semanales_alumna_id ON planes_semanales(alumna_id);
 CREATE INDEX IF NOT EXISTS idx_planes_semanales_dia_semana ON planes_semanales(dia_semana);
