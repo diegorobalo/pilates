@@ -15,6 +15,7 @@ import birthdaysRoutes from './routes/birthdays.js';
 import calendarRoutes from './routes/calendar.js';
 import subscriptionsRoutes from './routes/subscriptions.js';
 import scheduleStatsRoutes from './routes/scheduleStats.js';
+import legajoRoutes from './routes/legajo.js';
 import { initSubscriptionCronJobs } from './cron/subscriptionCron.js';
 
 dotenv.config();
@@ -112,6 +113,9 @@ app.use('/api/subscriptions', subscriptionsRoutes);
 
 // Schedule stats (instructor capacity, assignments) routes
 app.use('/api/schedule-stats', scheduleStatsRoutes);
+
+// Student legajo (profile/record) routes
+app.use('/api/legajo', legajoRoutes);
 
 // Admin (master access) routes
 app.use('/api/admin', adminRoutes);
