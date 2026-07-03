@@ -116,19 +116,24 @@ export const requestPhoneVerification = async (req, res) => {
     // Store code in database
     const { id: codeId, expiresAt } = await saveVerificationCode(phone, code);
 
-    // In development mode, return the code (for testing)
-    if (process.env.NODE_ENV === 'development') {
+    // Expose the code to the client when there is no SMS provider configured.
+    // Controlled by EXPOSE_VERIFICATION_CODE so it can be turned off once SMS is added.
+    const exposeCode =
+      process.env.NODE_ENV === 'development' ||
+      process.env.EXPOSE_VERIFICATION_CODE === 'true';
+
+    if (exposeCode) {
       return res.json({
         message: 'Verification code sent',
         phone,
-        code, // Development mode only
+        code, // shown on screen (no SMS provider configured)
         codeId,
         expiresAt,
         expiresIn: '10 minutes'
       });
     }
 
-    // In production, would send via SMS service
+    // In production with SMS, the code would be delivered via SMS service only.
     res.json({
       message: 'Verification code sent to your phone',
       phone,

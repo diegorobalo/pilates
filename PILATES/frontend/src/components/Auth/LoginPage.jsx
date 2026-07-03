@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [codeId, setCodeId] = useState('')
+  const [devCode, setDevCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [requestResendCountdown, setRequestResendCountdown] = useState(0)
@@ -54,6 +55,7 @@ export default function LoginPage() {
       }
 
       setCodeId(data.codeId)
+      setDevCode(data.code || '')
       setStep('code')
       setRequestResendCountdown(60) // 60 second cooldown for resend
     } catch (err) {
@@ -129,6 +131,7 @@ export default function LoginPage() {
       }
 
       setCodeId(data.codeId)
+      setDevCode(data.code || '')
       setCode('')
       setRequestResendCountdown(60)
     } catch (err) {
@@ -204,9 +207,23 @@ export default function LoginPage() {
                 Verifica tu Código
               </h2>
               <p className="text-gray-600 mb-2">
-                Te enviamos un código a:
+                Código para el número:
               </p>
-              <p className="text-primary font-bold text-lg mb-6">{phone}</p>
+              <p className="text-primary font-bold text-lg mb-4">{phone}</p>
+
+              {devCode && (
+                <div className="mb-6 rounded-xl border-2 border-primary/30 bg-primary/5 p-4 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                    Tu código de acceso
+                  </p>
+                  <p className="text-3xl font-extrabold tracking-[0.3em] text-primary">
+                    {devCode}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    Ingresá este código abajo para continuar
+                  </p>
+                </div>
+              )}
 
               <form onSubmit={handleCodeSubmit} className="space-y-6">
                 <CodeInput
