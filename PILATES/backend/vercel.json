@@ -3,7 +3,7 @@
   "buildCommand": "npm install",
   "env": {
     "NODE_ENV": "production",
-    "JWT_SECRET": "@JWT_SECRET",
+    "JWT_SECRET_KEY": "@JWT_SECRET_KEY",
     "DATABASE_URL": "@DATABASE_URL",
     "JWT_EXPIRE": "7d"
   },
