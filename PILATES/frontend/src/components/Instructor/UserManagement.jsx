@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { UserPlus, Check, X, Loader, RefreshCw, MessageCircle, Save } from 'lucide-react'
 
 const ROLE_LABEL = {
-  ALUMNA: 'Alumna',
-  PROFESORA: 'Profesora',
+  ALUMNA: 'Alumn@',
+  PROFESORA: 'Profe',
   DUEÑA: 'Dueña',
   ADMIN: 'Admin',
 }
@@ -208,8 +208,8 @@ export default function UserManagement() {
                       onChange={(e) => setRoleChoice({ ...roleChoice, [u.id]: e.target.value })}
                       className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary"
                     >
-                      <option value="ALUMNA">Alumna</option>
-                      <option value="PROFESORA">Profesora</option>
+                      <option value="ALUMNA">Alumn@</option>
+                      <option value="PROFESORA">Profe</option>
                     </select>
                   </div>
                   <button

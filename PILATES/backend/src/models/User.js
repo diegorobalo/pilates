@@ -108,9 +108,9 @@ class User {
   static async findAll(tipo = null) {
     try {
       if (tipo) {
-        return await allAsync('SELECT * FROM users WHERE tipo = ? ORDER BY nombre ASC', [tipo]);
+        return await allAsync('SELECT * FROM users WHERE tipo = ? AND estado = ? ORDER BY nombre ASC', [tipo, 'ACTIVA']);
       }
-      return await allAsync('SELECT * FROM users ORDER BY nombre ASC');
+      return await allAsync('SELECT * FROM users WHERE estado = ? ORDER BY nombre ASC', ['ACTIVA']);
     } catch (error) {
       throw new Error(`Error finding all users: ${error.message}`);
     }

@@ -118,7 +118,10 @@ export default function StudentManagement() {
         method: 'DELETE',
       })
 
-      if (!response.ok) throw new Error('Error deleting student')
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.message || data.error || 'Error al eliminar alumn@')
+      }
 
       setShowConfirmDelete(false)
       setStudentToDelete(null)
