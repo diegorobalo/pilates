@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "buildCommand": "npm install",
+  "framework": "express",
+  "env": {
+    "NODE_ENV": "production",
+    "JWT_SECRET_KEY": "@jwt_secret_key",
+    "DATABASE_URL": "@database_url"
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/src/server.js"
+    }
+  ]
+}
