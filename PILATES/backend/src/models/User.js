@@ -5,31 +5,43 @@ class User {
   /**
    * Create a new user
    * @param {Object} data - User data
-   * @param {string} data.nombre - User's name
+   * @param {string} data.nombre - User's first name
+   * @param {string} [data.apellido] - User's last name
    * @param {string} data.telefono - User's phone (unique)
-   * @param {string} data.tipo - User type: ALUMNA, DUEÑA, or ADMIN
+   * @param {string} data.tipo - User type: ALUMNA, DUEÑA, PROFESORA, or ADMIN
    * @param {string} [data.dni] - Optional DNI
-   * @param {string} [data.estado] - User status: ACTIVA or INACTIVA (default: ACTIVA)
+   * @param {string} [data.estado] - User status: ACTIVA, INACTIVA, PENDIENTE, SUSPENDIDA (default: ACTIVA)
+   * @param {string} [data.fecha_nacimiento] - Date of birth (YYYY-MM-DD)
+   * @param {string} [data.direccion] - Address
+   * @param {string} [data.ciudad] - City
+   * @param {string} [data.pin_ingreso] - Login PIN (for DUEÑA)
    * @param {string} [data.datos_emergencia_nombre] - Emergency contact name
    * @param {string} [data.datos_emergencia_telefono] - Emergency contact phone
    * @param {string} [data.datos_emergencia_relacion] - Emergency contact relation
    * @param {string} [data.alergias] - Allergies
    * @param {string} [data.restricciones_medicas] - Medical restrictions
+   * @param {boolean} [data.datos_completados] - Whether user completed their profile
    * @returns {Promise<Object>} Created user object with id
    */
   static async create(data) {
     const id = uuidv4();
     const {
       nombre,
+      apellido = null,
       telefono,
       tipo,
       dni = null,
       estado = 'ACTIVA',
+      fecha_nacimiento = null,
+      direccion = null,
+      ciudad = null,
+      pin_ingreso = null,
       datos_emergencia_nombre = null,
       datos_emergencia_telefono = null,
       datos_emergencia_relacion = null,
       alergias = null,
-      restricciones_medicas = null
+      restricciones_medicas = null,
+      datos_completados = 0
     } = data;
 
     // Validate telefono format (basic validation: digits and symbols)
@@ -40,14 +52,16 @@ class User {
     try {
       await runAsync(
         `INSERT INTO users (
-          id, nombre, telefono, tipo, dni, estado,
+          id, nombre, apellido, telefono, tipo, dni, estado,
+          fecha_nacimiento, direccion, ciudad, pin_ingreso,
           datos_emergencia_nombre, datos_emergencia_telefono, datos_emergencia_relacion,
-          alergias, restricciones_medicas
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          alergias, restricciones_medicas, datos_completados
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          id, nombre, telefono, tipo, dni, estado,
+          id, nombre, apellido, telefono, tipo, dni, estado,
+          fecha_nacimiento, direccion, ciudad, pin_ingreso,
           datos_emergencia_nombre, datos_emergencia_telefono, datos_emergencia_relacion,
-          alergias, restricciones_medicas
+          alergias, restricciones_medicas, datos_completados
         ]
       );
 
@@ -133,27 +147,35 @@ class User {
 
       const {
         nombre = user.nombre,
+        apellido = user.apellido,
         telefono = user.telefono,
         tipo = user.tipo,
         dni = user.dni,
         estado = user.estado,
+        fecha_nacimiento = user.fecha_nacimiento,
+        direccion = user.direccion,
+        ciudad = user.ciudad,
+        pin_ingreso = user.pin_ingreso,
         datos_emergencia_nombre = user.datos_emergencia_nombre,
         datos_emergencia_telefono = user.datos_emergencia_telefono,
         datos_emergencia_relacion = user.datos_emergencia_relacion,
         alergias = user.alergias,
-        restricciones_medicas = user.restricciones_medicas
+        restricciones_medicas = user.restricciones_medicas,
+        datos_completados = user.datos_completados
       } = data;
 
       await runAsync(
         `UPDATE users SET
-          nombre = ?, telefono = ?, tipo = ?, dni = ?, estado = ?,
+          nombre = ?, apellido = ?, telefono = ?, tipo = ?, dni = ?, estado = ?,
+          fecha_nacimiento = ?, direccion = ?, ciudad = ?, pin_ingreso = ?,
           datos_emergencia_nombre = ?, datos_emergencia_telefono = ?, datos_emergencia_relacion = ?,
-          alergias = ?, restricciones_medicas = ?, updated_at = CURRENT_TIMESTAMP
+          alergias = ?, restricciones_medicas = ?, datos_completados = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?`,
         [
-          nombre, telefono, tipo, dni, estado,
+          nombre, apellido, telefono, tipo, dni, estado,
+          fecha_nacimiento, direccion, ciudad, pin_ingreso,
           datos_emergencia_nombre, datos_emergencia_telefono, datos_emergencia_relacion,
-          alergias, restricciones_medicas, id
+          alergias, restricciones_medicas, datos_completados, id
         ]
       );
 

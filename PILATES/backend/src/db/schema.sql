@@ -6,15 +6,21 @@
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   nombre TEXT NOT NULL,
+  apellido TEXT,
   telefono TEXT UNIQUE NOT NULL,
   dni TEXT UNIQUE,
   tipo TEXT NOT NULL CHECK (tipo IN ('ALUMNA', 'PROFESORA', 'DUEÑA', 'ADMIN')),
-  estado TEXT NOT NULL DEFAULT 'ACTIVA' CHECK (estado IN ('ACTIVA', 'INACTIVA', 'PENDIENTE')),
+  estado TEXT NOT NULL DEFAULT 'ACTIVA' CHECK (estado IN ('ACTIVA', 'INACTIVA', 'PENDIENTE', 'SUSPENDIDA')),
+  fecha_nacimiento DATE,
+  direccion TEXT,
+  ciudad TEXT,
+  pin_ingreso TEXT,
   datos_emergencia_nombre TEXT,
   datos_emergencia_telefono TEXT,
   datos_emergencia_relacion TEXT,
   alergias TEXT,
   restricciones_medicas TEXT,
+  datos_completados BOOLEAN DEFAULT 0,
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -84,11 +90,12 @@ CREATE TABLE IF NOT EXISTS asistencia (
 );
 
 -- Pagos (Payments) table
--- Stores payment records for students
+-- Stores payment records for students (in ARS)
 CREATE TABLE IF NOT EXISTS pagos (
   id TEXT PRIMARY KEY,
   alumna_id TEXT NOT NULL,
   monto DECIMAL(10, 2) NOT NULL CHECK (monto > 0 AND monto <= 999999.99),
+  moneda TEXT NOT NULL DEFAULT 'ARS' CHECK (moneda IN ('ARS')),
   fecha_pago DATE NOT NULL,
   mes_referencia TEXT NOT NULL,
   metodo TEXT NOT NULL CHECK (metodo IN ('EFECTIVO', 'TRANSFERENCIA', 'OTRO')),
@@ -97,6 +104,40 @@ CREATE TABLE IF NOT EXISTS pagos (
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT
+);
+
+-- Pagos Profesores (Teacher Payments) table
+-- Stores payment records for teachers/instructors (in ARS)
+CREATE TABLE IF NOT EXISTS pagos_profesores (
+  id TEXT PRIMARY KEY,
+  profesora_id TEXT NOT NULL,
+  monto DECIMAL(10, 2) NOT NULL CHECK (monto > 0 AND monto <= 999999.99),
+  moneda TEXT NOT NULL DEFAULT 'ARS' CHECK (moneda IN ('ARS')),
+  fecha_pago DATE NOT NULL,
+  mes_referencia TEXT NOT NULL,
+  metodo TEXT NOT NULL CHECK (metodo IN ('EFECTIVO', 'TRANSFERENCIA', 'OTRO')),
+  registrada_por TEXT NOT NULL,
+  notas TEXT,
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (profesora_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT
+);
+
+-- Gastos (Expenses) table
+-- Stores various business expenses (in ARS)
+CREATE TABLE IF NOT EXISTS gastos (
+  id TEXT PRIMARY KEY,
+  descripcion TEXT NOT NULL,
+  monto DECIMAL(10, 2) NOT NULL CHECK (monto > 0 AND monto <= 999999.99),
+  moneda TEXT NOT NULL DEFAULT 'ARS' CHECK (moneda IN ('ARS')),
+  categoria TEXT NOT NULL CHECK (categoria IN ('MANTENIMIENTO', 'SUPPLIES', 'SERVICIOS', 'OTRO')),
+  fecha_gasto DATE NOT NULL,
+  registrada_por TEXT NOT NULL,
+  notas TEXT,
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT
 );
 
@@ -149,3 +190,10 @@ CREATE INDEX IF NOT EXISTS idx_asistencia_fecha_registro ON asistencia(fecha_reg
 CREATE INDEX IF NOT EXISTS idx_pagos_alumna_id ON pagos(alumna_id);
 CREATE INDEX IF NOT EXISTS idx_pagos_fecha_pago ON pagos(fecha_pago);
 CREATE INDEX IF NOT EXISTS idx_pagos_mes_referencia ON pagos(mes_referencia);
+
+CREATE INDEX IF NOT EXISTS idx_pagos_profesores_profesora_id ON pagos_profesores(profesora_id);
+CREATE INDEX IF NOT EXISTS idx_pagos_profesores_fecha_pago ON pagos_profesores(fecha_pago);
+CREATE INDEX IF NOT EXISTS idx_pagos_profesores_mes_referencia ON pagos_profesores(mes_referencia);
+
+CREATE INDEX IF NOT EXISTS idx_gastos_categoria ON gastos(categoria);
+CREATE INDEX IF NOT EXISTS idx_gastos_fecha_gasto ON gastos(fecha_gasto);

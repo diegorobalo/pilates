@@ -50,17 +50,17 @@ export const authMiddleware = (req, res, next) => {
 /**
  * Role-based access control middleware
  * Checks if user has required role(s)
+ *
+ * Role hierarchy:
+ * - ADMIN: Master access, everything
+ * - DUEÑA: Full management (users, schedules, reservations, attendance, finances)
+ * - PROFESORA: Limited to schedules, reservations, attendance (NO finances/user management)
+ * - ALUMNA: Only view own reservations and calendar
+ *
  * @param {string|string[]} allowedRoles - Role(s) allowed to access this endpoint
  */
 export const requireRole = (allowedRoles) => {
   const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
-
-  // Build the effective allow-set:
-  // - ADMIN is the master account and can access everything.
-  // - PROFESORA shares the same privileges as DUEÑA (turnos/alumnas/etc.).
-  const effective = new Set(roles);
-  effective.add('ADMIN');
-  if (effective.has('DUEÑA')) effective.add('PROFESORA');
 
   return (req, res, next) => {
     if (!req.user) {
@@ -68,6 +68,22 @@ export const requireRole = (allowedRoles) => {
         error: 'Authentication required',
         message: 'Please provide a valid token'
       });
+    }
+
+    // ADMIN always has access
+    if (req.user.tipo === 'ADMIN') {
+      return next();
+    }
+
+    // PROFESORA can access DUEÑA routes EXCEPT finances/user management
+    let effective = new Set(roles);
+    if (req.user.tipo === 'PROFESORA' && roles.includes('DUEÑA')) {
+      const financesExempt = req.path.includes('/finances') ||
+                             req.path.includes('/users') ||
+                             req.path.includes('/admin');
+      if (!financesExempt) {
+        return next();
+      }
     }
 
     if (!effective.has(req.user.tipo)) {
