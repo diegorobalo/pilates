@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import User from '../models/User.js';
 import db from '../db/connection.js';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET_KEY;
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
 const verificationCodeTTL = 10 * 60; // 10 minutes in seconds
 
