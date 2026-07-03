@@ -91,9 +91,9 @@ export default function StudentModal({ student, onSave, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
           <h2 className="text-xl font-bold text-gray-900">
             {student ? 'Editar Alumn@' : 'Nuev@ Alumn@'}
           </h2>
@@ -106,7 +106,7 @@ export default function StudentModal({ student, onSave, onClose }) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {/* Row 1: Nombre and Apellido */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -313,7 +313,7 @@ export default function StudentModal({ student, onSave, onClose }) {
           </div>
 
           {/* Footer */}
-          <div className="flex gap-3 justify-end pt-4 border-t">
+          <div className="flex gap-3 justify-end pt-4 border-t flex-shrink-0">
             <button
               type="button"
               onClick={onClose}

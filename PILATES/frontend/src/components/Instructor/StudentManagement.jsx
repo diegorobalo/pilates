@@ -187,9 +187,6 @@ export default function StudentManagement() {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Nombre
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
@@ -199,7 +196,7 @@ export default function StudentManagement() {
                 DNI
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Plan Semanal
+                Días/Semana
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Estado
@@ -213,7 +210,7 @@ export default function StudentManagement() {
             {filteredStudents.length === 0 ? (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="6"
                   className="px-6 py-8 text-center text-gray-500"
                 >
                   No hay alumn@s para mostrar
@@ -222,7 +219,6 @@ export default function StudentManagement() {
             ) : (
               filteredStudents.map((student) => (
                 <tr key={student.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">{student.id}</td>
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
                     {student.nombre}
                   </td>
@@ -233,7 +229,7 @@ export default function StudentManagement() {
                     {student.dni || '-'}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {student.plan_semanal || '-'}
+                    {student.clases_semanales || 0} días
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span

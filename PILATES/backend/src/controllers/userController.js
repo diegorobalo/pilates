@@ -74,7 +74,7 @@ export const createUser = async (req, res, next) => {
  */
 export const getAllUsers = async (req, res, next) => {
   try {
-    const { tipo } = req.query;
+    const { tipo, includeInactive } = req.query;
 
     // Validate tipo if provided
     if (tipo && !ASSIGNABLE_ROLES.includes(tipo)) {
@@ -83,7 +83,8 @@ export const getAllUsers = async (req, res, next) => {
       });
     }
 
-    const users = await User.findAll(tipo || null);
+    const showInactive = includeInactive === 'true';
+    const users = await User.findAll(tipo || null, showInactive);
 
     res.json({
       total: users.length,
