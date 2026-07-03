@@ -40,7 +40,7 @@ export default function FinanceSummary() {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'ARS',
     }).format(value || 0)
   }
 
