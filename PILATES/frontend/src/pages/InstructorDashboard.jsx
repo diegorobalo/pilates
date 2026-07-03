@@ -19,6 +19,7 @@ import PendingReservations from '../components/Instructor/PendingReservations'
 import AttendanceManagement from '../components/Instructor/AttendanceManagement'
 import FinancesManagement from '../components/Instructor/FinancesManagement'
 import AdminSettings from '../components/Instructor/AdminSettings'
+import CalendarManagement from '../components/Instructor/CalendarManagement'
 
 export default function InstructorDashboard() {
   const [activeTab, setActiveTab] = useState('usuarios')
@@ -77,6 +78,7 @@ export default function InstructorDashboard() {
     },
     { id: 'asistencia', label: 'Asistencia', icon: UserCheck },
     { id: 'finanzas', label: 'Finanzas', icon: DollarSign },
+    { id: 'calendario', label: 'Calendario', icon: Calendar },
     // Admin-only tab
     ...(isAdmin ? [{ id: 'config', label: 'Configuración', icon: Settings }] : []),
   ]
@@ -168,6 +170,7 @@ export default function InstructorDashboard() {
             <FinancesManagement />
           </div>
         )}
+        {activeTab === 'calendario' && <CalendarManagement />}
         {activeTab === 'config' && isAdmin && <AdminSettings />}
       </main>
     </div>

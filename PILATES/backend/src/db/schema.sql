@@ -162,6 +162,17 @@ CREATE TABLE IF NOT EXISTS verification_codes (
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Calendar Exceptions (Feriados, Days Off, Special Days)
+CREATE TABLE IF NOT EXISTS calendar_excepciones (
+  id TEXT PRIMARY KEY,
+  fecha DATE NOT NULL UNIQUE,
+  tipo TEXT NOT NULL CHECK (tipo IN ('FERIADO', 'CERRADO', 'ESPECIAL')),
+  descripcion TEXT NOT NULL,
+  afecta_suscripciones BOOLEAN DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create indexes for performance optimization
 CREATE INDEX IF NOT EXISTS idx_users_tipo ON users(tipo);
 CREATE INDEX IF NOT EXISTS idx_users_estado ON users(estado);
@@ -197,3 +208,6 @@ CREATE INDEX IF NOT EXISTS idx_pagos_profesores_mes_referencia ON pagos_profesor
 
 CREATE INDEX IF NOT EXISTS idx_gastos_categoria ON gastos(categoria);
 CREATE INDEX IF NOT EXISTS idx_gastos_fecha_gasto ON gastos(fecha_gasto);
+
+CREATE INDEX IF NOT EXISTS idx_calendar_excepciones_fecha ON calendar_excepciones(fecha);
+CREATE INDEX IF NOT EXISTS idx_calendar_excepciones_tipo ON calendar_excepciones(tipo);
