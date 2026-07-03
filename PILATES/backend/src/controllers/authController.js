@@ -1,13 +1,11 @@
 import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
 import User from '../models/User.js';
+import db from '../db/connection.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
-
-// In-memory storage for verification codes (dev only)
-// In production, use Redis or database with expiration
-const verificationCodes = new Map();
-const verificationCodeTTL = 10 * 60 * 1000; // 10 minutes
+const verificationCodeTTL = 10 * 60; // 10 minutes in seconds
 
 /**
  * Generate a random 6-digit verification code
@@ -15,6 +13,74 @@ const verificationCodeTTL = 10 * 60 * 1000; // 10 minutes
  */
 function generateVerificationCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+/**
+ * Save verification code to database
+ */
+async function saveVerificationCode(phone, code) {
+  const id = uuid();
+  const expiresAt = new Date(Date.now() + verificationCodeTTL * 1000);
+
+  return new Promise((resolve, reject) => {
+    db.run(
+      `INSERT OR REPLACE INTO verification_codes (id, telefono, code, attempts, expires_at, created_at)
+       VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [id, phone, code, 0, expiresAt.toISOString()],
+      (err) => {
+        if (err) reject(err);
+        else resolve({ id, expiresAt });
+      }
+    );
+  });
+}
+
+/**
+ * Get verification code from database
+ */
+async function getVerificationCode(phone) {
+  return new Promise((resolve, reject) => {
+    db.get(
+      `SELECT * FROM verification_codes WHERE telefono = ? AND expires_at > CURRENT_TIMESTAMP`,
+      [phone],
+      (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      }
+    );
+  });
+}
+
+/**
+ * Increment verification attempts
+ */
+async function incrementVerificationAttempts(phone) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `UPDATE verification_codes SET attempts = attempts + 1 WHERE telefono = ?`,
+      [phone],
+      function(err) {
+        if (err) reject(err);
+        else resolve(this.changes);
+      }
+    );
+  });
+}
+
+/**
+ * Delete verification code
+ */
+async function deleteVerificationCode(phone) {
+  return new Promise((resolve, reject) => {
+    db.run(
+      `DELETE FROM verification_codes WHERE telefono = ?`,
+      [phone],
+      function(err) {
+        if (err) reject(err);
+        else resolve(this.changes);
+      }
+    );
+  });
 }
 
 /**
@@ -47,17 +113,8 @@ export const requestPhoneVerification = async (req, res) => {
     // Generate verification code
     const code = generateVerificationCode();
 
-    // Store code with timestamp for expiration
-    verificationCodes.set(phone, {
-      code,
-      createdAt: Date.now(),
-      attempts: 0
-    });
-
-    // Clean up expired codes after TTL
-    setTimeout(() => {
-      verificationCodes.delete(phone);
-    }, verificationCodeTTL);
+    // Store code in database
+    await saveVerificationCode(phone, code);
 
     // In development mode, return the code (for testing)
     if (process.env.NODE_ENV === 'development') {
@@ -101,8 +158,8 @@ export const verifyPhoneCode = async (req, res) => {
       });
     }
 
-    // Check if verification code exists
-    const stored = verificationCodes.get(phone);
+    // Check if verification code exists and is not expired
+    const stored = await getVerificationCode(phone);
     if (!stored) {
       return res.status(401).json({
         error: 'Invalid or expired code',
@@ -110,18 +167,9 @@ export const verifyPhoneCode = async (req, res) => {
       });
     }
 
-    // Check if code has expired
-    if (Date.now() - stored.createdAt > verificationCodeTTL) {
-      verificationCodes.delete(phone);
-      return res.status(401).json({
-        error: 'Code expired',
-        message: 'Verification code has expired. Please request a new one'
-      });
-    }
-
     // Check for too many attempts
     if (stored.attempts >= 3) {
-      verificationCodes.delete(phone);
+      await deleteVerificationCode(phone);
       return res.status(429).json({
         error: 'Too many attempts',
         message: 'Maximum verification attempts exceeded. Please request a new code'
@@ -130,10 +178,12 @@ export const verifyPhoneCode = async (req, res) => {
 
     // Verify code
     if (stored.code !== code) {
-      stored.attempts++;
+      await incrementVerificationAttempts(phone);
+      const updatedCode = await getVerificationCode(phone);
+      const attemptsRemaining = 3 - (updatedCode?.attempts || 0);
       return res.status(401).json({
         error: 'Invalid code',
-        message: `Wrong verification code. ${3 - stored.attempts} attempts remaining`
+        message: `Wrong verification code. ${attemptsRemaining} attempts remaining`
       });
     }
 
@@ -164,7 +214,7 @@ export const verifyPhoneCode = async (req, res) => {
     });
 
     // Clear verification code
-    verificationCodes.delete(phone);
+    await deleteVerificationCode(phone);
 
     // Return user data (without sensitive info) and tokens
     res.json({

@@ -280,7 +280,13 @@
       "Bash(curl -s http://localhost:4173/index.html)",
       "Bash(cd /c/Users/diego.robalo/Documents/CLAUDIA/PILETERO && sed -n '/POST.*\\\\/visitas/,/^router\\\\./p' backend/api/routes.js | head -80)",
       "mcp__Claude_in_Chrome__form_input",
-      "Bash(find \"C:\\\\Users\\\\diego.robalo\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\" -name \"start-server.sh\" -type f)"
+      "Bash(find \"C:\\\\Users\\\\diego.robalo\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\" -name \"start-server.sh\" -type f)",
+      "mcp__claude-in-chrome__navigate",
+      "mcp__claude-in-chrome__read_page",
+      "mcp__claude-in-chrome__read_console_messages",
+      "mcp__claude-in-chrome__form_input",
+      "mcp__claude-in-chrome__computer",
+      "mcp__claude-in-chrome__read_network_requests"
     ]
   }
 }

@@ -100,10 +100,23 @@ CREATE TABLE IF NOT EXISTS pagos (
   FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT
 );
 
+-- Verification Codes table (for phone verification)
+CREATE TABLE IF NOT EXISTS verification_codes (
+  id TEXT PRIMARY KEY,
+  telefono TEXT NOT NULL,
+  code TEXT NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 3,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create indexes for performance optimization
 CREATE INDEX IF NOT EXISTS idx_users_tipo ON users(tipo);
 CREATE INDEX IF NOT EXISTS idx_users_estado ON users(estado);
 CREATE INDEX IF NOT EXISTS idx_users_telefono ON users(telefono);
+
+CREATE INDEX IF NOT EXISTS idx_verification_codes_telefono ON verification_codes(telefono);
+CREATE INDEX IF NOT EXISTS idx_verification_codes_expires_at ON verification_codes(expires_at);
 
 CREATE INDEX IF NOT EXISTS idx_planes_semanales_alumna_id ON planes_semanales(alumna_id);
 CREATE INDEX IF NOT EXISTS idx_planes_semanales_dia_semana ON planes_semanales(dia_semana);
