@@ -49,22 +49,19 @@ export default function PaymentModal({ student, onClose, onSuccess }) {
 
     try {
       setLoading(true)
-      const response = await fetch('/api/payments', {
+      const response = await fetch(`/api/legajo/${student.id}/pagar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          alumnaId: student.id,
           monto: parseFloat(formData.monto),
-          fecha: formData.fechaPago,
-          mesReferencia: formData.mesReferencia,
           metodo: formData.metodo,
-          notas: formData.notas,
+          notas: formData.notas || null,
         }),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.message || 'Error al registrar el pago')
+        throw new Error(errorData.error || errorData.message || 'Error al registrar el pago')
       }
 
       setSuccess(true)
@@ -90,9 +87,9 @@ export default function PaymentModal({ student, onClose, onSuccess }) {
   }
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('es-ES', {
+    return new Intl.NumberFormat('es-AR', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'ARS',
     }).format(value || 0)
   }
 
@@ -145,7 +142,7 @@ export default function PaymentModal({ student, onClose, onSuccess }) {
                 Monto *
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2.5 text-gray-600">€</span>
+                <span className="absolute left-3 top-2.5 text-gray-600">$</span>
                 <input
                   type="number"
                   name="monto"
