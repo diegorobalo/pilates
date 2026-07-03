@@ -173,6 +173,31 @@ CREATE TABLE IF NOT EXISTS calendar_excepciones (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Subscriptions (recurring enrollment: "every Monday 10am")
+CREATE TABLE IF NOT EXISTS suscripciones_alumnos (
+  id TEXT PRIMARY KEY,
+  alumna_id TEXT NOT NULL,
+  dia_semana INTEGER NOT NULL CHECK (dia_semana >= 0 AND dia_semana <= 6),
+  hora TEXT NOT NULL,
+  activa BOOLEAN DEFAULT 1,
+  cama_preferida INTEGER CHECK (cama_preferida IS NULL OR (cama_preferida >= 1 AND cama_preferida <= 6)),
+  fecha_inicio DATE DEFAULT CURRENT_DATE,
+  fecha_fin DATE,
+  notas TEXT,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE (alumna_id, dia_semana, hora)
+);
+
+-- Auto-generated Reservations Metadata (track which suscripcion generated which reservation)
+CREATE TABLE IF NOT EXISTS reserva_suscripcion (
+  reserva_id TEXT PRIMARY KEY,
+  suscripcion_id TEXT NOT NULL,
+  FOREIGN KEY (reserva_id) REFERENCES reservas(id) ON DELETE CASCADE,
+  FOREIGN KEY (suscripcion_id) REFERENCES suscripciones_alumnos(id) ON DELETE CASCADE
+);
+
 -- Create indexes for performance optimization
 CREATE INDEX IF NOT EXISTS idx_users_tipo ON users(tipo);
 CREATE INDEX IF NOT EXISTS idx_users_estado ON users(estado);
@@ -211,3 +236,9 @@ CREATE INDEX IF NOT EXISTS idx_gastos_fecha_gasto ON gastos(fecha_gasto);
 
 CREATE INDEX IF NOT EXISTS idx_calendar_excepciones_fecha ON calendar_excepciones(fecha);
 CREATE INDEX IF NOT EXISTS idx_calendar_excepciones_tipo ON calendar_excepciones(tipo);
+
+CREATE INDEX IF NOT EXISTS idx_suscripciones_alumna_id ON suscripciones_alumnos(alumna_id);
+CREATE INDEX IF NOT EXISTS idx_suscripciones_activa ON suscripciones_alumnos(activa);
+CREATE INDEX IF NOT EXISTS idx_suscripciones_dia_semana ON suscripciones_alumnos(dia_semana);
+
+CREATE INDEX IF NOT EXISTS idx_reserva_suscripcion_suscripcion_id ON reserva_suscripcion(suscripcion_id);

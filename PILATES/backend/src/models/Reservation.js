@@ -216,6 +216,52 @@ class Reservation {
       throw new Error(`Error deleting reservation: ${error.message}`);
     }
   }
+
+  /**
+   * Find one reservation by custom filter
+   * @param {Object} filters - Filter object (e.g., { alumna_id, horario_id })
+   * @returns {Promise<Object|null>} Reservation object or null
+   */
+  static async findOne(filters) {
+    try {
+      let query = 'SELECT * FROM reservas WHERE 1=1';
+      const params = [];
+
+      if (filters.alumna_id) {
+        query += ' AND alumna_id = ?';
+        params.push(filters.alumna_id);
+      }
+      if (filters.horario_id) {
+        query += ' AND horario_id = ?';
+        params.push(filters.horario_id);
+      }
+      if (filters.cama_numero) {
+        query += ' AND cama_numero = ?';
+        params.push(filters.cama_numero);
+      }
+
+      return await getAsync(query, params);
+    } catch (error) {
+      throw new Error(`Error finding reservation: ${error.message}`);
+    }
+  }
+
+  /**
+   * Link a reservation to a subscription
+   * @param {string} reserva_id - Reservation ID
+   * @param {string} suscripcion_id - Subscription ID
+   * @returns {Promise<void>}
+   */
+  static async linkToSubscription(reserva_id, suscripcion_id) {
+    try {
+      await runAsync(
+        `INSERT INTO reserva_suscripcion (reserva_id, suscripcion_id) VALUES (?, ?)`,
+        [reserva_id, suscripcion_id]
+      );
+    } catch (error) {
+      throw new Error(`Error linking reservation to subscription: ${error.message}`);
+    }
+  }
 }
 
 export default Reservation;

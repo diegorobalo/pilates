@@ -13,6 +13,7 @@ import onboardingRoutes from './routes/onboarding.js';
 import financesRoutes from './routes/finances.js';
 import birthdaysRoutes from './routes/birthdays.js';
 import calendarRoutes from './routes/calendar.js';
+import subscriptionsRoutes from './routes/subscriptions.js';
 
 dotenv.config();
 
@@ -103,6 +104,9 @@ app.use('/api/birthdays', birthdaysRoutes);
 
 // Calendar exceptions (holidays, closures) routes
 app.use('/api/calendar', calendarRoutes);
+
+// Subscriptions (recurring class enrollment) routes
+app.use('/api/subscriptions', subscriptionsRoutes);
 
 // Admin (master access) routes
 app.use('/api/admin', adminRoutes);
