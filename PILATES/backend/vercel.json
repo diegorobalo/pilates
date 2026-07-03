@@ -4,8 +4,8 @@
   "framework": "express",
   "env": {
     "NODE_ENV": "production",
-    "JWT_SECRET_KEY": "@jwt_secret_key",
-    "DATABASE_URL": "@database_url"
+    "JWT_SECRET_KEY": "pilates-super-secret-key-change-in-production-min-32-chars",
+    "DATABASE_URL": "libsql://pilates-diegorobalo.aws-us-west-2.turso.io"
   },
   "rewrites": [
     {
