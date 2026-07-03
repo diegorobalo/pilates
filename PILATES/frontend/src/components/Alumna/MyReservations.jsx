@@ -16,10 +16,12 @@ export default function MyReservations() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch('/api/reservations')
+      const response = await fetch('/api/reservations/mine')
       if (response.ok) {
         const data = await response.json()
         setReservations(Array.isArray(data) ? data : data.reservations || [])
+      } else {
+        setError('Error al cargar las reservas')
       }
     } catch (err) {
       console.error('Error fetching reservations:', err)
@@ -54,35 +56,53 @@ export default function MyReservations() {
 
   const getFilteredReservations = () => {
     if (filter === 'todas') return reservations
-    if (filter === 'confirmadas') return reservations.filter((r) => r.status === 'Confirmada')
-    if (filter === 'pendientes') return reservations.filter((r) => r.status === 'Pendiente')
-    if (filter === 'canceladas') return reservations.filter((r) => r.status === 'Cancelada')
+    if (filter === 'confirmadas') return reservations.filter((r) => r.estado === 'CONFIRMADA')
+    if (filter === 'pendientes') return reservations.filter((r) => r.estado === 'PENDIENTE')
+    if (filter === 'canceladas') return reservations.filter((r) => r.estado === 'CANCELADA')
     return reservations
   }
 
   const canCancelReservation = (reservation) => {
-    const classDateTime = new Date(`${reservation.fecha}T${reservation.hora}`)
+    const horario = reservation.horario
+    if (!horario || !horario.fecha || !horario.hora) return false
+
+    const classDateTime = new Date(`${horario.fecha}T${horario.hora}`)
     const now = new Date()
     const oneHourBefore = new Date(classDateTime.getTime() - 60 * 60 * 1000)
 
     return (
       now < oneHourBefore &&
-      (reservation.status === 'Confirmada' || reservation.status === 'Pendiente')
+      (reservation.estado === 'CONFIRMADA' || reservation.estado === 'PENDIENTE')
     )
   }
 
-  const getStatusBadgeColor = (status) => {
-    switch (status) {
-      case 'Confirmada':
+  const getStatusBadgeColor = (estado) => {
+    switch (estado) {
+      case 'CONFIRMADA':
         return 'bg-green-100 text-green-800'
-      case 'Pendiente':
+      case 'PENDIENTE':
         return 'bg-yellow-100 text-yellow-800'
-      case 'Cancelada':
+      case 'CANCELADA':
         return 'bg-gray-100 text-gray-800'
-      case 'Rechazada':
+      case 'RECHAZADA':
         return 'bg-red-100 text-red-800'
       default:
         return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getEstadoLabel = (estado) => {
+    switch (estado) {
+      case 'CONFIRMADA':
+        return 'Confirmada'
+      case 'PENDIENTE':
+        return 'Pendiente'
+      case 'CANCELADA':
+        return 'Cancelada'
+      case 'RECHAZADA':
+        return 'Rechazada'
+      default:
+        return estado
     }
   }
 
@@ -141,7 +161,10 @@ export default function MyReservations() {
                     Hora
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Instructor
+                    Profesora
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    Clase
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Cama
@@ -155,32 +178,45 @@ export default function MyReservations() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredReservations.map((reservation) => (
-                  <tr
-                    key={reservation.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {new Date(reservation.fecha).toLocaleDateString('es-ES')}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {reservation.hora}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {reservation.instructor}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                      Cama {reservation.bedNumber}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(
-                          reservation.status
-                        )}`}
-                      >
-                        {reservation.status}
-                      </span>
-                    </td>
+                {filteredReservations.map((reservation) => {
+                  const horario = reservation.horario || {}
+                  const fechaStr = horario.fecha
+                    ? new Date(horario.fecha).toLocaleDateString('es-ES')
+                    : '-'
+                  const horaStr = horario.hora || '-'
+                  const profesoraStr = horario.profesora_nombre
+                    ? `${horario.profesora_nombre} ${horario.profesora_apellido}`
+                    : 'Sin asignar'
+
+                  return (
+                    <tr
+                      key={reservation.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        {fechaStr}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {horaStr}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {profesoraStr}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {horario.titulo || '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        Cama {reservation.cama_numero}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(
+                            reservation.estado
+                          )}`}
+                        >
+                          {getEstadoLabel(reservation.estado)}
+                        </span>
+                      </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {canCancelReservation(reservation) && (
                         <div className="flex gap-2">
@@ -195,12 +231,13 @@ export default function MyReservations() {
                       )}
                       {!canCancelReservation(reservation) && (
                         <span className="text-gray-400 text-xs">
-                          {reservation.status === 'Cancelada' ? 'Cancelada' : 'No se puede cancelar'}
+                          {reservation.estado === 'CANCELADA' ? 'Cancelada' : 'No se puede cancelar'}
                         </span>
                       )}
                     </td>
-                  </tr>
-                ))}
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
