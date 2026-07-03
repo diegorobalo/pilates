@@ -7,6 +7,20 @@
       "runtimeArgs": ["run", "dev", "--", "--port", "5174"],
       "cwd": "PILETERO/frontend",
       "port": 5174
+    },
+    {
+      "name": "pilates-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--port", "5180"],
+      "cwd": "PILATES/frontend",
+      "port": 5180
+    },
+    {
+      "name": "pilates-backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "PILATES/backend",
+      "port": 3000
     }
   ]
 }

@@ -15,6 +15,7 @@ import birthdaysRoutes from './routes/birthdays.js';
 import calendarRoutes from './routes/calendar.js';
 import subscriptionsRoutes from './routes/subscriptions.js';
 import scheduleStatsRoutes from './routes/scheduleStats.js';
+import { initSubscriptionCronJobs } from './cron/subscriptionCron.js';
 
 dotenv.config();
 
@@ -133,6 +134,9 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('❌ UNHANDLED REJECTION at:', promise, 'reason:', reason);
   process.exit(1);
 });
+
+// Initialize cron jobs
+initSubscriptionCronJobs();
 
 // Start server
 app.listen(PORT, () => {
