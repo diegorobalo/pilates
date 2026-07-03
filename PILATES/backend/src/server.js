@@ -11,6 +11,7 @@ import paymentsRoutes from './routes/payments.js';
 import adminRoutes from './routes/admin.js';
 import onboardingRoutes from './routes/onboarding.js';
 import financesRoutes from './routes/finances.js';
+import birthdaysRoutes from './routes/birthdays.js';
 
 dotenv.config();
 
@@ -95,6 +96,9 @@ app.use('/api/onboarding', onboardingRoutes);
 
 // Finance management routes (payments, expenses, reports)
 app.use('/api/finances', financesRoutes);
+
+// Birthday calendar routes
+app.use('/api/birthdays', birthdaysRoutes);
 
 // Admin (master access) routes
 app.use('/api/admin', adminRoutes);

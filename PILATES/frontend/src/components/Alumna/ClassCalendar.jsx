@@ -5,13 +5,15 @@ import ReservationModal from './ReservationModal'
 export default function ClassCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [schedules, setSchedules] = useState([])
+  const [birthdays, setBirthdays] = useState([])
   const [loading, setLoading] = useState(false)
   const [selectedClass, setSelectedClass] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
-  // Fetch schedules for the next 30 days
+  // Fetch schedules and birthdays for the month
   useEffect(() => {
     fetchSchedules()
+    fetchBirthdays()
   }, [currentDate])
 
   const fetchSchedules = async () => {
@@ -38,6 +40,20 @@ export default function ClassCalendar() {
     }
   }
 
+  const fetchBirthdays = async () => {
+    try {
+      const month = currentDate.getMonth() + 1
+      const year = currentDate.getFullYear()
+      const response = await fetch(`/api/birthdays?month=${month}&year=${year}`)
+      if (response.ok) {
+        const data = await response.json()
+        setBirthdays(Array.isArray(data.birthdays) ? data.birthdays : [])
+      }
+    } catch (error) {
+      console.error('Error fetching birthdays:', error)
+    }
+  }
+
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
   }
@@ -56,6 +72,10 @@ export default function ClassCalendar() {
       .split('T')[0]
 
     return schedules.filter((schedule) => schedule.fecha === dateStr)
+  }
+
+  const getBirthdaysForDay = (day) => {
+    return birthdays.filter((b) => b.dia === day)
   }
 
   const handlePrevMonth = () => {
@@ -136,26 +156,39 @@ export default function ClassCalendar() {
             >
               <div className="text-sm font-semibold text-gray-900 mb-2">{day}</div>
               <div className="space-y-1">
-                {daySchedules.length > 0 ? (
-                  daySchedules.map((schedule) => (
-                    <button
-                      key={schedule.id}
-                      onClick={() => handleClassClick(schedule)}
-                      className="w-full text-left text-xs bg-primary/10 hover:bg-primary/20 text-primary p-1.5 rounded transition-colors"
-                    >
-                      <div className="font-medium">{schedule.hora}</div>
-                      <div className="text-xs opacity-70">{schedule.instructor}</div>
-                      <div className="mt-1 flex items-center gap-1">
-                        <div
-                          className={`w-2 h-2 rounded-full ${getStatusColor(
-                            schedule.reservationStatus
-                          )}`}
-                        />
-                        <span className="text-xs">{getStatusLabel(schedule.reservationStatus)}</span>
+                {daySchedules.length > 0 && daySchedules.map((schedule) => (
+                  <button
+                    key={schedule.id}
+                    onClick={() => handleClassClick(schedule)}
+                    className="w-full text-left text-xs bg-primary/10 hover:bg-primary/20 text-primary p-1.5 rounded transition-colors"
+                  >
+                    <div className="font-medium">{schedule.hora}</div>
+                    <div className="text-xs opacity-70">{schedule.instructor}</div>
+                    <div className="mt-1 flex items-center gap-1">
+                      <div
+                        className={`w-2 h-2 rounded-full ${getStatusColor(
+                          schedule.reservationStatus
+                        )}`}
+                      />
+                      <span className="text-xs">{getStatusLabel(schedule.reservationStatus)}</span>
+                    </div>
+                  </button>
+                ))}
+
+                {getBirthdaysForDay(day).length > 0 && (
+                  <div className="border-t border-gray-200 pt-1 mt-1">
+                    {getBirthdaysForDay(day).map((b) => (
+                      <div
+                        key={b.id}
+                        className="text-xs bg-pink-50 text-pink-700 p-1 rounded italic border border-pink-200"
+                      >
+                        🎂 {b.nombre}
                       </div>
-                    </button>
-                  ))
-                ) : (
+                    ))}
+                  </div>
+                )}
+
+                {daySchedules.length === 0 && getBirthdaysForDay(day).length === 0 && (
                   <div className="text-xs text-gray-400 italic">Sin clases</div>
                 )}
               </div>

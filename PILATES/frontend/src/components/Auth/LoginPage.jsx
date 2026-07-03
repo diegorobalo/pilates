@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { Dumbbell, AlertCircle, Loader, ShieldCheck, KeyRound, ArrowLeft } from 'lucide-react'
 import PhoneInput from './PhoneInput'
 import CodeInput from './CodeInput'
+import AlumnaOnboarding from '../Onboarding/AlumnaOnboarding'
 import { useAuth } from '../../context/AuthContext'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { login, loading: authLoading } = useAuth()
 
-  const [step, setStep] = useState('phone') // 'phone' or 'code'
+  const [step, setStep] = useState('phone') // 'phone', 'code', 'onboarding'
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [codeId, setCodeId] = useState('')
@@ -17,6 +18,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [requestResendCountdown, setRequestResendCountdown] = useState(0)
+  const [onboardingUserId, setOnboardingUserId] = useState(null)
 
   // Admin (master access)
   const [adminUsername, setAdminUsername] = useState('')
@@ -106,6 +108,16 @@ export default function LoginPage() {
         throw new Error(data.message || 'Error al verificar código')
       }
 
+      // Check if alumna needs to complete profile
+      if (data.user?.tipo === 'ALUMNA' && !data.user?.datos_completados) {
+        setOnboardingUserId(data.user.id)
+        setStep('onboarding')
+        // Store temp token for onboarding requests
+        localStorage.setItem('tempAccessToken', data.accessToken)
+        localStorage.setItem('tempRefreshToken', data.refreshToken)
+        return
+      }
+
       // Login with the auth context
       await login(data.accessToken, data.refreshToken, data.user)
 
@@ -124,6 +136,21 @@ export default function LoginPage() {
     setCode('')
     setCodeId('')
     setError('')
+  }
+
+  const handleOnboardingComplete = async (updatedUser) => {
+    try {
+      const tempToken = localStorage.getItem('tempAccessToken')
+      const tempRefresh = localStorage.getItem('tempRefreshToken')
+
+      localStorage.removeItem('tempAccessToken')
+      localStorage.removeItem('tempRefreshToken')
+
+      await login(tempToken, tempRefresh, updatedUser)
+      navigate('/alumna', { replace: true })
+    } catch (err) {
+      setError('Error completando el perfil. Intenta de nuevo.')
+    }
   }
 
   const handleResendCode = async () => {
@@ -518,6 +545,11 @@ export default function LoginPage() {
           Tu información está segura y encriptada
         </p>
       </div>
+
+      {/* Onboarding Modal */}
+      {step === 'onboarding' && onboardingUserId && (
+        <AlumnaOnboarding userId={onboardingUserId} onComplete={handleOnboardingComplete} />
+      )}
     </div>
   )
 }
