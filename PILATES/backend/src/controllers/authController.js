@@ -114,7 +114,7 @@ export const requestPhoneVerification = async (req, res) => {
     const code = generateVerificationCode();
 
     // Store code in database
-    await saveVerificationCode(phone, code);
+    const { id: codeId, expiresAt } = await saveVerificationCode(phone, code);
 
     // In development mode, return the code (for testing)
     if (process.env.NODE_ENV === 'development') {
@@ -122,6 +122,8 @@ export const requestPhoneVerification = async (req, res) => {
         message: 'Verification code sent',
         phone,
         code, // Development mode only
+        codeId,
+        expiresAt,
         expiresIn: '10 minutes'
       });
     }
@@ -130,6 +132,8 @@ export const requestPhoneVerification = async (req, res) => {
     res.json({
       message: 'Verification code sent to your phone',
       phone,
+      codeId,
+      expiresAt,
       expiresIn: '10 minutes'
     });
   } catch (error) {
@@ -225,7 +229,7 @@ export const verifyPhoneCode = async (req, res) => {
         telefono: user.telefono,
         tipo: user.tipo
       },
-      token,
+      accessToken: token,
       refreshToken
     });
   } catch (error) {
