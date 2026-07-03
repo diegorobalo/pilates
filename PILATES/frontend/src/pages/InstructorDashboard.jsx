@@ -8,6 +8,7 @@ import {
   Clock,
   DollarSign,
   UserCheck,
+  Settings,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import StudentManagement from '../components/Instructor/StudentManagement'
@@ -15,6 +16,7 @@ import ScheduleManagement from '../components/Instructor/ScheduleManagement'
 import PendingReservations from '../components/Instructor/PendingReservations'
 import AttendanceManagement from '../components/Instructor/AttendanceManagement'
 import FinancesManagement from '../components/Instructor/FinancesManagement'
+import AdminSettings from '../components/Instructor/AdminSettings'
 
 export default function InstructorDashboard() {
   const [activeTab, setActiveTab] = useState('alumnas')
@@ -22,7 +24,8 @@ export default function InstructorDashboard() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  const instructorName = user?.name || 'Instructor'
+  const isAdmin = user?.tipo === 'ADMIN'
+  const instructorName = user?.nombre || user?.name || (isAdmin ? 'Administrador' : 'Instructor')
 
   useEffect(() => {
     // Fetch pending reservations count
@@ -59,6 +62,8 @@ export default function InstructorDashboard() {
     },
     { id: 'asistencia', label: 'Asistencia', icon: UserCheck },
     { id: 'finanzas', label: 'Finanzas', icon: DollarSign },
+    // Admin-only tab
+    ...(isAdmin ? [{ id: 'config', label: 'Configuración', icon: Settings }] : []),
   ]
 
   return (
@@ -147,6 +152,7 @@ export default function InstructorDashboard() {
             <FinancesManagement />
           </div>
         )}
+        {activeTab === 'config' && isAdmin && <AdminSettings />}
       </main>
     </div>
   )

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Dumbbell, AlertCircle, Loader } from 'lucide-react'
+import { Dumbbell, AlertCircle, Loader, ShieldCheck, KeyRound, ArrowLeft } from 'lucide-react'
 import PhoneInput from './PhoneInput'
 import CodeInput from './CodeInput'
 import { useAuth } from '../../context/AuthContext'
@@ -17,6 +17,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [requestResendCountdown, setRequestResendCountdown] = useState(0)
+
+  // Admin (master access)
+  const [adminUsername, setAdminUsername] = useState('')
+  const [adminPassword, setAdminPassword] = useState('')
+  const [adminEmail, setAdminEmail] = useState('')
+  const [resetToken, setResetToken] = useState('')
+  const [resetPassword, setResetPassword] = useState('')
+  const [info, setInfo] = useState('')
+  const secretTaps = useRef(0)
+  const secretTimer = useRef(null)
 
   // Handle resend code countdown
   useEffect(() => {
@@ -141,13 +151,104 @@ export default function LoginPage() {
     }
   }
 
+  // Secret gesture: tap the dumbbell 5 times (within 2s) to reveal admin login
+  const handleSecretTap = () => {
+    secretTaps.current += 1
+    if (secretTimer.current) clearTimeout(secretTimer.current)
+    secretTimer.current = setTimeout(() => {
+      secretTaps.current = 0
+    }, 2000)
+    if (secretTaps.current >= 5) {
+      secretTaps.current = 0
+      setError('')
+      setInfo('')
+      setStep('admin')
+    }
+  }
+
+  const handleAdminLogin = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setInfo('')
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: adminUsername, password: adminPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || 'Credenciales inválidas')
+      await login(data.accessToken, data.refreshToken, data.user)
+      navigate('/instructor')
+    } catch (err) {
+      setError(err.message || 'No se pudo iniciar sesión')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAdminForgot = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setInfo('')
+    try {
+      const res = await fetch('/api/admin/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: adminEmail }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || 'Error')
+      setInfo(data.message)
+      setStep('admin-reset')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAdminReset = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setInfo('')
+    try {
+      const res = await fetch('/api/admin/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: resetToken, newPassword: resetPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || 'Error')
+      setInfo('Contraseña actualizada. Ingresá con tu nueva contraseña.')
+      setResetToken('')
+      setResetPassword('')
+      setStep('admin')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary via-purple-600 to-primary-dark flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Dumbbell className="w-10 h-10 text-white" />
+            <button
+              type="button"
+              onClick={handleSecretTap}
+              aria-label="PILATES"
+              className="focus:outline-none"
+              title=""
+            >
+              <Dumbbell className="w-10 h-10 text-white cursor-pointer select-none" />
+            </button>
             <h1 className="text-4xl font-bold text-white">PILATES</h1>
           </div>
           <p className="text-purple-100 text-lg font-medium">
@@ -201,7 +302,7 @@ export default function LoginPage() {
                 </p>
               </div>
             </>
-          ) : (
+          ) : step === 'code' ? (
             <>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Verifica tu Código
@@ -268,6 +369,144 @@ export default function LoginPage() {
                 </button>
               </div>
             </>
+          ) : (
+            <>
+              {step === 'admin' && (
+                <>
+                  <div className="flex items-center gap-2 mb-2">
+                    <ShieldCheck className="w-6 h-6 text-primary" />
+                    <h2 className="text-2xl font-bold text-gray-900">Acceso Administrador</h2>
+                  </div>
+                  <p className="text-gray-600 mb-6">Ingresá con usuario y contraseña</p>
+
+                  <form onSubmit={handleAdminLogin} className="space-y-4">
+                    <input
+                      type="text"
+                      value={adminUsername}
+                      onChange={(e) => setAdminUsername(e.target.value)}
+                      placeholder="Usuario"
+                      autoComplete="username"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    />
+                    <input
+                      type="password"
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      placeholder="Contraseña"
+                      autoComplete="current-password"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading || !adminUsername || !adminPassword}
+                      className="w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed font-bold py-3 flex items-center justify-center gap-2"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader className="w-5 h-5 animate-spin" />
+                          Ingresando...
+                        </>
+                      ) : (
+                        'Ingresar'
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="mt-6 pt-6 border-t border-gray-200 space-y-3">
+                    <button
+                      onClick={() => { setStep('admin-forgot'); setError(''); setInfo('') }}
+                      className="w-full text-primary font-semibold hover:text-primary-dark py-2 flex items-center justify-center gap-2"
+                    >
+                      <KeyRound className="w-4 h-4" />
+                      ¿Olvidaste tu contraseña?
+                    </button>
+                    <button
+                      onClick={() => { setStep('phone'); setError(''); setInfo('') }}
+                      className="w-full text-gray-600 font-semibold hover:text-gray-900 py-2 flex items-center justify-center gap-2"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Volver
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {step === 'admin-forgot' && (
+                <>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Recuperar contraseña</h2>
+                  <p className="text-gray-600 mb-6">
+                    Ingresá el email de recuperación y te enviaremos un código.
+                  </p>
+                  <form onSubmit={handleAdminForgot} className="space-y-4">
+                    <input
+                      type="email"
+                      value={adminEmail}
+                      onChange={(e) => setAdminEmail(e.target.value)}
+                      placeholder="Email de recuperación"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading || !adminEmail}
+                      className="w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed font-bold py-3"
+                    >
+                      {loading ? 'Enviando...' : 'Enviar código'}
+                    </button>
+                  </form>
+                  <button
+                    onClick={() => { setStep('admin'); setError(''); setInfo('') }}
+                    className="w-full mt-4 text-gray-600 font-semibold hover:text-gray-900 py-2"
+                  >
+                    Volver
+                  </button>
+                </>
+              )}
+
+              {step === 'admin-reset' && (
+                <>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Nueva contraseña</h2>
+                  <p className="text-gray-600 mb-6">
+                    Pegá el código que te llegó por email y elegí una contraseña nueva.
+                  </p>
+                  <form onSubmit={handleAdminReset} className="space-y-4">
+                    <input
+                      type="text"
+                      value={resetToken}
+                      onChange={(e) => setResetToken(e.target.value)}
+                      placeholder="Código de recuperación"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    />
+                    <input
+                      type="password"
+                      value={resetPassword}
+                      onChange={(e) => setResetPassword(e.target.value)}
+                      placeholder="Nueva contraseña"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading || !resetToken || !resetPassword}
+                      className="w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed font-bold py-3"
+                    >
+                      {loading ? 'Guardando...' : 'Cambiar contraseña'}
+                    </button>
+                  </form>
+                  <button
+                    onClick={() => { setStep('admin'); setError(''); setInfo('') }}
+                    className="w-full mt-4 text-gray-600 font-semibold hover:text-gray-900 py-2"
+                  >
+                    Volver
+                  </button>
+                </>
+              )}
+            </>
+          )}
+
+          {/* Info / success message */}
+          {info && (
+            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-700 font-medium">{info}</p>
+            </div>
           )}
 
           {/* General error (API/network) */}

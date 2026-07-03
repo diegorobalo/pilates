@@ -8,6 +8,7 @@ import schedulesRoutes from '../backend/src/routes/schedules.js';
 import reservationsRoutes from '../backend/src/routes/reservations.js';
 import attendanceRoutes from '../backend/src/routes/attendance.js';
 import paymentsRoutes from '../backend/src/routes/payments.js';
+import adminRoutes from '../backend/src/routes/admin.js';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/schedules', schedulesRoutes);
 app.use('/api/reservations', reservationsRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

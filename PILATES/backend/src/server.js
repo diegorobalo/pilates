@@ -8,6 +8,7 @@ import schedulesRoutes from './routes/schedules.js';
 import reservationsRoutes from './routes/reservations.js';
 import attendanceRoutes from './routes/attendance.js';
 import paymentsRoutes from './routes/payments.js';
+import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
@@ -86,6 +87,9 @@ app.use('/api/attendance', attendanceRoutes);
 
 // Payment management routes
 app.use('/api/payments', paymentsRoutes);
+
+// Admin (master access) routes
+app.use('/api/admin', adminRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

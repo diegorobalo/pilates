@@ -100,6 +100,17 @@ CREATE TABLE IF NOT EXISTS pagos (
   FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT
 );
 
+-- Admin master credentials (single row, id = 1). Default seeded as admin/admin.
+CREATE TABLE IF NOT EXISTS admin_config (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  username TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  email TEXT,
+  reset_token TEXT,
+  reset_expires DATETIME,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Verification Codes table (for phone verification)
 CREATE TABLE IF NOT EXISTS verification_codes (
   id TEXT PRIMARY KEY,
