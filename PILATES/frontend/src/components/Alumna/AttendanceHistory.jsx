@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
 
 export default function AttendanceHistory() {
+  const { user } = useAuth()
   const [history, setHistory] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -10,15 +12,16 @@ export default function AttendanceHistory() {
   const itemsPerPage = 10
 
   useEffect(() => {
-    fetchAttendanceHistory()
-  }, [])
+    if (user?.userId) {
+      fetchAttendanceHistory()
+    }
+  }, [user?.userId])
 
   const fetchAttendanceHistory = async () => {
     setLoading(true)
     setError(null)
     try {
-      // Get alumna ID from auth context or state
-      const alumnaId = '1' // TODO: Replace with actual alumna ID from auth
+      const alumnaId = user?.userId
 
       const response = await fetch(`/api/attendance/stats/${alumnaId}`)
       if (response.ok) {
