@@ -72,12 +72,12 @@ async function generateReservationsFromSubscriptions() {
           });
 
           if (!existingRes) {
-            // Create new reservation
+            // Create new reservation (auto-confirmed for subscription-based reservations)
             const reservation = await Reservation.create({
               alumna_id: subscription.alumna_id,
               horario_id: schedule.id,
               cama_numero: subscription.cama_preferida || 1,
-              estado: 'PENDIENTE'
+              estado: 'CONFIRMADA'
             });
 
             // Link to subscription
