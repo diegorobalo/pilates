@@ -40,7 +40,7 @@ export default function InstructorDashboard() {
     try {
       const response = await fetch('/api/reservations/pending')
       const data = await response.json()
-      setPendingCount(data.length || 0)
+      setPendingCount(data.total ?? (Array.isArray(data) ? data.length : 0))
     } catch (error) {
       console.error('Error fetching pending count:', error)
     }

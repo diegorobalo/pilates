@@ -36,7 +36,7 @@ export default function PaymentHistory() {
       const response = await fetch(`/api/payments/month/${selectedMonth}`)
       if (!response.ok) throw new Error('Error fetching payments')
       const data = await response.json()
-      setPayments(data || [])
+      setPayments(Array.isArray(data) ? data : data.payments || [])
       setCurrentPage(1)
     } catch (err) {
       console.error('Error fetching payments:', err)

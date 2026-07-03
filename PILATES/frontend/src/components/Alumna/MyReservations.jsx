@@ -19,7 +19,7 @@ export default function MyReservations() {
       const response = await fetch('/api/reservations')
       if (response.ok) {
         const data = await response.json()
-        setReservations(data)
+        setReservations(Array.isArray(data) ? data : data.reservations || [])
       }
     } catch (err) {
       console.error('Error fetching reservations:', err)

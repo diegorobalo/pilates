@@ -29,7 +29,7 @@ export default function ClassCalendar() {
       )
       if (response.ok) {
         const data = await response.json()
-        setSchedules(data)
+        setSchedules(Array.isArray(data) ? data : data.schedules || [])
       }
     } catch (error) {
       console.error('Error fetching schedules:', error)

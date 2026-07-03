@@ -28,8 +28,9 @@ export default function ScheduleManagement() {
       const response = await fetch('/api/schedules')
       if (!response.ok) throw new Error('Error fetching schedules')
       const data = await response.json()
+      const list = Array.isArray(data) ? data : data.schedules || []
       // Sort by date and time
-      const sorted = data.sort((a, b) => {
+      const sorted = list.sort((a, b) => {
         const dateA = new Date(`${a.fecha}T${a.hora}`)
         const dateB = new Date(`${b.fecha}T${b.hora}`)
         return dateA - dateB

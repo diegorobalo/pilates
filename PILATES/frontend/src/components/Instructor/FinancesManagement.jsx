@@ -50,7 +50,7 @@ export default function FinancesManagement() {
       )
       if (!response.ok) throw new Error('Error fetching payments')
       const data = await response.json()
-      setPayments(data || [])
+      setPayments(Array.isArray(data) ? data : data.payments || [])
       setError(null)
     } catch (err) {
       setError(err.message)

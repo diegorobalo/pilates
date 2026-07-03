@@ -32,7 +32,7 @@ export default function AttendanceManagement() {
       const schedulesResponse = await fetch(`/api/schedules?fecha=${filterDate}`)
       if (schedulesResponse.ok) {
         const schedulesData = await schedulesResponse.json()
-        setSchedules(schedulesData || [])
+        setSchedules(Array.isArray(schedulesData) ? schedulesData : schedulesData.schedules || [])
       }
 
       // Fetch attendance records

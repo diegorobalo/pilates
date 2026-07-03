@@ -30,11 +30,12 @@ export default function StudentPayments() {
       const response = await fetch('/api/users?tipo=ALUMNA')
       if (!response.ok) throw new Error('Error fetching students')
       const data = await response.json()
-      setStudents(data)
+      const list = Array.isArray(data) ? data : data.users || []
+      setStudents(list)
 
       // Fetch payment data for each student
       const paymentsMap = {}
-      for (const student of data) {
+      for (const student of list) {
         try {
           const paymentResponse = await fetch(
             `/api/payments/alumna/${student.id}`

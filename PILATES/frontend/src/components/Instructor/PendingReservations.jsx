@@ -30,7 +30,7 @@ export default function PendingReservations({ onCountChange }) {
       const response = await fetch('/api/reservations/pending')
       if (!response.ok) throw new Error('Error fetching reservations')
       const data = await response.json()
-      setReservations(data || [])
+      setReservations(Array.isArray(data) ? data : data.reservations || [])
       setError(null)
     } catch (err) {
       setError(err.message)

@@ -36,7 +36,7 @@ export default function StudentManagement() {
       const response = await fetch('/api/users?tipo=ALUMNA')
       if (!response.ok) throw new Error('Error fetching students')
       const data = await response.json()
-      setStudents(data)
+      setStudents(Array.isArray(data) ? data : data.users || [])
       setError(null)
     } catch (err) {
       setError(err.message)
