@@ -262,6 +262,22 @@ class Reservation {
       throw new Error(`Error linking reservation to subscription: ${error.message}`);
     }
   }
+
+  /**
+   * Find reservations by schedule
+   * @param {string} horario_id - Schedule ID
+   * @returns {Promise<Array>} Array of reservations for that schedule
+   */
+  static async findBySchedule(horario_id) {
+    try {
+      return await allAsync(
+        `SELECT * FROM reservas WHERE horario_id = ? AND estado IN ('PENDIENTE', 'CONFIRMADA')`,
+        [horario_id]
+      );
+    } catch (error) {
+      throw new Error(`Error finding reservations by schedule: ${error.message}`);
+    }
+  }
 }
 
 export default Reservation;

@@ -48,9 +48,12 @@ CREATE TABLE IF NOT EXISTS horarios_clases (
   capacidad INTEGER NOT NULL DEFAULT 6 CHECK (capacidad = 6),
   estado TEXT NOT NULL DEFAULT 'ABIERTA' CHECK (estado IN ('ABIERTA', 'CERRADA', 'CANCELADA')),
   creada_por TEXT NOT NULL,
+  profesora_asignada TEXT,
+  titulo TEXT,
   fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (creada_por) REFERENCES users(id) ON DELETE RESTRICT,
+  FOREIGN KEY (profesora_asignada) REFERENCES users(id) ON DELETE SET NULL,
   UNIQUE (fecha, hora)
 );
 

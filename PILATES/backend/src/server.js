@@ -14,6 +14,7 @@ import financesRoutes from './routes/finances.js';
 import birthdaysRoutes from './routes/birthdays.js';
 import calendarRoutes from './routes/calendar.js';
 import subscriptionsRoutes from './routes/subscriptions.js';
+import scheduleStatsRoutes from './routes/scheduleStats.js';
 
 dotenv.config();
 
@@ -107,6 +108,9 @@ app.use('/api/calendar', calendarRoutes);
 
 // Subscriptions (recurring class enrollment) routes
 app.use('/api/subscriptions', subscriptionsRoutes);
+
+// Schedule stats (instructor capacity, assignments) routes
+app.use('/api/schedule-stats', scheduleStatsRoutes);
 
 // Admin (master access) routes
 app.use('/api/admin', adminRoutes);

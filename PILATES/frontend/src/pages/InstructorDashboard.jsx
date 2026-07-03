@@ -20,6 +20,7 @@ import AttendanceManagement from '../components/Instructor/AttendanceManagement'
 import FinancesManagement from '../components/Instructor/FinancesManagement'
 import AdminSettings from '../components/Instructor/AdminSettings'
 import CalendarManagement from '../components/Instructor/CalendarManagement'
+import ScheduleStatsManagement from '../components/Instructor/ScheduleStatsManagement'
 
 export default function InstructorDashboard() {
   const [activeTab, setActiveTab] = useState('usuarios')
@@ -70,6 +71,7 @@ export default function InstructorDashboard() {
     { id: 'usuarios', label: 'Usuarios', icon: UserPlus, badge: pendingUsersCount },
     { id: 'alumnas', label: 'Alumnas', icon: Users },
     { id: 'horarios', label: 'Horarios', icon: Calendar },
+    { id: 'stats', label: 'Estadísticas', icon: Clock },
     {
       id: 'reservas',
       label: 'Reservas Pendientes',
@@ -146,6 +148,7 @@ export default function InstructorDashboard() {
         {activeTab === 'usuarios' && <UserManagement />}
         {activeTab === 'alumnas' && <StudentManagement />}
         {activeTab === 'horarios' && <ScheduleManagement />}
+        {activeTab === 'stats' && <ScheduleStatsManagement />}
         {activeTab === 'reservas' && (
           <PendingReservations onCountChange={setPendingCount} />
         )}

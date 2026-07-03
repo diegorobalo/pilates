@@ -196,6 +196,74 @@ class Schedule {
       throw new Error(`Error deleting schedule: ${error.message}`);
     }
   }
+
+  /**
+   * Find schedules by date range
+   * @param {string} fecha_desde - Start date (YYYY-MM-DD)
+   * @param {string} fecha_hasta - End date (YYYY-MM-DD)
+   * @returns {Promise<Array>} Array of schedule objects
+   */
+  static async findByDateRange(fecha_desde, fecha_hasta) {
+    try {
+      return await allAsync(
+        `SELECT * FROM horarios_clases
+         WHERE fecha BETWEEN ? AND ?
+         ORDER BY fecha ASC, hora ASC`,
+        [fecha_desde, fecha_hasta]
+      );
+    } catch (error) {
+      throw new Error(`Error finding schedules by date range: ${error.message}`);
+    }
+  }
+
+  /**
+   * Find schedule by date and time
+   * @param {string} fecha - Date (YYYY-MM-DD)
+   * @param {string} hora - Time (HH:MM)
+   * @returns {Promise<Object|null>} Schedule object or null
+   */
+  static async findByDateAndTime(fecha, hora) {
+    try {
+      return await getAsync(
+        `SELECT * FROM horarios_clases WHERE fecha = ? AND hora = ?`,
+        [fecha, hora]
+      );
+    } catch (error) {
+      throw new Error(`Error finding schedule: ${error.message}`);
+    }
+  }
+
+  /**
+   * Update schedule (including profesora_asignada and titulo)
+   * @param {string} id - Schedule ID
+   * @param {Object} data - Data to update
+   * @returns {Promise<Object>} Updated schedule object
+   */
+  static async update(id, data) {
+    try {
+      const schedule = await Schedule.findById(id);
+      if (!schedule) {
+        throw new Error('Schedule not found');
+      }
+
+      const {
+        estado = schedule.estado,
+        profesora_asignada = schedule.profesora_asignada,
+        titulo = schedule.titulo
+      } = data;
+
+      await runAsync(
+        `UPDATE horarios_clases SET
+          estado = ?, profesora_asignada = ?, titulo = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?`,
+        [estado, profesora_asignada, titulo, id]
+      );
+
+      return await Schedule.findById(id);
+    } catch (error) {
+      throw new Error(`Error updating schedule: ${error.message}`);
+    }
+  }
 }
 
 export default Schedule;
