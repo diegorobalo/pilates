@@ -146,8 +146,13 @@ process.on('unhandledRejection', (reason, promise) => {
 // Initialize cron jobs
 initSubscriptionCronJobs();
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`📋 NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
-});
+// Export app for Vercel
+export { app };
+
+// Start server only in local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`📋 NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
