@@ -245,15 +245,13 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <button
-              type="button"
+            <span
               onClick={handleSecretTap}
-              aria-label="PILATES"
-              className="focus:outline-none"
-              title=""
+              aria-hidden="true"
+              className="cursor-default select-none"
             >
-              <Dumbbell className="w-10 h-10 text-white cursor-pointer select-none" />
-            </button>
+              <Dumbbell className="w-10 h-10 text-white cursor-default select-none" />
+            </span>
             <h1 className="text-4xl font-bold text-white">PILATES</h1>
           </div>
           <p className="text-purple-100 text-lg font-medium">
