@@ -13,9 +13,13 @@ export default function AlumnaPortal() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  // Default alumna data if user info not available
-  const alumnaInfo = {
-    name: user?.name || 'Alumna',
+  // User data - use nombre/apellido from user object
+  const userName = user?.nombre
+    ? `${user.nombre} ${user.apellido || ''}`.trim()
+    : user?.name || 'Estudiante'
+
+  const userInfo = {
+    name: userName,
     plan: user?.plan || 'Plan Semanal',
     status: user?.status || 'Activo'
   }
@@ -35,8 +39,8 @@ export default function AlumnaPortal() {
               M
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{alumnaInfo.name}</h1>
-              <p className="text-sm text-gray-500">{alumnaInfo.plan} - {alumnaInfo.status}</p>
+              <h1 className="text-2xl font-bold text-gray-900">{userInfo.name}</h1>
+              <p className="text-sm text-gray-500">{userInfo.plan} - {userInfo.status}</p>
             </div>
           </div>
           <button
