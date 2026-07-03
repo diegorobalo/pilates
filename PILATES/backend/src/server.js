@@ -12,7 +12,7 @@ import paymentsRoutes from './routes/payments.js';
 dotenv.config();
 
 // Validate required environment variables
-const requiredEnvVars = ['JWT_SECRET'];
+const requiredEnvVars = ['JWT_SECRET_KEY'];
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     console.error(`❌ FATAL: Missing required environment variable: ${envVar}`);
@@ -20,7 +20,7 @@ for (const envVar of requiredEnvVars) {
   }
   // Prevent using insecure default value
   if (process.env[envVar] === 'your-secure-secret-key-here' || process.env[envVar] === 'your-secret-key-change-in-production') {
-    console.error(`❌ FATAL: JWT_SECRET is using insecure placeholder value. Set a real secret in .env`);
+    console.error(`❌ FATAL: JWT_SECRET_KEY is using insecure placeholder value. Set a real secret in .env`);
     process.exit(1);
   }
 }
@@ -36,19 +36,18 @@ if (isNaN(PORT) || PORT < 1 || PORT > 65535) {
 const app = express();
 
 // CORS configuration
-const allowedOrigins = [
-  'https://pilates-app.vercel.app',
-  'http://localhost:3000',
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://127.0.0.1:3000',
-  'http://127.0.0.1:5173',
-  'http://127.0.0.1:5174'
-];
+// Allow local dev, any *.vercel.app frontend, and an optional explicit FRONTEND_URL.
+const explicitOrigin = process.env.FRONTEND_URL;
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      origin === explicitOrigin ||
+      origin.endsWith('.vercel.app') ||
+      origin.startsWith('http://localhost:') ||
+      origin.startsWith('http://127.0.0.1:')
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
