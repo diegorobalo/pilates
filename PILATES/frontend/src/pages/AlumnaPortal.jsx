@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LogOut, Calendar, BookMarked, History, Repeat } from 'lucide-react'
+import { LogOut, Calendar, BookMarked, History, Repeat, BarChart3 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import ClassCalendar from '../components/Alumna/ClassCalendar'
 import MyReservations from '../components/Alumna/MyReservations'
 import AttendanceHistory from '../components/Alumna/AttendanceHistory'
 import MySubscriptions from '../components/Alumna/MySubscriptions'
+import AlumnaStats from '../components/Alumna/AlumnaStats'
 
 export default function AlumnaPortal() {
   const [activeTab, setActiveTab] = useState('calendar')
@@ -104,6 +105,19 @@ export default function AlumnaPortal() {
               <Repeat className="w-5 h-5" />
               Mis Suscripciones
             </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'stats'}
+              onClick={() => setActiveTab('stats')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                activeTab === 'stats'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <BarChart3 className="w-5 h-5" />
+              Estadísticas
+            </button>
           </nav>
         </div>
       </div>
@@ -114,6 +128,7 @@ export default function AlumnaPortal() {
         {activeTab === 'reservations' && <MyReservations />}
         {activeTab === 'history' && <AttendanceHistory />}
         {activeTab === 'subscriptions' && <MySubscriptions />}
+        {activeTab === 'stats' && <AlumnaStats />}
       </main>
     </div>
   )
