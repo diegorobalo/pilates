@@ -22,17 +22,25 @@ async function saveVerificationCode(phone, code) {
   const id = uuid();
   const expiresAt = new Date(Date.now() + verificationCodeTTL * 1000);
 
-  return new Promise((resolve, reject) => {
+  // Ensure only one active code per phone: remove any previous ones first.
+  await new Promise((resolve, reject) => {
     db.run(
-      `INSERT OR REPLACE INTO verification_codes (id, telefono, code, attempts, expires_at, created_at)
-       VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
-      [id, phone, code, 0, expiresAt.toISOString()],
-      (err) => {
-        if (err) reject(err);
-        else resolve({ id, expiresAt });
-      }
+      `DELETE FROM verification_codes WHERE telefono = ?`,
+      [phone],
+      (err) => (err ? reject(err) : resolve())
     );
   });
+
+  await new Promise((resolve, reject) => {
+    db.run(
+      `INSERT INTO verification_codes (id, telefono, code, attempts, expires_at, created_at)
+       VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      [id, phone, code, 0, expiresAt.toISOString()],
+      (err) => (err ? reject(err) : resolve())
+    );
+  });
+
+  return { id, expiresAt };
 }
 
 /**
@@ -41,7 +49,7 @@ async function saveVerificationCode(phone, code) {
 async function getVerificationCode(phone) {
   return new Promise((resolve, reject) => {
     db.get(
-      `SELECT * FROM verification_codes WHERE telefono = ? AND expires_at > CURRENT_TIMESTAMP`,
+      `SELECT * FROM verification_codes WHERE telefono = ? AND expires_at > CURRENT_TIMESTAMP ORDER BY created_at DESC LIMIT 1`,
       [phone],
       (err, row) => {
         if (err) reject(err);
