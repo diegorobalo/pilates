@@ -163,7 +163,12 @@ export default function ClassCalendar() {
                     className="w-full text-left text-xs bg-primary/10 hover:bg-primary/20 text-primary p-1.5 rounded transition-colors"
                   >
                     <div className="font-medium">{schedule.hora}</div>
-                    <div className="text-xs opacity-70">{schedule.instructor}</div>
+                    <div className="text-xs opacity-70">
+                      {schedule.profesora_nombre && schedule.profesora_apellido
+                        ? `${schedule.profesora_nombre} ${schedule.profesora_apellido}`
+                        : 'Sin asignar'}
+                    </div>
+                    {schedule.titulo && <div className="text-xs text-primary font-medium mt-0.5">{schedule.titulo}</div>}
                     <div className="mt-1 flex items-center gap-1">
                       <div
                         className={`w-2 h-2 rounded-full ${getStatusColor(

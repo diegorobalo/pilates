@@ -78,22 +78,6 @@ class Schedule {
     }
   }
 
-  /**
-   * Find all schedules within a date range
-   * @param {string} fechaInicio - Start date (YYYY-MM-DD format)
-   * @param {string} fechaFin - End date (YYYY-MM-DD format)
-   * @returns {Promise<Array>} Array of schedule objects within the range
-   */
-  static async findByDateRange(fechaInicio, fechaFin) {
-    try {
-      return await allAsync(
-        'SELECT * FROM horarios_clases WHERE fecha BETWEEN ? AND ? ORDER BY fecha ASC, hora ASC',
-        [fechaInicio, fechaFin]
-      );
-    } catch (error) {
-      throw new Error(`Error finding schedules by date range: ${error.message}`);
-    }
-  }
 
   /**
    * Find all schedules
@@ -206,9 +190,13 @@ class Schedule {
   static async findByDateRange(fecha_desde, fecha_hasta) {
     try {
       return await allAsync(
-        `SELECT * FROM horarios_clases
-         WHERE fecha BETWEEN ? AND ?
-         ORDER BY fecha ASC, hora ASC`,
+        `SELECT h.*,
+                u.nombre as profesora_nombre,
+                u.apellido as profesora_apellido
+         FROM horarios_clases h
+         LEFT JOIN users u ON h.profesora_asignada = u.id
+         WHERE h.fecha BETWEEN ? AND ?
+         ORDER BY h.fecha ASC, h.hora ASC`,
         [fecha_desde, fecha_hasta]
       );
     } catch (error) {
