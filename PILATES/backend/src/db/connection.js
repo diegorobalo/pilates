@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
  *  - default export `db` with callback-style .run/.get/.all (used by authController)
  */
 
-const DATABASE_URL = process.env.DATABASE_URL || '';
+const DATABASE_URL = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || '';
 const isRemote =
   DATABASE_URL.startsWith('libsql://') ||
   DATABASE_URL.startsWith('http://') ||
