@@ -258,7 +258,7 @@ export default function FinancesManagement() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="px-4 py-3 text-left font-semibold">Alumna</th>
+                  <th className="px-4 py-3 text-left font-semibold">Alumn@</th>
                   <th className="px-4 py-3 text-right font-semibold">Monto</th>
                   <th className="px-4 py-3 text-left font-semibold">Mes</th>
                   <th className="px-4 py-3 text-left font-semibold">Fecha</th>

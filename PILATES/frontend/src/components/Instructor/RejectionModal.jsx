@@ -42,7 +42,7 @@ export default function RejectionModal({ reservation, onSubmit, onClose }) {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="bg-gray-50 p-3 rounded">
             <p className="text-sm text-gray-600">
-              <span className="font-medium">Alumna:</span> {reservation?.nombre_alumna}
+              <span className="font-medium">Alumn@:</span> {reservation?.nombre_alumna}
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-medium">Fecha:</span>{' '}
