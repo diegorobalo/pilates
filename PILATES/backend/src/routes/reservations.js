@@ -6,7 +6,8 @@ import {
   confirmReservation,
   rejectReservation,
   cancelReservation,
-  getPendingReservations
+  getPendingReservations,
+  getMyReservations
 } from '../controllers/reservationController.js';
 import { authMiddleware, requireRole } from '../middleware/auth.js';
 
@@ -31,6 +32,15 @@ router.post('/', authMiddleware, requireRole('ALUMNA'), requestReservation);
  * - alumna_id: Filter by student ID
  */
 router.get('/', authMiddleware, requireRole('DUEÑA'), listReservations);
+
+/**
+ * GET /api/reservations/mine
+ * Get current user's reservations with schedule details
+ * Only ALUMNA can view this
+ * Optional: ?status=CONFIRMADA
+ * Must come before /:id route to avoid conflict
+ */
+router.get('/mine', authMiddleware, requireRole('ALUMNA'), getMyReservations);
 
 /**
  * GET /api/reservations/pending

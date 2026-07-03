@@ -1,4 +1,5 @@
 import Reservation from '../models/Reservation.js';
+import Schedule from '../models/Schedule.js';
 
 /**
  * Request a new reservation
@@ -237,6 +238,48 @@ export const getPendingReservations = async (req, res, next) => {
     res.json({
       total: reservations.length,
       reservations
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get current user's reservations with full schedule details
+ * GET /api/reservations/mine?status=CONFIRMADA
+ * ALUMNA views their own reservations
+ * Optional query param: status (PENDIENTE, CONFIRMADA, RECHAZADA, CANCELADA)
+ */
+export const getMyReservations = async (req, res, next) => {
+  try {
+    const { status } = req.query;
+    const alumnaId = req.user.userId;
+
+    let reservations = await Reservation.findByAlumna(alumnaId);
+
+    // Filter by status if provided
+    if (status) {
+      reservations = reservations.filter(r => r.estado === status);
+    }
+
+    // Enrich with schedule details (profesora name, titulo)
+    const enriched = await Promise.all(
+      reservations.map(async (r) => {
+        const schedule = await Schedule.findById(r.horario_id);
+        return {
+          ...r,
+          horario: schedule || {
+            id: r.horario_id,
+            fecha: null,
+            hora: null
+          }
+        };
+      })
+    );
+
+    res.json({
+      total: enriched.length,
+      reservations: enriched
     });
   } catch (error) {
     next(error);
