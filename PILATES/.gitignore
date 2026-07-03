@@ -23,3 +23,9 @@ pilates.db
 
 # Logs
 *.log
+
+.vercel
+.env*
+
+# Root lockfile omitted: npm optional-deps native binding bug across platforms (npm#4828)
+/package-lock.json
