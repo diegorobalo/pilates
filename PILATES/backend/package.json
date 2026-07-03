@@ -5,10 +5,9 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
+    "dev": "vercel dev",
     "test": "jest",
-    "start": "node src/server.js",
-    "build": "echo 'Build step (if needed for production)'"
+    "build": "npm install"
   },
   "keywords": [],
   "author": "",
