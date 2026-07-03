@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { UserPlus, Check, X, Send, Loader, RefreshCw, MessageCircle } from 'lucide-react'
+import { UserPlus, Check, X, Loader, RefreshCw, MessageCircle, Save } from 'lucide-react'
 
 const ROLE_LABEL = {
   ALUMNA: 'Alumna',
@@ -13,9 +13,10 @@ export default function UserManagement() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [roleChoice, setRoleChoice] = useState({}) // { [userId]: 'ALUMNA' | 'PROFESORA' }
+  const [roleChoice, setRoleChoice] = useState({}) // pending: id -> role
+  const [nameDraft, setNameDraft] = useState({}) // id -> name (pending & active)
   const [busyId, setBusyId] = useState(null)
-  const [lastSent, setLastSent] = useState(null) // { phone, code }
+  const [lastSent, setLastSent] = useState(null) // { phone, code, nombre }
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -28,11 +29,16 @@ export default function UserManagement() {
       const pData = await pRes.json()
       const uData = await uRes.json()
       if (!pRes.ok) throw new Error(pData.message || pData.error || 'Error al cargar solicitudes')
-      setPending(pData.users || [])
+      const pend = pData.users || []
       const active = (uData.users || []).filter(
         (u) => u.estado === 'ACTIVA' && (u.tipo === 'ALUMNA' || u.tipo === 'PROFESORA')
       )
+      setPending(pend)
       setUsers(active)
+      // Seed the name drafts: active users keep their real name (blank if it's the phone placeholder)
+      const drafts = {}
+      active.forEach((u) => { drafts[u.id] = u.nombre && u.nombre !== u.telefono ? u.nombre : '' })
+      setNameDraft((prev) => ({ ...drafts, ...prevOnlyPending(prev, pend) }))
     } catch (e) {
       setError(e.message)
     } finally {
@@ -40,19 +46,31 @@ export default function UserManagement() {
     }
   }, [])
 
+  // keep any in-progress pending name drafts
+  const prevOnlyPending = (prev, pend) => {
+    const keep = {}
+    pend.forEach((u) => { if (prev[u.id] !== undefined) keep[u.id] = prev[u.id] })
+    return keep
+  }
+
   useEffect(() => {
     load()
   }, [load])
 
   const approve = async (u) => {
     const tipo = roleChoice[u.id] || 'ALUMNA'
+    const nombre = (nameDraft[u.id] || '').trim()
+    if (!nombre) {
+      setError('Poné un nombre para identificar a la persona antes de aprobar.')
+      return
+    }
     setBusyId(u.id)
     setError('')
     try {
       const res = await fetch(`/api/users/${u.id}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tipo }),
+        body: JSON.stringify({ tipo, nombre }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || data.error || 'No se pudo aprobar')
@@ -80,6 +98,27 @@ export default function UserManagement() {
     }
   }
 
+  const saveName = async (u) => {
+    const nombre = (nameDraft[u.id] || '').trim()
+    if (!nombre) return
+    setBusyId(u.id)
+    setError('')
+    try {
+      const res = await fetch(`/api/users/${u.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || data.error || 'No se pudo guardar el nombre')
+      await load()
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusyId(null)
+    }
+  }
+
   const sendCode = async (u) => {
     setBusyId(u.id)
     setError('')
@@ -87,7 +126,7 @@ export default function UserManagement() {
       const res = await fetch(`/api/users/${u.id}/send-code`, { method: 'POST' })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || data.error || 'No se pudo generar el código')
-      setLastSent({ phone: u.telefono, code: data.code })
+      setLastSent({ phone: u.telefono, code: data.code, nombre: u.nombre })
       if (data.waLink) window.open(data.waLink, '_blank')
     } catch (e) {
       setError(e.message)
@@ -111,10 +150,7 @@ export default function UserManagement() {
           <UserPlus className="w-6 h-6 text-primary" />
           <h2 className="text-xl font-bold text-gray-900">Usuarios y solicitudes</h2>
         </div>
-        <button
-          onClick={load}
-          className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
-        >
+        <button onClick={load} className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
           <RefreshCw className="w-4 h-4" /> Actualizar
         </button>
       </div>
@@ -128,12 +164,11 @@ export default function UserManagement() {
       {lastSent && (
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
           <p className="text-sm text-green-800">
-            Código para <span className="font-semibold">{lastSent.phone}</span>:{' '}
+            Código para <span className="font-semibold">{lastSent.nombre || lastSent.phone}</span> ({lastSent.phone}):{' '}
             <span className="font-mono font-bold text-lg tracking-widest">{lastSent.code}</span>
           </p>
           <p className="text-xs text-green-700 mt-1">
-            Se abrió WhatsApp con el mensaje listo para enviar. Si no se abrió, copiá el código y
-            mandáselo vos.
+            Se abrió WhatsApp con el mensaje listo para enviar. Si no se abrió, copiá el código y mandáselo vos.
           </p>
         </div>
       )}
@@ -148,36 +183,46 @@ export default function UserManagement() {
         ) : (
           <div className="space-y-3">
             {pending.map((u) => (
-              <div
-                key={u.id}
-                className="bg-white rounded-xl shadow p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between"
-              >
-                <div>
-                  <p className="font-bold text-gray-900">{u.telefono}</p>
+              <div key={u.id} className="bg-white rounded-xl shadow p-4">
+                <div className="flex items-baseline justify-between mb-3">
+                  <p className="font-bold text-gray-900 text-lg">{u.telefono}</p>
                   <p className="text-xs text-gray-400">
-                    Solicitó el {new Date(u.fecha_registro).toLocaleString('es-AR')}
+                    {new Date(u.fecha_registro).toLocaleString('es-AR')}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <select
-                    value={roleChoice[u.id] || 'ALUMNA'}
-                    onChange={(e) => setRoleChoice({ ...roleChoice, [u.id]: e.target.value })}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="ALUMNA">Alumna</option>
-                    <option value="PROFESORA">Profesora</option>
-                  </select>
+                <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      value={nameDraft[u.id] || ''}
+                      onChange={(e) => setNameDraft({ ...nameDraft, [u.id]: e.target.value })}
+                      placeholder="Nombre y apellido"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1">Rol</label>
+                    <select
+                      value={roleChoice[u.id] || 'ALUMNA'}
+                      onChange={(e) => setRoleChoice({ ...roleChoice, [u.id]: e.target.value })}
+                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary"
+                    >
+                      <option value="ALUMNA">Alumna</option>
+                      <option value="PROFESORA">Profesora</option>
+                    </select>
+                  </div>
                   <button
                     onClick={() => approve(u)}
                     disabled={busyId === u.id}
-                    className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+                    className="flex items-center justify-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
                   >
                     <Check className="w-4 h-4" /> Aprobar
                   </button>
                   <button
                     onClick={() => reject(u)}
                     disabled={busyId === u.id}
-                    className="flex items-center gap-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 disabled:opacity-50"
+                    className="flex items-center justify-center gap-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 disabled:opacity-50"
                   >
                     <X className="w-4 h-4" /> Rechazar
                   </button>
@@ -196,53 +241,60 @@ export default function UserManagement() {
         {users.length === 0 ? (
           <p className="text-gray-500 text-sm">Todavía no hay usuarios aprobados.</p>
         ) : (
-          <div className="overflow-x-auto bg-white rounded-xl shadow">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-gray-500 border-b border-gray-100">
-                  <th className="px-4 py-3 font-medium">Nombre</th>
-                  <th className="px-4 py-3 font-medium">Teléfono</th>
-                  <th className="px-4 py-3 font-medium">Rol</th>
-                  <th className="px-4 py-3 font-medium text-right">Acceso</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u.id} className="border-b border-gray-50 hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium text-gray-900">
-                      {u.nombre === u.telefono ? '—' : u.nombre}
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">{u.telefono}</td>
-                    <td className="px-4 py-3">
+          <div className="space-y-3">
+            {users.map((u) => {
+              const changed = (nameDraft[u.id] || '') !== (u.nombre && u.nombre !== u.telefono ? u.nombre : '')
+              return (
+                <div key={u.id} className="bg-white rounded-xl shadow p-4">
+                  <div className="flex flex-col md:flex-row gap-3 md:items-end">
+                    <div className="flex-1">
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
+                      <input
+                        type="text"
+                        value={nameDraft[u.id] || ''}
+                        onChange={(e) => setNameDraft({ ...nameDraft, [u.id]: e.target.value })}
+                        placeholder="Sin nombre"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">{u.telefono}</span>
                       <span
                         className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          u.tipo === 'PROFESORA'
-                            ? 'bg-purple-100 text-purple-700'
-                            : 'bg-blue-100 text-blue-700'
+                          u.tipo === 'PROFESORA' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
                         }`}
                       >
                         {ROLE_LABEL[u.tipo] || u.tipo}
                       </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
+                    </div>
+                    <div className="flex gap-2">
+                      {changed && (
+                        <button
+                          onClick={() => saveName(u)}
+                          disabled={busyId === u.id}
+                          className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 disabled:opacity-50"
+                        >
+                          <Save className="w-4 h-4" /> Guardar
+                        </button>
+                      )}
                       <button
                         onClick={() => sendCode(u)}
                         disabled={busyId === u.id}
-                        className="inline-flex items-center gap-1 px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
+                        className="flex items-center justify-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-50"
                       >
                         {busyId === u.id ? (
                           <Loader className="w-4 h-4 animate-spin" />
                         ) : (
                           <>
-                            <MessageCircle className="w-4 h-4" /> Enviar código
+                            <MessageCircle className="w-4 h-4" /> Enviar código por WhatsApp
                           </>
                         )}
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
       </section>

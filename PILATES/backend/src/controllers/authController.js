@@ -108,7 +108,11 @@ export const requestAccess = async (req, res) => {
 
     const user = await User.findByPhone(phone);
     if (user) {
-      if (user.estado === 'ACTIVA') return res.json({ status: 'active' });
+      if (user.estado === 'ACTIVA') {
+        // Greet returning users by the name the studio assigned (if any).
+        const nombre = user.nombre && user.nombre !== user.telefono ? user.nombre : null;
+        return res.json({ status: 'active', nombre });
+      }
       if (user.estado === 'PENDIENTE') return res.json({ status: 'pending' });
       return res.json({ status: 'inactive' });
     }

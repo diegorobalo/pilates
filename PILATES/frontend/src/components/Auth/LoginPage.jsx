@@ -25,6 +25,7 @@ export default function LoginPage() {
   const [resetToken, setResetToken] = useState('')
   const [resetPassword, setResetPassword] = useState('')
   const [info, setInfo] = useState('')
+  const [greetName, setGreetName] = useState('')
   const secretTaps = useRef(0)
   const secretTimer = useRef(null)
 
@@ -66,6 +67,7 @@ export default function LoginPage() {
 
       if (data.status === 'active') {
         // Approved user: ask for the code the studio sent by WhatsApp
+        setGreetName(data.nombre || '')
         setStep('code')
       } else if (data.status === 'pending' || data.status === 'pending_created') {
         setStep('pending-info')
@@ -302,7 +304,7 @@ export default function LoginPage() {
           ) : step === 'code' ? (
             <>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Verifica tu Código
+                {greetName ? `¡Hola, ${greetName}!` : 'Verifica tu Código'}
               </h2>
               <p className="text-gray-600 mb-2">
                 Ingresá el código que te enviaron por WhatsApp al número:
