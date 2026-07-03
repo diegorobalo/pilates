@@ -50,7 +50,7 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await fetch('/api/auth/request-code', {
+      const response = await fetch('/api/auth/access', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,15 +61,19 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || 'Error al solicitar código')
+        throw new Error(data.message || 'No se pudo procesar la solicitud')
       }
 
-      setCodeId(data.codeId)
-      setDevCode(data.code || '')
-      setStep('code')
-      setRequestResendCountdown(60) // 60 second cooldown for resend
+      if (data.status === 'active') {
+        // Approved user: ask for the code the studio sent by WhatsApp
+        setStep('code')
+      } else if (data.status === 'pending' || data.status === 'pending_created') {
+        setStep('pending-info')
+      } else if (data.status === 'inactive') {
+        setError('Tu acceso está desactivado. Contactá a la profe.')
+      }
     } catch (err) {
-      setError(err.message || 'Error al solicitar el código. Intenta de nuevo.')
+      setError(err.message || 'Error al procesar la solicitud. Intentá de nuevo.')
     } finally {
       setLoading(false)
     }
@@ -103,8 +107,9 @@ export default function LoginPage() {
       // Login with the auth context
       await login(data.accessToken, data.refreshToken, data.user)
 
-      // Redirect to dashboard
-      navigate('/dashboard', { replace: true })
+      // Route by role: alumnas -> portal; profesora/dueña/admin -> dashboard
+      const tipo = data.user?.tipo
+      navigate(tipo === 'ALUMNA' ? '/alumna' : '/instructor', { replace: true })
     } catch (err) {
       setError(err.message || 'Código incorrecto. Intenta de nuevo.')
     } finally {
@@ -282,23 +287,17 @@ export default function LoginPage() {
                   {loading || authLoading ? (
                     <>
                       <Loader className="w-5 h-5 animate-spin" />
-                      Enviando...
+                      Procesando...
                     </>
                   ) : (
-                    'Solicitar Código'
+                    'Continuar'
                   )}
                 </button>
               </form>
 
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <p className="text-center text-sm text-gray-600">
-                  ¿Primera vez aquí?{' '}
-                  <a
-                    href="#"
-                    className="font-semibold text-primary hover:text-primary-dark transition-colors"
-                  >
-                    Crear cuenta
-                  </a>
+                  ¿Primera vez? Ingresá tu número y la profe va a habilitar tu acceso.
                 </p>
               </div>
             </>
@@ -308,23 +307,9 @@ export default function LoginPage() {
                 Verifica tu Código
               </h2>
               <p className="text-gray-600 mb-2">
-                Código para el número:
+                Ingresá el código que te enviaron por WhatsApp al número:
               </p>
-              <p className="text-primary font-bold text-lg mb-4">{phone}</p>
-
-              {devCode && (
-                <div className="mb-6 rounded-xl border-2 border-primary/30 bg-primary/5 p-4 text-center">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">
-                    Tu código de acceso
-                  </p>
-                  <p className="text-3xl font-extrabold tracking-[0.3em] text-primary">
-                    {devCode}
-                  </p>
-                  <p className="mt-2 text-xs text-gray-500">
-                    Ingresá este código abajo para continuar
-                  </p>
-                </div>
-              )}
+              <p className="text-primary font-bold text-lg mb-6">{phone}</p>
 
               <form onSubmit={handleCodeSubmit} className="space-y-6">
                 <CodeInput
@@ -350,16 +335,9 @@ export default function LoginPage() {
               </form>
 
               <div className="mt-6 pt-6 border-t border-gray-200 space-y-3">
-                <button
-                  onClick={handleResendCode}
-                  disabled={requestResendCountdown > 0 || loading || authLoading}
-                  className="w-full text-primary font-semibold hover:text-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed py-2"
-                >
-                  {requestResendCountdown > 0
-                    ? `Reenviar en ${requestResendCountdown}s`
-                    : 'Reenviar Código'}
-                </button>
-
+                <p className="text-center text-sm text-gray-500">
+                  ¿No te llegó? Pedile a la profe que te reenvíe el código por WhatsApp.
+                </p>
                 <button
                   onClick={handleBackToPhone}
                   disabled={loading || authLoading}
@@ -496,6 +474,23 @@ export default function LoginPage() {
                     className="w-full mt-4 text-gray-600 font-semibold hover:text-gray-900 py-2"
                   >
                     Volver
+                  </button>
+                </>
+              )}
+
+              {step === 'pending-info' && (
+                <>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Solicitud enviada</h2>
+                  <p className="text-gray-600 mb-6">
+                    Tu número quedó registrado. La profe va a revisar tu solicitud y te va a
+                    enviar un <span className="font-semibold">código por WhatsApp</span> para que
+                    puedas ingresar.
+                  </p>
+                  <button
+                    onClick={() => { setStep('phone'); setError(''); setInfo('') }}
+                    className="w-full btn btn-primary font-bold py-3"
+                  >
+                    Entendido
                   </button>
                 </>
               )}

@@ -92,6 +92,36 @@ async function deleteVerificationCode(phone) {
 }
 
 /**
+ * Request access to the system by phone number.
+ * - Existing ACTIVA user  -> { status: 'active' }   (frontend shows the code step)
+ * - Existing PENDIENTE     -> { status: 'pending' }
+ * - Existing INACTIVA      -> { status: 'inactive' }
+ * - New number             -> creates a PENDIENTE request, { status: 'pending_created' }
+ * The verification code is NEVER generated or shown here; staff send it via WhatsApp.
+ */
+export const requestAccess = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone || !/^[\d\s\-\+\(\)]+$/.test(phone)) {
+      return res.status(400).json({ error: 'Invalid phone', message: 'Número de teléfono inválido' });
+    }
+
+    const user = await User.findByPhone(phone);
+    if (user) {
+      if (user.estado === 'ACTIVA') return res.json({ status: 'active' });
+      if (user.estado === 'PENDIENTE') return res.json({ status: 'pending' });
+      return res.json({ status: 'inactive' });
+    }
+
+    await User.create({ nombre: phone, telefono: phone, tipo: 'ALUMNA', estado: 'PENDIENTE' });
+    return res.json({ status: 'pending_created' });
+  } catch (error) {
+    console.error('requestAccess error:', error);
+    res.status(500).json({ error: 'Request failed', message: error.message });
+  }
+};
+
+/**
  * Request phone verification - sends a code to the user's phone
  * In development mode, returns the code directly for testing
  * @param {Object} req - Express request
@@ -124,26 +154,10 @@ export const requestPhoneVerification = async (req, res) => {
     // Store code in database
     const { id: codeId, expiresAt } = await saveVerificationCode(phone, code);
 
-    // Expose the code to the client when there is no SMS provider configured.
-    // Controlled by EXPOSE_VERIFICATION_CODE so it can be turned off once SMS is added.
-    const exposeCode =
-      process.env.NODE_ENV === 'development' ||
-      process.env.EXPOSE_VERIFICATION_CODE === 'true';
-
-    if (exposeCode) {
-      return res.json({
-        message: 'Verification code sent',
-        phone,
-        code, // shown on screen (no SMS provider configured)
-        codeId,
-        expiresAt,
-        expiresIn: '10 minutes'
-      });
-    }
-
-    // In production with SMS, the code would be delivered via SMS service only.
+    // The code is never returned to the client. Staff deliver it via WhatsApp
+    // (see POST /api/users/:id/send-code). This endpoint just (re)generates it.
     res.json({
-      message: 'Verification code sent to your phone',
+      message: 'Verification code generated',
       phone,
       codeId,
       expiresAt,
@@ -210,6 +224,14 @@ export const verifyPhoneCode = async (req, res) => {
       return res.status(404).json({
         error: 'User not found',
         message: 'User was deleted or does not exist'
+      });
+    }
+
+    // Only approved (active) users can obtain tokens.
+    if (user.estado !== 'ACTIVA') {
+      return res.status(403).json({
+        error: 'Access not active',
+        message: 'Tu acceso todavía no está habilitado. La profe debe aprobarte.'
       });
     }
 

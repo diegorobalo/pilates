@@ -1,5 +1,9 @@
+import { v4 as uuid } from 'uuid';
 import User from '../models/User.js';
 import WeeklyPlan from '../models/WeeklyPlan.js';
+import { runAsync } from '../db/connection.js';
+
+const ASSIGNABLE_ROLES = ['ALUMNA', 'PROFESORA', 'DUEÑA', 'ADMIN'];
 
 /**
  * Create a new user (only DUEÑA can create users)
@@ -28,9 +32,9 @@ export const createUser = async (req, res, next) => {
     }
 
     // Validate tipo values
-    if (!['ALUMNA', 'DUEÑA', 'ADMIN'].includes(tipo)) {
+    if (!ASSIGNABLE_ROLES.includes(tipo)) {
       return res.status(400).json({
-        error: 'Invalid tipo. Must be one of: ALUMNA, DUEÑA, ADMIN'
+        error: `Invalid tipo. Must be one of: ${ASSIGNABLE_ROLES.join(', ')}`
       });
     }
 
@@ -73,9 +77,9 @@ export const getAllUsers = async (req, res, next) => {
     const { tipo } = req.query;
 
     // Validate tipo if provided
-    if (tipo && !['ALUMNA', 'DUEÑA', 'ADMIN'].includes(tipo)) {
+    if (tipo && !ASSIGNABLE_ROLES.includes(tipo)) {
       return res.status(400).json({
-        error: 'Invalid tipo filter. Must be one of: ALUMNA, DUEÑA, ADMIN'
+        error: `Invalid tipo filter. Must be one of: ${ASSIGNABLE_ROLES.join(', ')}`
       });
     }
 
@@ -140,9 +144,9 @@ export const updateUser = async (req, res, next) => {
     }
 
     // Validate tipo if provided
-    if (tipo && !['ALUMNA', 'DUEÑA', 'ADMIN'].includes(tipo)) {
+    if (tipo && !ASSIGNABLE_ROLES.includes(tipo)) {
       return res.status(400).json({
-        error: 'Invalid tipo. Must be one of: ALUMNA, DUEÑA, ADMIN'
+        error: `Invalid tipo. Must be one of: ${ASSIGNABLE_ROLES.join(', ')}`
       });
     }
 
@@ -360,6 +364,110 @@ export const deletePlan = async (req, res, next) => {
         error: 'Failed to delete plan'
       });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * List pending access requests (users awaiting approval)
+ * GET /users/pending
+ */
+export const getPendingUsers = async (req, res, next) => {
+  try {
+    const users = await User.findByEstado('PENDIENTE');
+    res.json({ total: users.length, users });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Approve a pending user and assign a role
+ * POST /users/:id/approve  { tipo, nombre? }
+ */
+export const approveUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { tipo, nombre } = req.body;
+
+    if (!['ALUMNA', 'PROFESORA'].includes(tipo)) {
+      return res.status(400).json({ error: 'tipo debe ser ALUMNA o PROFESORA' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const updated = await User.update(id, {
+      tipo,
+      estado: 'ACTIVA',
+      nombre: (nombre && nombre.trim()) || user.nombre
+    });
+
+    res.json({ message: 'Usuario aprobado', user: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Reject a pending user (removes the request)
+ * POST /users/:id/reject
+ */
+export const rejectUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    await User.delete(id);
+    res.json({ message: 'Solicitud rechazada' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Generate an access code for a user and return a WhatsApp "click to send" link.
+ * The code is only returned to the authenticated staff member (never shown publicly).
+ * POST /users/:id/send-code
+ */
+export const sendAccessCode = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (user.estado !== 'ACTIVA') {
+      return res.status(400).json({ error: 'El usuario debe estar aprobado (activo) antes de enviarle un código' });
+    }
+
+    // Generate a 6-digit code and store it (one active code per phone, 24h TTL).
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    await runAsync('DELETE FROM verification_codes WHERE telefono = ?', [user.telefono]);
+    await runAsync(
+      'INSERT INTO verification_codes (id, telefono, code, attempts, expires_at, created_at) VALUES (?, ?, ?, 0, ?, CURRENT_TIMESTAMP)',
+      [uuid(), user.telefono, code, expiresAt]
+    );
+
+    // Build a wa.me click-to-send link. Optionally prefix a country code.
+    const cc = (process.env.WHATSAPP_COUNTRY_CODE || '').replace(/\D/g, '');
+    let digits = String(user.telefono).replace(/\D/g, '');
+    if (cc && !digits.startsWith(cc)) digits = cc + digits;
+
+    const appUrl = process.env.APP_URL || '';
+    const message =
+      `Hola${user.nombre && user.nombre !== user.telefono ? ' ' + user.nombre : ''}! ` +
+      `Tu código de acceso a PILATES es: ${code}` +
+      (appUrl ? `\n\nIngresá en ${appUrl} con tu número y este código.` : '') +
+      `\n\nEl código vence en 24 horas.`;
+    const waLink = `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+
+    res.json({
+      message: 'Código generado',
+      code,               // shown to the staff member so they can also copy it
+      phone: user.telefono,
+      waLink
+    });
   } catch (error) {
     next(error);
   }

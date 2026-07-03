@@ -9,8 +9,10 @@ import {
   DollarSign,
   UserCheck,
   Settings,
+  UserPlus,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import UserManagement from '../components/Instructor/UserManagement'
 import StudentManagement from '../components/Instructor/StudentManagement'
 import ScheduleManagement from '../components/Instructor/ScheduleManagement'
 import PendingReservations from '../components/Instructor/PendingReservations'
@@ -19,8 +21,9 @@ import FinancesManagement from '../components/Instructor/FinancesManagement'
 import AdminSettings from '../components/Instructor/AdminSettings'
 
 export default function InstructorDashboard() {
-  const [activeTab, setActiveTab] = useState('alumnas')
+  const [activeTab, setActiveTab] = useState('usuarios')
   const [pendingCount, setPendingCount] = useState(0)
+  const [pendingUsersCount, setPendingUsersCount] = useState(0)
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
@@ -30,6 +33,7 @@ export default function InstructorDashboard() {
   useEffect(() => {
     // Fetch pending reservations count
     fetchPendingCount()
+    fetchPendingUsersCount()
   }, [])
 
   const fetchPendingCount = async () => {
@@ -39,6 +43,16 @@ export default function InstructorDashboard() {
       setPendingCount(data.length || 0)
     } catch (error) {
       console.error('Error fetching pending count:', error)
+    }
+  }
+
+  const fetchPendingUsersCount = async () => {
+    try {
+      const response = await fetch('/api/users/pending')
+      const data = await response.json()
+      setPendingUsersCount(data.total || 0)
+    } catch (error) {
+      console.error('Error fetching pending users count:', error)
     }
   }
 
@@ -52,6 +66,7 @@ export default function InstructorDashboard() {
   }
 
   const tabs = [
+    { id: 'usuarios', label: 'Usuarios', icon: UserPlus, badge: pendingUsersCount },
     { id: 'alumnas', label: 'Alumnas', icon: Users },
     { id: 'horarios', label: 'Horarios', icon: Calendar },
     {
@@ -126,6 +141,7 @@ export default function InstructorDashboard() {
 
       {/* Content */}
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {activeTab === 'usuarios' && <UserManagement />}
         {activeTab === 'alumnas' && <StudentManagement />}
         {activeTab === 'horarios' && <ScheduleManagement />}
         {activeTab === 'reservas' && (

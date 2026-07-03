@@ -103,6 +103,22 @@ class User {
   }
 
   /**
+   * Get all users with a given estado (e.g. 'PENDIENTE')
+   * @param {string} estado - ACTIVA | INACTIVA | PENDIENTE
+   * @returns {Promise<Array>} Array of user objects
+   */
+  static async findByEstado(estado) {
+    try {
+      return await allAsync(
+        'SELECT * FROM users WHERE estado = ? ORDER BY fecha_registro DESC',
+        [estado]
+      );
+    } catch (error) {
+      throw new Error(`Error finding users by estado: ${error.message}`);
+    }
+  }
+
+  /**
    * Update user information
    * @param {string} id - User ID
    * @param {Object} data - Data to update

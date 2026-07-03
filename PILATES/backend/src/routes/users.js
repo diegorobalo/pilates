@@ -7,11 +7,24 @@ import {
   deactivateUser,
   createOrUpdatePlan,
   getPlansByAlumnaId,
-  deletePlan
+  deletePlan,
+  getPendingUsers,
+  approveUser,
+  rejectUser,
+  sendAccessCode
 } from '../controllers/userController.js';
 import { authMiddleware, requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Staff = DUEÑA/PROFESORA/ADMIN (PROFESORA and ADMIN are granted via requireRole).
+const STAFF = ['DUEÑA'];
+
+// Access-request management (must be declared before '/:id' routes)
+router.get('/pending', authMiddleware, requireRole(STAFF), getPendingUsers);
+router.post('/:id/approve', authMiddleware, requireRole(STAFF), approveUser);
+router.post('/:id/reject', authMiddleware, requireRole(STAFF), rejectUser);
+router.post('/:id/send-code', authMiddleware, requireRole(STAFF), sendAccessCode);
 
 /**
  * POST /api/users

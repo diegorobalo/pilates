@@ -55,6 +55,13 @@ export const authMiddleware = (req, res, next) => {
 export const requireRole = (allowedRoles) => {
   const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
 
+  // Build the effective allow-set:
+  // - ADMIN is the master account and can access everything.
+  // - PROFESORA shares the same privileges as DUEÑA (turnos/alumnas/etc.).
+  const effective = new Set(roles);
+  effective.add('ADMIN');
+  if (effective.has('DUEÑA')) effective.add('PROFESORA');
+
   return (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({
@@ -63,10 +70,10 @@ export const requireRole = (allowedRoles) => {
       });
     }
 
-    if (!roles.includes(req.user.tipo)) {
+    if (!effective.has(req.user.tipo)) {
       return res.status(403).json({
         error: 'Insufficient permissions',
-        message: `This operation requires one of these roles: ${roles.join(', ')}`
+        message: `This operation requires one of these roles: ${[...effective].join(', ')}`
       });
     }
 

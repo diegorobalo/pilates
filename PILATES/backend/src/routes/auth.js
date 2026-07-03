@@ -1,11 +1,19 @@
 import express from 'express';
 import {
+  requestAccess,
   requestPhoneVerification,
   verifyPhoneCode,
   refreshAccessToken
 } from '../controllers/authController.js';
 
 const router = express.Router();
+
+/**
+ * POST /api/auth/access
+ * Request access by phone. Returns { status: active | pending | pending_created | inactive }.
+ * Never generates or returns a verification code.
+ */
+router.post('/access', requestAccess);
 
 /**
  * POST /api/auth/request-code
