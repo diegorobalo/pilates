@@ -245,3 +245,16 @@ CREATE INDEX IF NOT EXISTS idx_suscripciones_activa ON suscripciones_alumnos(act
 CREATE INDEX IF NOT EXISTS idx_suscripciones_dia_semana ON suscripciones_alumnos(dia_semana);
 
 CREATE INDEX IF NOT EXISTS idx_reserva_suscripcion_suscripcion_id ON reserva_suscripcion(suscripcion_id);
+
+-- System Configuration table
+-- Stores global settings like class capacity, payment terms, etc.
+CREATE TABLE IF NOT EXISTS configuracion (
+  id TEXT PRIMARY KEY,
+  clave TEXT NOT NULL UNIQUE,
+  valor TEXT NOT NULL,
+  descripcion TEXT,
+  tipo TEXT NOT NULL DEFAULT 'string' CHECK (tipo IN ('string', 'number', 'boolean', 'json')),
+  fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+  actualizado_por TEXT,
+  FOREIGN KEY (actualizado_por) REFERENCES users(id) ON DELETE SET NULL
+);

@@ -8,6 +8,7 @@ const STATUS_OPTIONS = [
 ]
 
 export default function ScheduleModal({ schedule, onSave, onClose }) {
+  const [defaultCapacity, setDefaultCapacity] = useState(6)
   const [formData, setFormData] = useState({
     fecha: '',
     hora: '09:00',
@@ -18,11 +19,27 @@ export default function ScheduleModal({ schedule, onSave, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
+    // Fetch default capacity from config
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/api/config/CAPACIDAD_CAMAS')
+        if (response.ok) {
+          const data = await response.json()
+          setDefaultCapacity(data.value || 6)
+        }
+      } catch (err) {
+        console.error('Error fetching config:', err)
+      }
+    }
+    fetchConfig()
+  }, [])
+
+  useEffect(() => {
     if (schedule) {
       setFormData({
         fecha: schedule.fecha || '',
         hora: schedule.hora || '09:00',
-        capacidad: schedule.capacidad || 6,
+        capacidad: schedule.capacidad || defaultCapacity,
         estado: schedule.estado || 'ABIERTA',
       })
     } else {
@@ -31,9 +48,10 @@ export default function ScheduleModal({ schedule, onSave, onClose }) {
       setFormData((prev) => ({
         ...prev,
         fecha: today,
+        capacidad: defaultCapacity,
       }))
     }
-  }, [schedule])
+  }, [schedule, defaultCapacity])
 
   const validateForm = () => {
     const newErrors = {}
@@ -55,8 +73,8 @@ export default function ScheduleModal({ schedule, onSave, onClose }) {
       newErrors.hora = 'La hora debe estar en formato HH:MM'
     }
 
-    if (formData.capacidad < 1 || formData.capacidad > 12) {
-      newErrors.capacidad = 'La capacidad debe estar entre 1 y 12'
+    if (formData.capacidad < 1 || formData.capacidad > 20) {
+      newErrors.capacidad = 'La capacidad debe estar entre 1 y 20'
     }
 
     setErrors(newErrors)
@@ -175,13 +193,24 @@ export default function ScheduleModal({ schedule, onSave, onClose }) {
           {/* Capacity */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Capacidad
+              Capacidad (Camas)
             </label>
-            <div className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-600 font-medium">
-              {formData.capacidad} (fijo)
-            </div>
+            <input
+              type="number"
+              name="capacidad"
+              value={formData.capacidad}
+              onChange={handleInputChange}
+              min="1"
+              max="20"
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                errors.capacidad ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            {errors.capacidad && (
+              <p className="mt-1 text-sm text-red-600">{errors.capacidad}</p>
+            )}
             <p className="mt-1 text-xs text-gray-500">
-              La capacidad es fija en 6 camas
+              Por defecto: {defaultCapacity} camas. Rango: 1-20
             </p>
           </div>
 
