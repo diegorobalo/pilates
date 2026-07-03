@@ -4,10 +4,15 @@ import { X } from 'lucide-react'
 export default function StudentModal({ student, onSave, onClose }) {
   const [formData, setFormData] = useState({
     nombre: '',
+    apellido: '',
     telefono: '',
     dni: '',
-    nombre_emergencia: '',
-    telefono_emergencia: '',
+    fecha_nacimiento: '',
+    direccion: '',
+    ciudad: '',
+    datos_emergencia_nombre: '',
+    datos_emergencia_telefono: '',
+    datos_emergencia_relacion: '',
     alergias: '',
     restricciones_medicas: '',
   })
@@ -18,10 +23,15 @@ export default function StudentModal({ student, onSave, onClose }) {
     if (student) {
       setFormData({
         nombre: student.nombre || '',
+        apellido: student.apellido || '',
         telefono: student.telefono || '',
         dni: student.dni || '',
-        nombre_emergencia: student.nombre_emergencia || '',
-        telefono_emergencia: student.telefono_emergencia || '',
+        fecha_nacimiento: student.fecha_nacimiento || '',
+        direccion: student.direccion || '',
+        ciudad: student.ciudad || '',
+        datos_emergencia_nombre: student.datos_emergencia_nombre || '',
+        datos_emergencia_telefono: student.datos_emergencia_telefono || '',
+        datos_emergencia_relacion: student.datos_emergencia_relacion || '',
         alergias: student.alergias || '',
         restricciones_medicas: student.restricciones_medicas || '',
       })
@@ -85,7 +95,7 @@ export default function StudentModal({ student, onSave, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">
-            {student ? 'Editar Alumna' : 'Nueva Alumna'}
+            {student ? 'Editar Alumn@' : 'Nuev@ Alumn@'}
           </h2>
           <button
             onClick={onClose}
@@ -97,7 +107,7 @@ export default function StudentModal({ student, onSave, onClose }) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Row 1: Nombre and Teléfono */}
+          {/* Row 1: Nombre and Apellido */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -111,13 +121,30 @@ export default function StudentModal({ student, onSave, onClose }) {
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
                   errors.nombre ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="Nombre completo"
+                placeholder="Nombre"
               />
               {errors.nombre && (
                 <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
               )}
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Apellido
+              </label>
+              <input
+                type="text"
+                name="apellido"
+                value={formData.apellido}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Apellido"
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Teléfono and DNI */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Teléfono *
@@ -130,51 +157,94 @@ export default function StudentModal({ student, onSave, onClose }) {
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
                   errors.telefono ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="+34 XXXXXX"
+                placeholder="XXXXXXXXXX"
               />
               {errors.telefono && (
                 <p className="mt-1 text-sm text-red-600">{errors.telefono}</p>
               )}
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                DNI
+              </label>
+              <input
+                type="text"
+                name="dni"
+                value={formData.dni}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                  errors.dni ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="XXXXXXX"
+              />
+              {errors.dni && (
+                <p className="mt-1 text-sm text-red-600">{errors.dni}</p>
+              )}
+            </div>
           </div>
 
-          {/* Row 2: DNI */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              DNI
-            </label>
-            <input
-              type="text"
-              name="dni"
-              value={formData.dni}
-              onChange={handleInputChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                errors.dni ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="XXXXXXX"
-            />
-            {errors.dni && (
-              <p className="mt-1 text-sm text-red-600">{errors.dni}</p>
-            )}
+          {/* Row 3: Fecha Nacimiento, Dirección, Ciudad */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Fecha de Nacimiento
+              </label>
+              <input
+                type="date"
+                name="fecha_nacimiento"
+                value={formData.fecha_nacimiento}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Dirección
+              </label>
+              <input
+                type="text"
+                name="direccion"
+                value={formData.direccion}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Calle y número"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ciudad
+              </label>
+              <input
+                type="text"
+                name="ciudad"
+                value={formData.ciudad}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Ciudad"
+              />
+            </div>
           </div>
 
-          {/* Row 3: Datos de Emergencia */}
+          {/* Row 4: Datos de Emergencia */}
           <div className="border-t pt-4">
             <h3 className="font-medium text-gray-900 mb-3">
               Datos de Emergencia
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre de Contacto
                 </label>
                 <input
                   type="text"
-                  name="nombre_emergencia"
-                  value={formData.nombre_emergencia}
+                  name="datos_emergencia_nombre"
+                  value={formData.datos_emergencia_nombre}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Nombre de contacto"
+                  placeholder="Nombre"
                 />
               </div>
 
@@ -184,17 +254,31 @@ export default function StudentModal({ student, onSave, onClose }) {
                 </label>
                 <input
                   type="tel"
-                  name="telefono_emergencia"
-                  value={formData.telefono_emergencia}
+                  name="datos_emergencia_telefono"
+                  value={formData.datos_emergencia_telefono}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Teléfono"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Relación
+                </label>
+                <input
+                  type="text"
+                  name="datos_emergencia_relacion"
+                  value={formData.datos_emergencia_relacion}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Ej: Madre, Hermano, etc"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Row 4: Salud */}
+          {/* Row 5: Salud */}
           <div className="border-t pt-4">
             <h3 className="font-medium text-gray-900 mb-3">Información Médica</h3>
             <div className="space-y-4">

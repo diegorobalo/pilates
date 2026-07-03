@@ -68,8 +68,8 @@ export default function InstructorDashboard() {
   }
 
   const tabs = [
-    { id: 'usuarios', label: 'Usuarios', icon: UserPlus, badge: pendingUsersCount },
-    { id: 'alumnas', label: 'Alumnas', icon: Users },
+    { id: 'usuarios', label: 'Usuari@s', icon: UserPlus, badge: pendingUsersCount },
+    { id: 'alumnas', label: 'Alumn@s', icon: Users },
     { id: 'horarios', label: 'Horarios', icon: Calendar },
     { id: 'stats', label: 'Estadísticas', icon: Clock },
     {
@@ -79,7 +79,7 @@ export default function InstructorDashboard() {
       badge: pendingCount,
     },
     { id: 'asistencia', label: 'Asistencia', icon: UserCheck },
-    { id: 'finanzas', label: 'Finanzas', icon: DollarSign },
+    ...(isAdmin ? [{ id: 'finanzas', label: 'Finanzas', icon: DollarSign }] : []),
     { id: 'calendario', label: 'Calendario', icon: Calendar },
     // Admin-only tab
     ...(isAdmin ? [{ id: 'config', label: 'Configuración', icon: Settings }] : []),

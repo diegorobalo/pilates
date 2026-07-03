@@ -174,7 +174,7 @@ export default function StudentManagement() {
           className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
         >
           <UserPlus className="w-5 h-5" />
-          Nueva Alumna
+          Nuev@ Alumn@
         </button>
       </div>
 
@@ -213,7 +213,7 @@ export default function StudentManagement() {
                   colSpan="7"
                   className="px-6 py-8 text-center text-gray-500"
                 >
-                  No hay alumnas para mostrar
+                  No hay alumn@s para mostrar
                 </td>
               </tr>
             ) : (
@@ -291,7 +291,7 @@ export default function StudentManagement() {
 
       {showConfirmDelete && (
         <ConfirmDialog
-          title="Eliminar Alumna"
+          title="Eliminar Alumn@"
           message={`¿Estás seguro que deseas eliminar a ${studentToDelete?.nombre}? Esta acción no se puede deshacer.`}
           confirmText="Eliminar"
           cancelText="Cancelar"
