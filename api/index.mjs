@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { ensureInitialized, runAsync } from '../backend/src/db/connection-lazy.js';
+import * as dbModule from '../backend/src/db/connection-lazy.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -19,7 +19,7 @@ app.get('/api/health', (req, res) => {
 // Initialize DB and load routes on startup
 (async () => {
   try {
-    await ensureInitialized();
+    await dbModule.ensureInitialized();
     console.log('✅ Database connected');
 
     // Execute schema to ensure tables exist
@@ -36,7 +36,7 @@ app.get('/api/health', (req, res) => {
 
       for (const statement of statements) {
         try {
-          await runAsync(statement);
+          await dbModule.runAsync(statement);
         } catch (err) {
           // Table might already exist, continue
           if (!err.message.includes('already exists')) {
