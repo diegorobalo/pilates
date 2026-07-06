@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Sistema de reserva de camas para clases de pilates",
   "private": true,
-  "type": "module",
   "workspaces": [
     "backend",
     "frontend"
