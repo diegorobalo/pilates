@@ -6,6 +6,23 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Static imports so Vercel's bundler traces and includes every route file.
+import authRoutes from '../backend/src/routes/auth.js';
+import usersRoutes from '../backend/src/routes/users.js';
+import adminRoutes from '../backend/src/routes/admin.js';
+import schedulesRoutes from '../backend/src/routes/schedules.js';
+import reservationsRoutes from '../backend/src/routes/reservations.js';
+import attendanceRoutes from '../backend/src/routes/attendance.js';
+import paymentsRoutes from '../backend/src/routes/payments.js';
+import onboardingRoutes from '../backend/src/routes/onboarding.js';
+import financesRoutes from '../backend/src/routes/finances.js';
+import birthdaysRoutes from '../backend/src/routes/birthdays.js';
+import calendarRoutes from '../backend/src/routes/calendar.js';
+import subscriptionsRoutes from '../backend/src/routes/subscriptions.js';
+import scheduleStatsRoutes from '../backend/src/routes/scheduleStats.js';
+import legajoRoutes from '../backend/src/routes/legajo.js';
+import configRoutes from '../backend/src/routes/config.js';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.use(cors());
@@ -16,9 +33,23 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Router that holds all the loaded API routes. It's mounted immediately,
-// but its child routes are attached asynchronously during initialization.
+// Router that holds all the loaded API routes. Mounted behind the init gate.
 const apiRouter = express.Router();
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/users', usersRoutes);
+apiRouter.use('/admin', adminRoutes);
+apiRouter.use('/schedules', schedulesRoutes);
+apiRouter.use('/reservations', reservationsRoutes);
+apiRouter.use('/attendance', attendanceRoutes);
+apiRouter.use('/payments', paymentsRoutes);
+apiRouter.use('/onboarding', onboardingRoutes);
+apiRouter.use('/finances', financesRoutes);
+apiRouter.use('/birthdays', birthdaysRoutes);
+apiRouter.use('/calendar', calendarRoutes);
+apiRouter.use('/subscriptions', subscriptionsRoutes);
+apiRouter.use('/schedule-stats', scheduleStatsRoutes);
+apiRouter.use('/legajo', legajoRoutes);
+apiRouter.use('/config', configRoutes);
 
 async function initialize() {
   await dbModule.ensureInitialized();
@@ -49,37 +80,6 @@ async function initialize() {
   } catch (err) {
     console.warn('⚠️ Schema initialization:', err.message);
   }
-
-  const routes = [
-    { path: '/auth', file: '../backend/src/routes/auth.js' },
-    { path: '/users', file: '../backend/src/routes/users.js' },
-    { path: '/admin', file: '../backend/src/routes/admin.js' },
-    { path: '/schedules', file: '../backend/src/routes/schedules.js' },
-    { path: '/reservations', file: '../backend/src/routes/reservations.js' },
-    { path: '/attendance', file: '../backend/src/routes/attendance.js' },
-    { path: '/payments', file: '../backend/src/routes/payments.js' },
-    { path: '/onboarding', file: '../backend/src/routes/onboarding.js' },
-    { path: '/finances', file: '../backend/src/routes/finances.js' },
-    { path: '/birthdays', file: '../backend/src/routes/birthdays.js' },
-    { path: '/calendar', file: '../backend/src/routes/calendar.js' },
-    { path: '/subscriptions', file: '../backend/src/routes/subscriptions.js' },
-    { path: '/schedule-stats', file: '../backend/src/routes/scheduleStats.js' },
-    { path: '/legajo', file: '../backend/src/routes/legajo.js' },
-    { path: '/config', file: '../backend/src/routes/config.js' },
-  ];
-
-  for (const route of routes) {
-    try {
-      const module = await import(route.file);
-      apiRouter.use(route.path, module.default);
-      console.log(`✅ /api${route.path} loaded`);
-    } catch (err) {
-      console.error(`❌ /api${route.path}:`, err.message);
-      apiRouter.use(route.path, (req, res) => {
-        res.status(503).json({ error: 'Service unavailable', route: route.path, detail: err.message });
-      });
-    }
-  }
 }
 
 // Single initialization promise, reused across warm invocations.
@@ -95,7 +95,7 @@ function getInit() {
   return initPromise;
 }
 
-// Gate: every /api request waits for initialization to finish before routing.
+// Gate: every /api request waits for DB/schema init before routing.
 app.use('/api', async (req, res, next) => {
   try {
     await getInit();
