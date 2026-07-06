@@ -119,13 +119,13 @@ export default function ScheduleManagement() {
       )}
 
       {/* Header with create button */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-900">
           Horarios de Clases
         </h2>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
         >
           <Plus className="w-5 h-5" />
           Nuevo Horario
