@@ -1,8 +1,12 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { ensureInitialized } from '../backend/src/db/connection-lazy.js';
+import { ensureInitialized, runAsync } from '../backend/src/db/connection-lazy.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -16,7 +20,34 @@ app.get('/api/health', (req, res) => {
 (async () => {
   try {
     await ensureInitialized();
-    console.log('✅ Database initialized');
+    console.log('✅ Database connected');
+
+    // Execute schema to ensure tables exist
+    try {
+      const schemaPath = path.join(__dirname, '../backend/src/db/schema.sql');
+      const schema = fs.readFileSync(schemaPath, 'utf-8');
+      const statements = schema
+        .split('\n')
+        .filter(line => !line.trim().startsWith('--'))
+        .join('\n')
+        .split(';')
+        .map(stmt => stmt.trim())
+        .filter(stmt => stmt.length > 0);
+
+      for (const statement of statements) {
+        try {
+          await runAsync(statement);
+        } catch (err) {
+          // Table might already exist, continue
+          if (!err.message.includes('already exists')) {
+            console.warn('Schema statement failed:', err.message);
+          }
+        }
+      }
+      console.log('✅ Database schema initialized');
+    } catch (err) {
+      console.warn('⚠️ Schema initialization:', err.message);
+    }
 
     const routes = [
       { path: '/api/auth', file: '../backend/src/routes/auth.js' },
