@@ -8,7 +8,7 @@
     "DATABASE_URL": "libsql://pilates-diegorobalo.aws-us-west-2.turso.io?authToken=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODMwNDIxODgsImlkIjoiMDE5ZjI1OTctMmYwMS03MjYyLWExOGYtZTlhMTIxM2Q0ODE1Iiwia2lkIjoiVnJMTThZRllkTnlVQjRtbWdrU0FHV2JnQmpnVnZRaXN3VHo3OUZ1RUFwMCIsInJpZCI6IjZiNTdlMjcxLWU2ZWYtNGQwYi1iODdiLTg0Mjk1MTIxNTIyZCJ9.0D1cbL2bQbCWHEEYkViVVH_1LSFn2nEKxm7G79bXsXRy5MrB6_WKK3tm1CBkzDnVy0JyonckFjHeDKDw1sPZAw"
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
