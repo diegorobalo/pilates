@@ -56,6 +56,30 @@ export default function ScheduleManagement() {
 
   const handleSaveSchedule = async (scheduleData) => {
     try {
+      // Batch create: scheduleData is an array of schedules (varios días)
+      if (Array.isArray(scheduleData)) {
+        const results = await Promise.allSettled(
+          scheduleData.map((s) =>
+            fetch('/api/schedules', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(s),
+            }).then((r) => {
+              if (!r.ok) return r.json().then((d) => Promise.reject(new Error(d.error || 'error')))
+            })
+          )
+        )
+        const ok = results.filter((r) => r.status === 'fulfilled').length
+        const failed = results.length - ok
+        handleCloseModal()
+        fetchSchedules()
+        if (failed > 0) {
+          alert(`${ok} clase(s) creada(s). ${failed} no se pudieron crear (probablemente ya existían en ese día y hora).`)
+        }
+        return
+      }
+
+      // Single create or update
       const url = selectedSchedule
         ? `/api/schedules/${selectedSchedule.id}`
         : '/api/schedules'
