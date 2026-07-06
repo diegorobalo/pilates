@@ -51,6 +51,51 @@ apiRouter.use('/schedule-stats', scheduleStatsRoutes);
 apiRouter.use('/legajo', legajoRoutes);
 apiRouter.use('/config', configRoutes);
 
+// Columns that older Turso databases may be missing. Each is safe to add via
+// ALTER TABLE ADD COLUMN (nullable, or constant default — no UNIQUE/PK/non-const).
+const MIGRATIONS = {
+  users: {
+    apellido: 'TEXT',
+    fecha_nacimiento: 'DATE',
+    direccion: 'TEXT',
+    ciudad: 'TEXT',
+    pin_ingreso: 'TEXT',
+    datos_completados: 'BOOLEAN DEFAULT 0',
+  },
+  horarios_clases: {
+    profesora_asignada: 'TEXT',
+    titulo: 'TEXT',
+  },
+  pagos: {
+    moneda: "TEXT DEFAULT 'ARS'",
+  },
+};
+
+async function runMigrations() {
+  for (const [table, columns] of Object.entries(MIGRATIONS)) {
+    let existing;
+    try {
+      const info = await dbModule.allAsync(`PRAGMA table_info(${table})`);
+      existing = new Set(info.map((r) => r.name));
+    } catch (err) {
+      // Table doesn't exist yet — schema step will create it with all columns.
+      continue;
+    }
+    for (const [col, def] of Object.entries(columns)) {
+      if (!existing.has(col)) {
+        try {
+          await dbModule.runAsync(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
+          console.log(`✅ Migrated: added ${table}.${col}`);
+        } catch (err) {
+          if (!err.message.includes('duplicate column')) {
+            console.warn(`⚠️ Migration ${table}.${col}:`, err.message);
+          }
+        }
+      }
+    }
+  }
+}
+
 async function initialize() {
   await dbModule.ensureInitialized();
   console.log('✅ Database connected');
@@ -79,6 +124,13 @@ async function initialize() {
     console.log('✅ Database schema initialized');
   } catch (err) {
     console.warn('⚠️ Schema initialization:', err.message);
+  }
+
+  // Reconcile older databases missing newer columns
+  try {
+    await runMigrations();
+  } catch (err) {
+    console.warn('⚠️ Migration step:', err.message);
   }
 }
 
