@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install --workspaces && npm run build --prefix ./frontend",
+  "buildCommand": "npm install --workspaces && npm run build --prefix ./frontend && node -e \"const fs=require('fs'); const path=require('path'); fs.cpSync('api', 'frontend/dist/api', {recursive: true})\"",
   "outputDirectory": "frontend/dist",
   "env": {
     "NODE_ENV": "production",
@@ -13,7 +13,7 @@
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
