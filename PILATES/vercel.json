@@ -1,19 +1,14 @@
 {
   "version": 2,
-  "buildCommand": "npm install --workspaces && npm run build --prefix ./frontend && node -e \"const fs=require('fs'); const path=require('path'); fs.cpSync('api', 'frontend/dist/api', {recursive: true})\"",
+  "buildCommand": "npm install --workspaces && npm run build --prefix ./frontend",
   "outputDirectory": "frontend/dist",
   "env": {
     "NODE_ENV": "production",
     "JWT_SECRET_KEY": "pilates-super-secret-key-change-in-production-min-32-chars",
     "DATABASE_URL": "libsql://pilates-diegorobalo.aws-us-west-2.turso.io?authToken=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODMwNDIxODgsImlkIjoiMDE5ZjI1OTctMmYwMS03MjYyLWExOGYtZTlhMTIxM2Q0ODE1Iiwia2lkIjoiVnJMTThZRllkTnlVQjRtbWdrU0FHV2JnQmpnVnZRaXN3VHo3OUZ1RUFwMCIsInJpZCI6IjZiNTdlMjcxLWU2ZWYtNGQwYi1iODdiLTg0Mjk1MTIxNTIyZCJ9.0D1cbL2bQbCWHEEYkViVVH_1LSFn2nEKxm7G79bXsXRy5MrB6_WKK3tm1CBkzDnVy0JyonckFjHeDKDw1sPZAw"
   },
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 60
-    }
-  },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" },
+    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
