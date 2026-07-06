@@ -1,0 +1,252 @@
+import Schedule from '../models/Schedule.js';
+
+/**
+ * Create a new class schedule
+ * POST /api/schedules
+ * Only DUEÑA can create schedules
+ */
+export const createSchedule = async (req, res, next) => {
+  try {
+    const { fecha, hora, capacidad } = req.body;
+
+    // Validate required fields
+    if (!fecha || !hora) {
+      return res.status(400).json({
+        error: 'Missing required fields: fecha, hora'
+      });
+    }
+
+    // Validate fecha format (YYYY-MM-DD)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+      return res.status(400).json({
+        error: 'Invalid fecha format. Must be YYYY-MM-DD'
+      });
+    }
+
+    // Validate hora format (HH:MM)
+    if (!/^\d{2}:\d{2}$/.test(hora)) {
+      return res.status(400).json({
+        error: 'Invalid hora format. Must be HH:MM'
+      });
+    }
+
+    // Validate capacidad if provided
+    if (capacidad && (typeof capacidad !== 'number' || capacidad < 1)) {
+      return res.status(400).json({
+        error: 'Capacidad must be a positive number'
+      });
+    }
+
+    const schedule = await Schedule.create({
+      fecha,
+      hora,
+      capacidad: capacidad || 6,
+      creada_por: req.user.userId
+    });
+
+    res.status(201).json({
+      message: 'Schedule created successfully',
+      schedule
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get all schedules with optional date range filter
+ * GET /api/schedules?fechaInicio=YYYY-MM-DD&fechaFin=YYYY-MM-DD
+ */
+export const getAllSchedules = async (req, res, next) => {
+  try {
+    const { fechaInicio, fechaFin } = req.query;
+
+    let schedules;
+
+    if (fechaInicio && fechaFin) {
+      // Validate date format
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaInicio) || !/^\d{4}-\d{2}-\d{2}$/.test(fechaFin)) {
+        return res.status(400).json({
+          error: 'Invalid date format. Must be YYYY-MM-DD'
+        });
+      }
+
+      // Fetch schedules for date range
+      schedules = await Schedule.findByDateRange(fechaInicio, fechaFin);
+    } else if (fechaInicio || fechaFin) {
+      return res.status(400).json({
+        error: 'Both fechaInicio and fechaFin are required for date range filter'
+      });
+    } else {
+      // Get all schedules (no filter)
+      schedules = await Schedule.findAll();
+    }
+
+    res.json({
+      total: schedules.length,
+      schedules
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get a single schedule by ID
+ * GET /api/schedules/:id
+ */
+export const getScheduleById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const schedule = await Schedule.findById(id);
+    if (!schedule) {
+      return res.status(404).json({
+        error: 'Schedule not found'
+      });
+    }
+
+    res.json({
+      schedule
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Update schedule status
+ * PUT /api/schedules/:id
+ * Only DUEÑA can update schedules
+ * Body: { estado } - ABIERTA, CERRADA, or CANCELADA
+ */
+export const updateScheduleStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { estado, ...otherData } = req.body;
+
+    // Check if schedule exists
+    const schedule = await Schedule.findById(id);
+    if (!schedule) {
+      return res.status(404).json({
+        error: 'Schedule not found'
+      });
+    }
+
+    // If estado is provided, validate it
+    if (estado) {
+      const validEstados = ['ABIERTA', 'CERRADA', 'CANCELADA'];
+      if (!validEstados.includes(estado)) {
+        return res.status(400).json({
+          error: 'Invalid estado. Must be one of: ABIERTA, CERRADA, CANCELADA'
+        });
+      }
+    }
+
+    // Prepare update data
+    const updateData = {};
+    if (estado) {
+      updateData.estado = estado;
+    }
+
+    // Allow updates to other fields as well
+    const validFields = ['fecha', 'hora', 'capacidad'];
+    for (const field of validFields) {
+      if (otherData[field] !== undefined) {
+        updateData[field] = otherData[field];
+      }
+    }
+
+    // Validate fecha and hora formats if provided
+    if (updateData.fecha && !/^\d{4}-\d{2}-\d{2}$/.test(updateData.fecha)) {
+      return res.status(400).json({
+        error: 'Invalid fecha format. Must be YYYY-MM-DD'
+      });
+    }
+
+    if (updateData.hora && !/^\d{2}:\d{2}$/.test(updateData.hora)) {
+      return res.status(400).json({
+        error: 'Invalid hora format. Must be HH:MM'
+      });
+    }
+
+    if (updateData.capacidad && (typeof updateData.capacidad !== 'number' || updateData.capacidad < 1)) {
+      return res.status(400).json({
+        error: 'Capacidad must be a positive number'
+      });
+    }
+
+    const updatedSchedule = await Schedule.update(id, updateData);
+
+    res.json({
+      message: 'Schedule updated successfully',
+      schedule: updatedSchedule
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Delete a schedule
+ * DELETE /api/schedules/:id
+ * Only DUEÑA can delete schedules
+ */
+export const deleteSchedule = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Check if schedule exists
+    const schedule = await Schedule.findById(id);
+    if (!schedule) {
+      return res.status(404).json({
+        error: 'Schedule not found'
+      });
+    }
+
+    const deleted = await Schedule.delete(id);
+
+    if (!deleted) {
+      return res.status(500).json({
+        error: 'Failed to delete schedule'
+      });
+    }
+
+    res.json({
+      message: 'Schedule deleted successfully',
+      deletedId: id
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get available bed numbers for a schedule
+ * GET /api/schedules/:id/available-beds
+ */
+export const getAvailableBeds = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Check if schedule exists
+    const schedule = await Schedule.findById(id);
+    if (!schedule) {
+      return res.status(404).json({
+        error: 'Schedule not found'
+      });
+    }
+
+    const availableBeds = await Schedule.getAvailableBeds(id);
+
+    res.json({
+      scheduleId: id,
+      capacidad: schedule.capacidad,
+      availableBeds,
+      totalAvailable: availableBeds.length,
+      totalReserved: schedule.capacidad - availableBeds.length
+    });
+  } catch (error) {
+    next(error);
+  }
+};
