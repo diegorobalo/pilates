@@ -3,80 +3,45 @@ import express from 'express';
 import cors from 'cors';
 
 const app = express();
-
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Basic endpoints that don't require backend imports
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.post('/api/auth/access', (req, res) => {
-  res.json({ error: 'Not implemented', status: 501 });
-});
+// Load all routes
+const routeConfigs = [
+  { path: '/api/auth', file: '../backend/src/routes/auth.js' },
+  { path: '/api/users', file: '../backend/src/routes/users.js' },
+  { path: '/api/schedules', file: '../backend/src/routes/schedules.js' },
+  { path: '/api/reservations', file: '../backend/src/routes/reservations.js' },
+  { path: '/api/attendance', file: '../backend/src/routes/attendance.js' },
+  { path: '/api/payments', file: '../backend/src/routes/payments.js' },
+  { path: '/api/admin', file: '../backend/src/routes/admin.js' },
+  { path: '/api/onboarding', file: '../backend/src/routes/onboarding.js' },
+  { path: '/api/finances', file: '../backend/src/routes/finances.js' },
+  { path: '/api/birthdays', file: '../backend/src/routes/birthdays.js' },
+  { path: '/api/calendar', file: '../backend/src/routes/calendar.js' },
+  { path: '/api/subscriptions', file: '../backend/src/routes/subscriptions.js' },
+  { path: '/api/schedule-stats', file: '../backend/src/routes/scheduleStats.js' },
+  { path: '/api/legajo', file: '../backend/src/routes/legajo.js' },
+  { path: '/api/config', file: '../backend/src/routes/config.js' },
+];
 
-app.post('/api/admin/login', (req, res) => {
-  res.json({ error: 'Not implemented', status: 501 });
-});
-
-// Try loading real routes
-(async () => {
+for (const route of routeConfigs) {
   try {
-    const authRoutes = await import('../backend/src/routes/auth.js');
-    app.use('/api/auth', authRoutes.default);
-    console.log('✅ auth loaded');
-  } catch (e) {
-    console.error('❌ auth failed:', e.message);
+    const module = await import(route.file);
+    app.use(route.path, module.default);
+    console.log(`✅ ${route.path} loaded`);
+  } catch (err) {
+    console.error(`❌ ${route.path} failed:`, err.message);
+    // Provide fallback
+    app.use(route.path, (req, res) => {
+      res.status(503).json({ error: 'Service unavailable', message: `${route.path} not ready` });
+    });
   }
-
-  try {
-    const adminRoutes = await import('../backend/src/routes/admin.js');
-    app.use('/api/admin', adminRoutes.default);
-    console.log('✅ admin loaded');
-  } catch (e) {
-    console.error('❌ admin failed:', e.message);
-  }
-
-  try {
-    const usersRoutes = await import('../backend/src/routes/users.js');
-    app.use('/api/users', usersRoutes.default);
-    console.log('✅ users loaded');
-  } catch (e) {
-    console.error('❌ users failed:', e.message);
-  }
-
-  try {
-    const schedulesRoutes = await import('../backend/src/routes/schedules.js');
-    app.use('/api/schedules', schedulesRoutes.default);
-    console.log('✅ schedules loaded');
-  } catch (e) {
-    console.error('❌ schedules failed:', e.message);
-  }
-
-  try {
-    const attendanceRoutes = await import('../backend/src/routes/attendance.js');
-    app.use('/api/attendance', attendanceRoutes.default);
-    console.log('✅ attendance loaded');
-  } catch (e) {
-    console.error('❌ attendance failed:', e.message);
-  }
-
-  try {
-    const paymentsRoutes = await import('../backend/src/routes/payments.js');
-    app.use('/api/payments', paymentsRoutes.default);
-    console.log('✅ payments loaded');
-  } catch (e) {
-    console.error('❌ payments failed:', e.message);
-  }
-
-  try {
-    const financesRoutes = await import('../backend/src/routes/finances.js');
-    app.use('/api/finances', financesRoutes.default);
-    console.log('✅ finances loaded');
-  } catch (e) {
-    console.error('❌ finances failed:', e.message);
-  }
-})();
+}
 
 export default app;
