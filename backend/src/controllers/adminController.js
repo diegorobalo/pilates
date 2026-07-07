@@ -24,7 +24,9 @@ async function getAdminConfig() {
 }
 
 function signAdminTokens(cfg) {
-  const payload = { adminId: 1, tipo: 'ADMIN', username: cfg.username };
+  // userId: 'admin' points to the seeded system user row in the `users` table,
+  // so controllers that stamp creada_por / registrada_por (FK to users.id) work.
+  const payload = { adminId: 1, userId: 'admin', tipo: 'ADMIN', username: cfg.username };
   const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE, issuer: 'pilates-api' });
   const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '30d', issuer: 'pilates-api' });
   return { accessToken, refreshToken };

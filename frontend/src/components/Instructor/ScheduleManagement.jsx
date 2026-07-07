@@ -64,17 +64,27 @@ export default function ScheduleManagement() {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(s),
-            }).then((r) => {
-              if (!r.ok) return r.json().then((d) => Promise.reject(new Error(d.error || 'error')))
+            }).then(async (r) => {
+              if (!r.ok) {
+                let detail = `HTTP ${r.status}`
+                try {
+                  const d = await r.json()
+                  detail = d.error || d.message || detail
+                } catch {
+                  // non-JSON error page
+                }
+                throw new Error(`${s.fecha}: ${detail}`)
+              }
             })
           )
         )
         const ok = results.filter((r) => r.status === 'fulfilled').length
-        const failed = results.length - ok
+        const failures = results.filter((r) => r.status === 'rejected').map((r) => r.reason.message)
         handleCloseModal()
         fetchSchedules()
-        if (failed > 0) {
-          alert(`${ok} clase(s) creada(s). ${failed} no se pudieron crear (probablemente ya existían en ese día y hora).`)
+        if (failures.length > 0) {
+          const sample = failures.slice(0, 3).join('\n')
+          alert(`${ok} clase(s) creada(s). ${failures.length} fallaron:\n${sample}`)
         }
         return
       }

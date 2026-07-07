@@ -132,6 +132,18 @@ async function initialize() {
   } catch (err) {
     console.warn('⚠️ Migration step:', err.message);
   }
+
+  // Seed a system user row for the master admin so FK-bound actions
+  // (creada_por / registrada_por -> users.id) work when operating as admin.
+  try {
+    await dbModule.runAsync(
+      `INSERT OR IGNORE INTO users (id, nombre, telefono, tipo, estado)
+       VALUES ('admin', 'Administrador', 'admin-system', 'ADMIN', 'ACTIVA')`
+    );
+    console.log('✅ Admin system user ensured');
+  } catch (err) {
+    console.warn('⚠️ Admin user seed:', err.message);
+  }
 }
 
 // Single initialization promise, reused across warm invocations.
