@@ -153,7 +153,7 @@ export default function ScheduleManagement() {
       )}
 
       {/* Header with create button */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-900">
           Horarios de Clases
         </h2>
@@ -166,8 +166,70 @@ export default function ScheduleManagement() {
         </button>
       </div>
 
-      {/* Schedules Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Mobile: card list */}
+      <div className="md:hidden space-y-3">
+        {schedules.length === 0 ? (
+          <div className="bg-white rounded-lg shadow px-4 py-8 text-center text-gray-500">
+            No hay horarios para mostrar
+          </div>
+        ) : (
+          schedules.map((schedule) => (
+            <div key={schedule.id} className="bg-white rounded-lg shadow p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900 capitalize">
+                    {formatDate(schedule.fecha)}
+                  </p>
+                  <p className="text-sm text-gray-500">{schedule.hora} hs</p>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
+                    STATUS_COLORS[schedule.estado] || 'bg-gray-100 text-gray-800'
+                  }`}
+                >
+                  {schedule.estado}
+                </span>
+              </div>
+
+              <div className="mt-3">
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-gray-500">Reservas</span>
+                  <span className="text-gray-700">
+                    <span className="font-medium">{schedule.reservas_count || 0}</span>
+                    <span className="text-gray-400"> / {schedule.capacidad}</span>
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full"
+                    style={{
+                      width: `${((schedule.reservas_count || 0) / schedule.capacidad) * 100}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="mt-3 flex gap-2 border-t border-gray-100 pt-3">
+                <button
+                  onClick={() => handleOpenModal(schedule)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm font-medium"
+                >
+                  <Edit className="w-4 h-4" /> Editar
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(schedule)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors text-sm font-medium"
+                >
+                  <Trash2 className="w-4 h-4" /> Eliminar
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop: table */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
