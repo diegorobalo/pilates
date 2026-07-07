@@ -1,6 +1,26 @@
 import { useState } from 'react'
 import { UserCheck, Loader } from 'lucide-react'
 
+const MESES = [
+  { value: '01', label: 'Enero' },
+  { value: '02', label: 'Febrero' },
+  { value: '03', label: 'Marzo' },
+  { value: '04', label: 'Abril' },
+  { value: '05', label: 'Mayo' },
+  { value: '06', label: 'Junio' },
+  { value: '07', label: 'Julio' },
+  { value: '08', label: 'Agosto' },
+  { value: '09', label: 'Septiembre' },
+  { value: '10', label: 'Octubre' },
+  { value: '11', label: 'Noviembre' },
+  { value: '12', label: 'Diciembre' },
+]
+
+const CURRENT_YEAR = new Date().getFullYear()
+// Descending years, from this year back 100 years — fast to scroll for any age.
+const ANIOS = Array.from({ length: 101 }, (_, i) => String(CURRENT_YEAR - i))
+const DIAS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'))
+
 export default function AlumnaOnboarding({ userId, onComplete }) {
   const [formData, setFormData] = useState({
     nombre: '',
@@ -9,12 +29,24 @@ export default function AlumnaOnboarding({ userId, onComplete }) {
     direccion: '',
     ciudad: ''
   })
+  // Separate parts for the day/month/year selectors
+  const [dob, setDob] = useState({ dia: '', mes: '', anio: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleDobChange = (part, value) => {
+    const next = { ...dob, [part]: value }
+    setDob(next)
+    // Compose YYYY-MM-DD only when all three are chosen
+    const composed = next.anio && next.mes && next.dia
+      ? `${next.anio}-${next.mes}-${next.dia}`
+      : ''
+    setFormData(prev => ({ ...prev, fecha_nacimiento: composed }))
   }
 
   const handleSubmit = async (e) => {
@@ -86,13 +118,38 @@ export default function AlumnaOnboarding({ userId, onComplete }) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Fecha de nacimiento *</label>
-            <input
-              type="date"
-              name="fecha_nacimiento"
-              value={formData.fecha_nacimiento}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
-            />
+            <div className="grid grid-cols-3 gap-2">
+              <select
+                value={dob.dia}
+                onChange={(e) => handleDobChange('dia', e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
+              >
+                <option value="">Día</option>
+                {DIAS.map((d) => (
+                  <option key={d} value={d}>{parseInt(d)}</option>
+                ))}
+              </select>
+              <select
+                value={dob.mes}
+                onChange={(e) => handleDobChange('mes', e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
+              >
+                <option value="">Mes</option>
+                {MESES.map((m) => (
+                  <option key={m.value} value={m.value}>{m.label}</option>
+                ))}
+              </select>
+              <select
+                value={dob.anio}
+                onChange={(e) => handleDobChange('anio', e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
+              >
+                <option value="">Año</option>
+                {ANIOS.map((a) => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>
