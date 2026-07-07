@@ -6,7 +6,7 @@ import CalendarException from '../models/CalendarException.js';
 export const createSubscription = async (req, res) => {
   try {
     const { dia_semana, hora, cama_preferida, fecha_fin, notas } = req.body;
-    const alumna_id = req.user.id;
+    const alumna_id = req.user.userId;
 
     if (dia_semana === undefined || !hora) {
       return res.status(400).json({ error: 'Missing required fields: dia_semana, hora' });
@@ -29,7 +29,7 @@ export const createSubscription = async (req, res) => {
 
 export const getMySubscriptions = async (req, res) => {
   try {
-    const alumna_id = req.user.id;
+    const alumna_id = req.user.userId;
     const subscriptions = await AlumnaSubscription.findByAlumna(alumna_id, true);
     res.json({ subscriptions });
   } catch (error) {

@@ -7,7 +7,7 @@ import Payment from '../models/Payment.js';
 export const createPayment = async (req, res) => {
   try {
     const { alumnaId, monto, fecha_pago, mes_referencia, metodo, notas } = req.body;
-    const registrada_por = req.user.id;
+    const registrada_por = req.user.userId;
 
     // Validate required fields
     if (!alumnaId || !monto || !fecha_pago || !mes_referencia || !metodo) {

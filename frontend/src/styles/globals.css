@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/*
+ * Tailwind v4 reads theme colors from CSS (@theme), NOT from tailwind.config.js.
+ * These map the app's custom palette so utilities like bg-primary, text-primary,
+ * border-primary, ring-primary, hover:bg-primary-dark, bg-primary/10 are generated.
+ */
+@theme {
+  --color-primary: #667eea;
+  --color-primary-light: #667eea;
+  --color-primary-dark: #764ba2;
+
+  --color-success: #10b981;
+  --color-success-light: #10b981;
+  --color-success-dark: #059669;
+
+  --color-danger: #ef4444;
+  --color-danger-light: #ef4444;
+  --color-danger-dark: #dc2626;
+
+  --color-warning: #f59e0b;
+  --color-warning-light: #f59e0b;
+  --color-warning-dark: #d97706;
+}
+
 @layer base {
   /* Base styles */
   * {

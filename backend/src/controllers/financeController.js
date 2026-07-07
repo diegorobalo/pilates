@@ -8,7 +8,7 @@ import User from '../models/User.js';
 export const createStudentPayment = async (req, res) => {
   try {
     const { alumna_id, monto, fecha_pago, mes_referencia, metodo, notas } = req.body;
-    const registrada_por = req.user.id;
+    const registrada_por = req.user.userId;
 
     if (!alumna_id || !monto || !fecha_pago || !mes_referencia || !metodo) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -105,7 +105,7 @@ export const deleteStudentPayment = async (req, res) => {
 export const createTeacherPayment = async (req, res) => {
   try {
     const { profesora_id, monto, fecha_pago, mes_referencia, metodo, notas } = req.body;
-    const registrada_por = req.user.id;
+    const registrada_por = req.user.userId;
 
     if (!profesora_id || !monto || !fecha_pago || !mes_referencia || !metodo) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -169,7 +169,7 @@ export const getAllTeacherPayments = async (req, res) => {
 export const createExpense = async (req, res) => {
   try {
     const { descripcion, monto, categoria, fecha_gasto, notas } = req.body;
-    const registrada_por = req.user.id;
+    const registrada_por = req.user.userId;
 
     if (!descripcion || !monto || !categoria || !fecha_gasto) {
       return res.status(400).json({ error: 'Missing required fields' });
