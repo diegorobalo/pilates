@@ -189,9 +189,10 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
                   return (
                     <button
                       key={bedNum}
+                      type="button"
                       onClick={() => isAvailable && setSelectedBed(bedNum)}
                       disabled={!isAvailable}
-                      className={`p-3 rounded-lg border-2 font-semibold transition-colors ${
+                      className={`p-3 rounded-lg border-2 font-semibold transition-colors select-none touch-manipulation ${
                         selectedBed === bedNum
                           ? 'border-primary bg-primary/10 text-primary'
                           : isAvailable
