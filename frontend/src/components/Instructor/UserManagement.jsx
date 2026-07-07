@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { UserPlus, Check, X, Loader, RefreshCw, MessageCircle, Save } from 'lucide-react'
+import { UserPlus, Check, X, Loader, RefreshCw, MessageCircle, Save, Trash2, RotateCcw } from 'lucide-react'
 
 const ROLE_LABEL = {
   ALUMNA: 'Alumn@',
@@ -138,6 +138,43 @@ export default function UserManagement() {
       if (!res.ok) throw new Error(data.message || data.error || 'No se pudo generar el código')
       setLastSent({ phone: u.telefono, code: data.code, nombre: u.nombre })
       if (data.waLink) window.open(data.waLink, '_blank')
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  const deactivate = async (u) => {
+    const label = ROLE_LABEL[u.tipo] || u.tipo
+    const who = u.nombre && u.nombre !== u.telefono ? u.nombre : u.telefono
+    if (!window.confirm(`¿Dar de baja a ${who} (${label})? Podrá volver a solicitar acceso más adelante.`)) return
+    setBusyId(u.id)
+    setError('')
+    try {
+      const res = await fetch(`/api/users/${u.id}`, { method: 'DELETE' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || data.error || 'No se pudo dar de baja')
+      await load()
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  const reactivate = async (u) => {
+    setBusyId(u.id)
+    setError('')
+    try {
+      const res = await fetch(`/api/users/${u.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: 'ACTIVA' }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || data.error || 'No se pudo reactivar')
+      await load()
     } catch (e) {
       setError(e.message)
     } finally {
@@ -303,19 +340,46 @@ export default function UserManagement() {
                           <Save className="w-4 h-4" /> Guardar
                         </button>
                       )}
-                      <button
-                        onClick={() => sendCode(u)}
-                        disabled={busyId === u.id}
-                        className="flex items-center justify-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-50"
-                      >
-                        {busyId === u.id ? (
-                          <Loader className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>
-                            <MessageCircle className="w-4 h-4" /> Enviar código por WhatsApp
-                          </>
-                        )}
-                      </button>
+                      {u.estado === 'ACTIVA' ? (
+                        <>
+                          <button
+                            onClick={() => sendCode(u)}
+                            disabled={busyId === u.id}
+                            className="flex items-center justify-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-50"
+                          >
+                            {busyId === u.id ? (
+                              <Loader className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>
+                                <MessageCircle className="w-4 h-4" /> Enviar código por WhatsApp
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => deactivate(u)}
+                            disabled={busyId === u.id}
+                            title="Dar de baja"
+                            className="flex items-center justify-center gap-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 disabled:opacity-50"
+                          >
+                            <Trash2 className="w-4 h-4" /> Baja
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => reactivate(u)}
+                          disabled={busyId === u.id}
+                          title="Reactivar"
+                          className="flex items-center justify-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
+                        >
+                          {busyId === u.id ? (
+                            <Loader className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <>
+                              <RotateCcw className="w-4 h-4" /> Reactivar
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -114,7 +114,10 @@ export const requestAccess = async (req, res) => {
         return res.json({ status: 'active', nombre });
       }
       if (user.estado === 'PENDIENTE') return res.json({ status: 'pending' });
-      return res.json({ status: 'inactive' });
+      // Previously removed user asking for access again: reopen as a pending
+      // request so staff can re-approve and re-send the code.
+      await User.reactivate(user.id);
+      return res.json({ status: 'pending_created' });
     }
 
     await User.create({ nombre: phone, telefono: phone, tipo: 'ALUMNA', estado: 'PENDIENTE' });

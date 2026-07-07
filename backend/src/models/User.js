@@ -221,6 +221,34 @@ class User {
   }
 
   /**
+   * Reactivate a user by moving them back to a PENDIENTE access request.
+   * Used when a previously removed (INACTIVA) person asks for access again,
+   * so staff can re-approve and re-send the code.
+   * @param {string} id - User ID
+   * @returns {Promise<Object>} Updated user object
+   */
+  static async reactivate(id) {
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      await runAsync(
+        'UPDATE users SET estado = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        ['PENDIENTE', id]
+      );
+
+      return await User.findById(id);
+    } catch (error) {
+      if (error.message === 'User not found') {
+        throw error;
+      }
+      throw new Error(`Error reactivating user: ${error.message}`);
+    }
+  }
+
+  /**
    * Delete a user
    * @param {string} id - User ID
    * @returns {Promise<boolean>} True if deletion was successful
