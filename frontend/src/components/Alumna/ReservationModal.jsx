@@ -19,7 +19,8 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
       const response = await fetch(`/api/schedules/${schedule.id}/available-beds`)
       if (response.ok) {
         const data = await response.json()
-        setAvailableBeds(data.beds || [])
+        // Backend returns { availableBeds, capacidad, ... }
+        setAvailableBeds(data.availableBeds || data.beds || [])
         setCurrentReservation(data.currentReservation || null)
       }
     } catch (err) {
@@ -59,8 +60,8 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          scheduleId: schedule.id,
-          bedNumber: selectedBed,
+          horario_id: schedule.id,
+          cama_numero: selectedBed,
         }),
       })
 
@@ -131,9 +132,9 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full max-h-96 overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
           <h2 className="text-xl font-bold text-gray-900">Reserva de Clase</h2>
           <button
             onClick={onClose}
@@ -144,7 +145,7 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 overflow-y-auto flex-1">
           {/* Class info */}
           <div className="bg-gray-50 rounded-lg p-4 space-y-2">
             <div>
@@ -225,7 +226,7 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
         </div>
 
         {/* Actions */}
-        <div className="border-t border-gray-200 p-6 bg-gray-50 flex gap-3 justify-end">
+        <div className="border-t border-gray-200 p-6 bg-gray-50 flex gap-3 justify-end flex-shrink-0">
           <button
             onClick={onClose}
             className="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-colors"
