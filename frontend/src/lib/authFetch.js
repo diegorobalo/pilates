@@ -8,7 +8,10 @@ window.fetch = (input, init = {}) => {
   try {
     const url = typeof input === 'string' ? input : (input && input.url) || ''
     if (url.startsWith('/api')) {
-      const token = localStorage.getItem('accessToken')
+      // Fall back to the onboarding temp token: a freshly verified alumna
+      // completing her profile only has `tempAccessToken` until onboarding finishes.
+      const token =
+        localStorage.getItem('accessToken') || localStorage.getItem('tempAccessToken')
       if (token) {
         const headers = new Headers(
           init.headers || (typeof input !== 'string' && input ? input.headers : undefined)
