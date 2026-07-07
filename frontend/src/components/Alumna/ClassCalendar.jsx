@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import ReservationModal from './ReservationModal'
 
 const WEEKDAYS_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
@@ -40,6 +40,7 @@ export default function ClassCalendar() {
   const [loading, setLoading] = useState(false)
   const [selectedClass, setSelectedClass] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  const [detailDate, setDetailDate] = useState(null) // day whose slots are shown
 
   useEffect(() => {
     fetchSchedules()
@@ -232,22 +233,23 @@ export default function ClassCalendar() {
             const dayBirthdays = getBirthdaysForDate(dateObj)
             const isToday = isSameDay(dateObj, today)
             return (
-              <div
+              <button
                 key={day}
-                className={`border rounded-lg p-1 sm:p-2 min-h-16 sm:min-h-24 overflow-y-auto ${
-                  isToday ? 'border-primary bg-blue-50' : 'border-gray-200 bg-white'
+                type="button"
+                onClick={() => setDetailDate(dateObj)}
+                className={`text-left border rounded-lg p-1 sm:p-2 min-h-16 sm:min-h-24 overflow-hidden transition-colors ${
+                  isToday ? 'border-primary bg-blue-50' : 'border-gray-200 bg-white hover:border-primary'
                 }`}
               >
                 <div className="text-xs sm:text-sm font-semibold text-gray-900 mb-1">{day}</div>
                 <div className="space-y-1">
                   {daySchedules.map((schedule) => (
-                    <button
+                    <div
                       key={schedule.id}
-                      onClick={() => handleClassClick(schedule)}
-                      className="w-full text-left text-[10px] sm:text-xs bg-primary/10 hover:bg-primary/20 text-primary px-1 py-0.5 rounded transition-colors"
+                      className="text-[10px] sm:text-xs bg-primary/10 text-primary px-1 py-0.5 rounded font-medium"
                     >
-                      <div className="font-medium">{schedule.hora}</div>
-                    </button>
+                      {schedule.hora}
+                    </div>
                   ))}
                   {dayBirthdays.map((b) => (
                     <div key={b.id} className="text-[10px] bg-pink-50 text-pink-700 px-1 rounded" title={b.nombre}>
@@ -255,7 +257,7 @@ export default function ClassCalendar() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </button>
             )
           })}
         </div>
@@ -301,6 +303,18 @@ export default function ClassCalendar() {
 
       {viewMode === 'mes' ? renderMonthView() : renderListView()}
 
+      {detailDate && (
+        <DayDetailModal
+          date={detailDate}
+          schedules={getSchedulesForDate(detailDate)}
+          onReserve={(schedule) => {
+            setDetailDate(null)
+            handleClassClick(schedule)
+          }}
+          onClose={() => setDetailDate(null)}
+        />
+      )}
+
       {showModal && selectedClass && (
         <ReservationModal
           schedule={selectedClass}
@@ -319,6 +333,75 @@ export default function ClassCalendar() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+// Modal listing every class slot for a chosen day, each with a Reservar button
+function DayDetailModal({ date, schedules, onReserve, onClose }) {
+  const titulo = date.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  })
+  const sorted = [...schedules].sort((a, b) => (a.hora || '').localeCompare(b.hora || ''))
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200 flex-shrink-0">
+          <h2 className="text-lg font-bold text-gray-900 capitalize">{titulo}</h2>
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition-colors">
+            <X className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
+
+        <div className="p-5 overflow-y-auto flex-1">
+          <p className="text-sm font-medium text-gray-700 mb-3">Horarios disponibles</p>
+          {sorted.length === 0 ? (
+            <div className="text-center text-gray-400 italic py-8">
+              No hay clases este día
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {sorted.map((schedule) => {
+                const estado = schedule.reservationStatus
+                const reservable = !estado || estado === 'Disponible'
+                return (
+                  <div
+                    key={schedule.id}
+                    className="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-lg font-bold text-gray-900">{schedule.hora}</p>
+                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                        <span className={`w-2 h-2 rounded-full ${getStatusColor(estado)}`} />
+                        {getStatusLabel(estado)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onReserve(schedule)}
+                      className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-colors text-sm select-none touch-manipulation flex-shrink-0"
+                    >
+                      {reservable ? 'Reservar' : 'Ver'}
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="border-t border-gray-200 p-4 flex justify-end flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

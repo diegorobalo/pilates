@@ -94,7 +94,17 @@ class Reservation {
   static async findPending() {
     try {
       return await allAsync(
-        'SELECT * FROM reservas WHERE estado = ? ORDER BY fecha_solicitud ASC',
+        `SELECT r.*,
+                r.cama_numero AS numero_cama,
+                TRIM(u.nombre || ' ' || COALESCE(u.apellido, '')) AS nombre_alumna,
+                u.telefono AS telefono_alumna,
+                h.fecha AS fecha,
+                h.hora AS hora
+         FROM reservas r
+         JOIN users u ON r.alumna_id = u.id
+         JOIN horarios_clases h ON r.horario_id = h.id
+         WHERE r.estado = ?
+         ORDER BY h.fecha ASC, h.hora ASC, r.fecha_solicitud ASC`,
         ['PENDIENTE']
       );
     } catch (error) {
