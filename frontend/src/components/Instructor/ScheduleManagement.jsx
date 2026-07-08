@@ -11,6 +11,7 @@ const STATUS_COLORS = {
 
 export default function ScheduleManagement() {
   const [schedules, setSchedules] = useState([])
+  const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedSchedule, setSelectedSchedule] = useState(null)
@@ -20,7 +21,40 @@ export default function ScheduleManagement() {
 
   useEffect(() => {
     fetchSchedules()
+    fetchInstructors()
   }, [])
+
+  const fetchInstructors = async () => {
+    try {
+      const res = await fetch('/api/users?includeInactive=false')
+      const data = await res.json()
+      const list = (data.users || data || []).filter(
+        (u) => u.tipo === 'PROFESORA' || u.tipo === 'DUEÑA'
+      )
+      setInstructors(list)
+    } catch (err) {
+      console.error('Error fetching instructors:', err)
+    }
+  }
+
+  // Assign (or clear) the instructor for a class — saves immediately
+  const assignInstructor = async (scheduleId, profesoraId) => {
+    try {
+      const res = await fetch(`/api/schedules/${scheduleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profesora_asignada: profesoraId || null }),
+      })
+      if (!res.ok) throw new Error('No se pudo asignar el instructor')
+      // Optimistic local update + refresh
+      setSchedules((prev) =>
+        prev.map((s) => (s.id === scheduleId ? { ...s, profesora_asignada: profesoraId || null } : s))
+      )
+      fetchSchedules()
+    } catch (err) {
+      alert(`Error: ${err.message}`)
+    }
+  }
 
   const fetchSchedules = async () => {
     try {
@@ -209,6 +243,22 @@ export default function ScheduleManagement() {
                 </div>
               </div>
 
+              <div className="mt-3">
+                <label className="block text-xs text-gray-500 mb-1">Instructor a cargo</label>
+                <select
+                  value={schedule.profesora_asignada || ''}
+                  onChange={(e) => assignInstructor(schedule.id, e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary"
+                >
+                  <option value="">Sin asignar</option>
+                  {instructors.map((i) => (
+                    <option key={i.id} value={i.id}>
+                      {i.nombre} {i.apellido || ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="mt-3 flex gap-2 border-t border-gray-100 pt-3">
                 <button
                   onClick={() => handleOpenModal(schedule)}
@@ -249,6 +299,9 @@ export default function ScheduleManagement() {
                 Estado
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Instructor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Acciones
               </th>
             </tr>
@@ -257,7 +310,7 @@ export default function ScheduleManagement() {
             {schedules.length === 0 ? (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="px-6 py-8 text-center text-gray-500"
                 >
                   No hay horarios para mostrar
@@ -300,6 +353,20 @@ export default function ScheduleManagement() {
                     >
                       {schedule.estado}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <select
+                      value={schedule.profesora_asignada || ''}
+                      onChange={(e) => assignInstructor(schedule.id, e.target.value)}
+                      className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary"
+                    >
+                      <option value="">Sin asignar</option>
+                      {instructors.map((i) => (
+                        <option key={i.id} value={i.id}>
+                          {i.nombre} {i.apellido || ''}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td className="px-6 py-4 text-sm space-x-2 flex">
                     <button

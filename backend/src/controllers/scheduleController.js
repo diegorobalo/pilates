@@ -203,7 +203,7 @@ export const updateScheduleStatus = async (req, res, next) => {
     }
 
     // Allow updates to other fields as well
-    const validFields = ['fecha', 'hora', 'capacidad'];
+    const validFields = ['fecha', 'hora', 'capacidad', 'profesora_asignada', 'titulo'];
     for (const field of validFields) {
       if (otherData[field] !== undefined) {
         updateData[field] = otherData[field];

@@ -86,7 +86,12 @@ class Schedule {
   static async findAll() {
     try {
       return await allAsync(
-        'SELECT * FROM horarios_clases ORDER BY fecha ASC, hora ASC',
+        `SELECT h.*,
+                u.nombre as profesora_nombre,
+                u.apellido as profesora_apellido
+         FROM horarios_clases h
+         LEFT JOIN users u ON h.profesora_asignada = u.id
+         ORDER BY h.fecha ASC, h.hora ASC`,
         []
       );
     } catch (error) {
