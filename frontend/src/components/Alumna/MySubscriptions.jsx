@@ -72,8 +72,11 @@ export default function MySubscriptions() {
     loadSlots()
   }, [loadSubscriptions, loadSlots])
 
-  // First weekday (0-6) that has classes, ascending
-  const availableDays = Object.keys(slotsByDay).map(Number).sort((a, b) => a - b)
+  // Weekdays (1-5) that have classes — the studio is closed weekends
+  const availableDays = Object.keys(slotsByDay)
+    .map(Number)
+    .filter((wd) => wd !== 0 && wd !== 6)
+    .sort((a, b) => a - b)
 
   const openForm = () => {
     // Preselect the first available day + its first time

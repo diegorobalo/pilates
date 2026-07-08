@@ -246,81 +246,37 @@ export const deletePayment = async (req, res) => {
 export const getFinanceStats = async (req, res) => {
   try {
     const { allAsync, getAsync } = await import('../db/connection.js');
+    const month = req.query.month || new Date().toLocaleDateString('en-CA').slice(0, 7);
 
-    // Get all payments
-    const allPayments = await allAsync('SELECT * FROM pagos');
-
-    // Calculate total collected
-    const totalResult = await getAsync('SELECT SUM(monto) as total FROM pagos');
-    const totalCollected = totalResult && totalResult.total ? parseFloat(totalResult.total) : 0;
-
-    // Get breakdown by method
-    const byMethodResult = await allAsync(
-      'SELECT metodo, SUM(monto) as total FROM pagos GROUP BY metodo'
+    // Total collected in the selected month
+    const totalRow = await getAsync(
+      'SELECT SUM(monto) as total FROM pagos WHERE mes_referencia = ?',
+      [month]
     );
-    const byMethod = {};
-    byMethodResult.forEach(row => {
-      byMethod[row.metodo] = parseFloat(row.total);
-    });
+    const totalCobrado = totalRow && totalRow.total ? parseFloat(totalRow.total) : 0;
 
-    // Get breakdown by month
-    const byMonthResult = await allAsync(
-      'SELECT mes_referencia, SUM(monto) as total FROM pagos GROUP BY mes_referencia ORDER BY mes_referencia DESC'
+    // Students who already paid this month
+    const paidRows = await allAsync(
+      'SELECT DISTINCT alumna_id FROM pagos WHERE mes_referencia = ?',
+      [month]
     );
-    const byMonth = {};
-    byMonthResult.forEach(row => {
-      byMonth[row.mes_referencia] = parseFloat(row.total);
-    });
+    const alumnasAlDia = paidRows.length;
 
-    // Get payment status summary (AL_DIA, VENCIDA, PENDIENTE)
-    // AL_DIA: pagos en el mes actual
-    // VENCIDA: no hay pagos del mes actual pero hay de meses anteriores
-    // PENDIENTE: nunca pagó
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
-    const currentMonthStr = `${currentYear}-${currentMonth}`;
-
-    const studentPaymentStatus = await allAsync(
-      `SELECT DISTINCT alumna_id FROM pagos`
+    // Active students total -> the rest are "en mora" for this month
+    const activeRow = await getAsync(
+      "SELECT COUNT(*) as count FROM users WHERE tipo = 'ALUMNA' AND estado = 'ACTIVA'"
     );
+    const totalActive = activeRow ? activeRow.count : 0;
+    const alumnasEnMora = Math.max(0, totalActive - alumnasAlDia);
 
-    let alDia = 0;
-    let vencida = 0;
-    let pendiente = 0;
-
-    for (const student of studentPaymentStatus) {
-      const currentMonthPayment = await getAsync(
-        `SELECT COUNT(*) as count FROM pagos WHERE alumna_id = ? AND mes_referencia = ?`,
-        [student.alumna_id, currentMonthStr]
-      );
-
-      if (currentMonthPayment && currentMonthPayment.count > 0) {
-        alDia++;
-      } else {
-        vencida++;
-      }
-    }
-
-    // Get all students to calculate PENDIENTE
-    const { getAsync: getAsyncUsers } = await import('../db/connection.js');
-    const allStudents = await allAsync(
-      `SELECT id FROM usuarios WHERE tipo = 'ALUMNA'`
-    );
-    pendiente = Math.max(0, allStudents.length - alDia - vencida);
-
+    // Ingresos pendientes/vencidos require per-plan pricing (abono por
+    // clases/semana), which isn't configured yet -> reported as 0 for now.
     res.json({
-      success: true,
-      stats: {
-        totalCollected,
-        byMethod,
-        byMonth,
-        statusSummary: {
-          AL_DIA: alDia,
-          VENCIDA: vencida,
-          PENDIENTE: pendiente
-        }
-      }
+      totalCobrado,
+      ingresosPendientes: 0,
+      ingresosVencidos: 0,
+      alumnasAlDia,
+      alumnasEnMora,
     });
   } catch (error) {
     console.error('Error fetching finance stats:', error);

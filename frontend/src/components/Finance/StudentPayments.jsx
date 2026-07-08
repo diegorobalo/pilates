@@ -42,7 +42,10 @@ export default function StudentPayments() {
           )
           if (paymentResponse.ok) {
             const paymentData = await paymentResponse.json()
-            paymentsMap[student.id] = paymentData
+            // Endpoint returns { success, count, payments: [...] }
+            paymentsMap[student.id] = Array.isArray(paymentData.payments)
+              ? paymentData.payments
+              : []
           }
         } catch (err) {
           console.error(`Error fetching payments for ${student.id}:`, err)
@@ -56,28 +59,23 @@ export default function StudentPayments() {
     }
   }
 
-  const getPaymentStatus = (student) => {
-    const payments = studentPayments[student.id] || {}
-    const status = payments.status || 'PENDIENTE'
+  const currentMonth = new Date().toLocaleDateString('en-CA').slice(0, 7) // YYYY-MM local
 
-    if (status === 'AL_DIA') {
+  const getPaymentStatus = (student) => {
+    const payments = studentPayments[student.id] || []
+    const paidThisMonth = payments.some((p) => p.mes_referencia === currentMonth)
+
+    if (paidThisMonth) {
       return {
-        label: 'AL DÍA',
+        label: 'PAGÓ ESTE MES',
         color: 'bg-green-100 text-green-800 border-green-300',
         icon: '✓',
       }
-    } else if (status === 'VENCIDA') {
-      return {
-        label: 'VENCIDA',
-        color: 'bg-red-100 text-red-800 border-red-300',
-        icon: '⚠️',
-      }
-    } else {
-      return {
-        label: 'PENDIENTE',
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-        icon: '⏳',
-      }
+    }
+    return {
+      label: 'PENDIENTE',
+      color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      icon: '⏳',
     }
   }
 
@@ -138,10 +136,10 @@ export default function StudentPayments() {
                 Estado
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Monto Debido
+                Último Pago
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Pagos Recientes
+                Pagos
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Acciones
@@ -163,9 +161,11 @@ export default function StudentPayments() {
             ) : (
               filteredStudents.map((student) => {
                 const status = getPaymentStatus(student)
-                const payments = studentPayments[student.id] || {}
-                const recentPayments = payments.recentPayments || []
-                const amountDue = payments.amountDue || 0
+                const payments = studentPayments[student.id] || []
+                const sorted = [...payments].sort((a, b) =>
+                  (b.fecha_pago || '').localeCompare(a.fecha_pago || '')
+                )
+                const lastPayment = sorted[0]
 
                 return (
                   <tr key={student.id} className="hover:bg-gray-50 transition-colors">
@@ -173,7 +173,9 @@ export default function StudentPayments() {
                       {student.nombre}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {student.plan || 'Sin plan'}
+                      {student.clases_semanales
+                        ? `${student.clases_semanales} clase(s)/sem`
+                        : (student.plan || 'Sin plan')}
                     </td>
                     <td className="px-6 py-4">
                       <span
@@ -183,13 +185,13 @@ export default function StudentPayments() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                      {formatCurrency(amountDue)}
+                      {lastPayment
+                        ? `${formatCurrency(lastPayment.monto)} · ${new Date(`${lastPayment.fecha_pago}T12:00:00`).toLocaleDateString('es-AR')}`
+                        : '—'}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {recentPayments.length > 0
-                        ? `${recentPayments.length} pago${
-                            recentPayments.length > 1 ? 's' : ''
-                          }`
+                      {payments.length > 0
+                        ? `${payments.length} pago${payments.length > 1 ? 's' : ''}`
                         : 'Sin pagos'}
                     </td>
                     <td className="px-6 py-4 text-sm space-x-2 flex">

@@ -7,16 +7,20 @@ const STATUS_OPTIONS = [
   { value: 'CANCELADA', label: 'Cancelada' },
 ]
 
-// getDay(): 0=Domingo .. 6=Sábado
+// getDay(): 0=Domingo .. 6=Sábado. El local cierra sábados y domingos,
+// así que no se ofrecen como días de clase.
 const WEEKDAYS = [
   { value: 1, label: 'Lun' },
   { value: 2, label: 'Mar' },
   { value: 3, label: 'Mié' },
   { value: 4, label: 'Jue' },
   { value: 5, label: 'Vie' },
-  { value: 6, label: 'Sáb' },
-  { value: 0, label: 'Dom' },
 ]
+
+const isWeekend = (isoDate) => {
+  const day = new Date(`${isoDate}T12:00:00`).getDay()
+  return day === 0 || day === 6
+}
 
 // Build "YYYY-MM-DD" without timezone drift
 const toISODate = (d) => {
@@ -116,6 +120,8 @@ export default function ScheduleModal({ schedule, onSave, onClose }) {
     if (mode === 'single') {
       if (!formData.fecha.trim()) {
         newErrors.fecha = 'La fecha es requerida'
+      } else if (isWeekend(formData.fecha)) {
+        newErrors.fecha = 'El local no abre sábados ni domingos'
       } else if (!schedule) {
         const selectedDate = new Date(`${formData.fecha}T12:00:00`)
         const today = new Date()
