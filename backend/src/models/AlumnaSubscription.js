@@ -67,6 +67,19 @@ class AlumnaSubscription {
     }
   }
 
+  static async findActiveByDayAndTime(dia_semana, hora) {
+    try {
+      return await allAsync(
+        `SELECT * FROM suscripciones_alumnos
+         WHERE activa = 1 AND dia_semana = ? AND hora = ?
+           AND (fecha_fin IS NULL OR fecha_fin >= CURRENT_DATE)`,
+        [dia_semana, hora]
+      );
+    } catch (error) {
+      throw new Error(`Error finding subscriptions by day/time: ${error.message}`);
+    }
+  }
+
   static async update(id, data) {
     try {
       const subscription = await AlumnaSubscription.findById(id);

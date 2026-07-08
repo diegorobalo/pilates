@@ -1,4 +1,48 @@
 import Schedule from '../models/Schedule.js';
+import AlumnaSubscription from '../models/AlumnaSubscription.js';
+import Reservation from '../models/Reservation.js';
+
+/**
+ * When a class schedule is created, auto-create PENDIENTE reservations for every
+ * alumna subscribed to that weekday + time, so subscriptions are "set once and
+ * forget" (staff still confirms each one). Returns how many were generated.
+ */
+async function generateReservationsForSchedule(schedule) {
+  const weekday = new Date(`${schedule.fecha}T12:00:00`).getDay();
+  const subs = await AlumnaSubscription.findActiveByDayAndTime(weekday, schedule.hora);
+  let count = 0;
+
+  for (const sub of subs) {
+    const existing = await Reservation.findOne({
+      alumna_id: sub.alumna_id,
+      horario_id: schedule.id
+    });
+    if (existing) continue;
+
+    const available = await Schedule.getAvailableBeds(schedule.id);
+    if (available.length === 0) break; // class is full
+
+    const cama =
+      sub.cama_preferida && available.includes(sub.cama_preferida)
+        ? sub.cama_preferida
+        : available[0];
+
+    const reservation = await Reservation.create({
+      alumna_id: sub.alumna_id,
+      horario_id: schedule.id,
+      cama_numero: cama,
+      estado: 'PENDIENTE'
+    });
+    count++;
+
+    try {
+      await Reservation.linkToSubscription(reservation.id, sub.id);
+    } catch (linkErr) {
+      console.error('linkToSubscription failed (non-fatal):', linkErr.message);
+    }
+  }
+  return count;
+}
 
 /**
  * Create a new class schedule
@@ -44,9 +88,18 @@ export const createSchedule = async (req, res, next) => {
       creada_por: req.user.userId
     });
 
+    // Auto-generate reservations for alumnas subscribed to this weekday+time
+    let generatedReservations = 0;
+    try {
+      generatedReservations = await generateReservationsForSchedule(schedule);
+    } catch (genErr) {
+      console.error('Error generating subscription reservations:', genErr.message);
+    }
+
     res.status(201).json({
       message: 'Schedule created successfully',
-      schedule
+      schedule,
+      generatedReservations
     });
   } catch (error) {
     next(error);
