@@ -97,6 +97,13 @@ export const createSubscription = async (req, res) => {
       generatedReservations
     });
   } catch (error) {
+    // Duplicate day+time subscription for the same alumna
+    if (/UNIQUE constraint/i.test(error.message)) {
+      return res.status(409).json({
+        error: 'Duplicate subscription',
+        message: 'Ya tenés una suscripción para ese día y horario.'
+      });
+    }
     res.status(500).json({ error: 'Error creating subscription', message: error.message });
   }
 };
