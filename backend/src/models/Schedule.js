@@ -88,7 +88,9 @@ class Schedule {
       return await allAsync(
         `SELECT h.*,
                 u.nombre as profesora_nombre,
-                u.apellido as profesora_apellido
+                u.apellido as profesora_apellido,
+                (SELECT COUNT(*) FROM reservas r
+                 WHERE r.horario_id = h.id AND r.estado IN ('CONFIRMADA', 'PENDIENTE')) AS reservas_count
          FROM horarios_clases h
          LEFT JOIN users u ON h.profesora_asignada = u.id
          ORDER BY h.fecha ASC, h.hora ASC`,
@@ -197,7 +199,9 @@ class Schedule {
       return await allAsync(
         `SELECT h.*,
                 u.nombre as profesora_nombre,
-                u.apellido as profesora_apellido
+                u.apellido as profesora_apellido,
+                (SELECT COUNT(*) FROM reservas r
+                 WHERE r.horario_id = h.id AND r.estado IN ('CONFIRMADA', 'PENDIENTE')) AS reservas_count
          FROM horarios_clases h
          LEFT JOIN users u ON h.profesora_asignada = u.id
          WHERE h.fecha BETWEEN ? AND ?
