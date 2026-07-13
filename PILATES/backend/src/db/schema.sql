@@ -155,6 +155,15 @@ CREATE TABLE IF NOT EXISTS admin_config (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Owner/DUEÑA master credentials (single row, id = 1). Optional login by username/password.
+CREATE TABLE IF NOT EXISTS dueña_config (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  username TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  email TEXT,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Verification Codes table (for phone verification)
 CREATE TABLE IF NOT EXISTS verification_codes (
   id TEXT PRIMARY KEY,
@@ -246,6 +255,17 @@ CREATE INDEX IF NOT EXISTS idx_suscripciones_dia_semana ON suscripciones_alumnos
 
 CREATE INDEX IF NOT EXISTS idx_reserva_suscripcion_suscripcion_id ON reserva_suscripcion(suscripcion_id);
 
+CREATE INDEX IF NOT EXISTS idx_categorias_tipo ON categorias(tipo);
+CREATE INDEX IF NOT EXISTS idx_categorias_nombre ON categorias(nombre);
+
+CREATE INDEX IF NOT EXISTS idx_transacciones_mes_referencia ON transacciones(mes_referencia);
+CREATE INDEX IF NOT EXISTS idx_transacciones_tipo ON transacciones(tipo);
+CREATE INDEX IF NOT EXISTS idx_transacciones_categoria ON transacciones(categoria);
+CREATE INDEX IF NOT EXISTS idx_transacciones_alumna_id ON transacciones(alumna_id);
+CREATE INDEX IF NOT EXISTS idx_transacciones_instructor_id ON transacciones(instructor_id);
+CREATE INDEX IF NOT EXISTS idx_transacciones_estado ON transacciones(estado);
+CREATE INDEX IF NOT EXISTS idx_transacciones_fecha ON transacciones(fecha);
+
 -- System Configuration table
 -- Stores global settings like class capacity, payment terms, etc.
 CREATE TABLE IF NOT EXISTS configuracion (
@@ -257,4 +277,49 @@ CREATE TABLE IF NOT EXISTS configuracion (
   fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
   actualizado_por TEXT,
   FOREIGN KEY (actualizado_por) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Seed predefined expense categories
+INSERT OR IGNORE INTO categorias (id, nombre, tipo, es_predefinida, creada_por)
+VALUES
+  ('cat-empleados', 'Empleados', 'GASTO', 1, NULL),
+  ('cat-servicios', 'Servicios', 'GASTO', 1, NULL),
+  ('cat-mantenimiento', 'Mantenimiento', 'GASTO', 1, NULL),
+  ('cat-materiales', 'Materiales', 'GASTO', 1, NULL),
+  ('cat-otros', 'Otros', 'GASTO', 1, NULL);
+
+-- Categorias (Expense/Income Categories) table
+-- Stores predefined and custom categories for financial transactions
+CREATE TABLE IF NOT EXISTS categorias (
+  id TEXT PRIMARY KEY,
+  nombre TEXT NOT NULL UNIQUE,
+  tipo TEXT NOT NULL CHECK (tipo IN ('INGRESO_ALUMNA', 'GASTO', 'PAGO_INSTRUCTOR', 'INGRESO_OTRO')),
+  es_predefinida BOOLEAN DEFAULT 1,
+  creada_por TEXT,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (creada_por) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Transacciones (Transactions) table
+-- Stores all financial transactions (income, expenses, payments)
+CREATE TABLE IF NOT EXISTS transacciones (
+  id TEXT PRIMARY KEY,
+  tipo TEXT NOT NULL CHECK (tipo IN ('INGRESO_ALUMNA', 'GASTO', 'PAGO_INSTRUCTOR', 'INGRESO_OTRO')),
+  categoria TEXT NOT NULL,
+  subcategoria TEXT,
+  monto DECIMAL(10, 2) NOT NULL CHECK (monto > 0),
+  fecha TEXT NOT NULL,
+  mes_referencia TEXT NOT NULL,
+  alumna_id TEXT,
+  instructor_id TEXT,
+  descripcion TEXT,
+  registrada_por TEXT NOT NULL,
+  comprobante TEXT,
+  estado TEXT NOT NULL DEFAULT 'REGISTRADA' CHECK (estado IN ('REGISTRADA', 'PENDIENTE', 'CANCELADA')),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (alumna_id) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (instructor_id) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT,
+  FOREIGN KEY (categoria) REFERENCES categorias(nombre) ON DELETE RESTRICT
 );
