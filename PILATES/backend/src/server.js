@@ -1,7 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import morgan from 'morgan';
+import { setJWTSecret } from './middleware/auth.js';
 import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
 import schedulesRoutes from './routes/schedules.js';
@@ -19,8 +22,6 @@ import legajoRoutes from './routes/legajo.js';
 import configRoutes from './routes/config.js';
 import { initSubscriptionCronJobs } from './cron/subscriptionCron.js';
 
-dotenv.config();
-
 // Validate required environment variables
 const requiredEnvVars = ['JWT_SECRET_KEY'];
 for (const envVar of requiredEnvVars) {
@@ -34,6 +35,9 @@ for (const envVar of requiredEnvVars) {
     process.exit(1);
   }
 }
+
+// Set JWT secret in auth middleware
+setJWTSecret(process.env.JWT_SECRET_KEY);
 
 // Validate PORT
 const portString = process.env.PORT || '3000';

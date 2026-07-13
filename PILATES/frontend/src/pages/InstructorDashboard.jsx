@@ -89,22 +89,25 @@ export default function InstructorDashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Clock className="w-8 h-8 text-primary" />
-              <h1 className="text-2xl font-bold text-gray-900">
+        <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-primary flex-shrink-0" />
+              <h1 className="text-base sm:text-2xl font-bold text-gray-900 truncate">
                 Dashboard de Instructora
               </h1>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-gray-700 font-medium">{instructorName}</span>
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+              <span className="hidden sm:inline text-gray-700 font-medium truncate max-w-[10rem]">
+                {instructorName}
+              </span>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Cerrar sesión"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <LogOut className="w-5 h-5" />
-                Cerrar Sesión
+                <LogOut className="w-5 h-5 flex-shrink-0" />
+                <span className="hidden sm:inline">Cerrar Sesión</span>
               </button>
             </div>
           </div>
@@ -113,8 +116,11 @@ export default function InstructorDashboard() {
 
       {/* Navigation Tabs */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8" role="tablist">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+          <nav
+            className="flex space-x-4 sm:space-x-8 overflow-x-auto no-scrollbar"
+            role="tablist"
+          >
             {tabs.map((tab) => {
               const Icon = tab.icon
               return (
@@ -123,16 +129,16 @@ export default function InstructorDashboard() {
                   onClick={() => setActiveTab(tab.id)}
                   role="tab"
                   aria-selected={activeTab === tab.id}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${
+                  className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap flex-shrink-0 transition-colors ${
                     activeTab === tab.id
                       ? 'border-primary text-primary'
                       : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-5 h-5 flex-shrink-0" />
                   {tab.label}
                   {tab.badge && tab.badge > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-bold leading-none bg-danger text-white">
+                    <span className="ml-1 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold leading-none bg-danger text-white">
                       {tab.badge}
                     </span>
                   )}
@@ -144,7 +150,7 @@ export default function InstructorDashboard() {
       </div>
 
       {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto px-4 py-6 sm:py-8 sm:px-6 lg:px-8">
         {activeTab === 'usuarios' && <UserManagement />}
         {activeTab === 'alumnas' && <StudentManagement />}
         {activeTab === 'horarios' && <ScheduleManagement />}
