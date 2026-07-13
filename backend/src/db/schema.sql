@@ -255,17 +255,6 @@ CREATE INDEX IF NOT EXISTS idx_suscripciones_dia_semana ON suscripciones_alumnos
 
 CREATE INDEX IF NOT EXISTS idx_reserva_suscripcion_suscripcion_id ON reserva_suscripcion(suscripcion_id);
 
-CREATE INDEX IF NOT EXISTS idx_categorias_tipo ON categorias(tipo);
-CREATE INDEX IF NOT EXISTS idx_categorias_nombre ON categorias(nombre);
-
-CREATE INDEX IF NOT EXISTS idx_transacciones_mes_referencia ON transacciones(mes_referencia);
-CREATE INDEX IF NOT EXISTS idx_transacciones_tipo ON transacciones(tipo);
-CREATE INDEX IF NOT EXISTS idx_transacciones_categoria ON transacciones(categoria);
-CREATE INDEX IF NOT EXISTS idx_transacciones_alumna_id ON transacciones(alumna_id);
-CREATE INDEX IF NOT EXISTS idx_transacciones_instructor_id ON transacciones(instructor_id);
-CREATE INDEX IF NOT EXISTS idx_transacciones_estado ON transacciones(estado);
-CREATE INDEX IF NOT EXISTS idx_transacciones_fecha ON transacciones(fecha);
-
 -- System Configuration table
 -- Stores global settings like class capacity, payment terms, etc.
 CREATE TABLE IF NOT EXISTS configuracion (
@@ -279,15 +268,6 @@ CREATE TABLE IF NOT EXISTS configuracion (
   FOREIGN KEY (actualizado_por) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Seed predefined expense categories
-INSERT OR IGNORE INTO categorias (id, nombre, tipo, es_predefinida, creada_por)
-VALUES
-  ('cat-empleados', 'Empleados', 'GASTO', 1, NULL),
-  ('cat-servicios', 'Servicios', 'GASTO', 1, NULL),
-  ('cat-mantenimiento', 'Mantenimiento', 'GASTO', 1, NULL),
-  ('cat-materiales', 'Materiales', 'GASTO', 1, NULL),
-  ('cat-otros', 'Otros', 'GASTO', 1, NULL);
-
 -- Categorias (Expense/Income Categories) table
 -- Stores predefined and custom categories for financial transactions
 CREATE TABLE IF NOT EXISTS categorias (
@@ -299,6 +279,19 @@ CREATE TABLE IF NOT EXISTS categorias (
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (creada_por) REFERENCES users(id) ON DELETE SET NULL
 );
+
+-- Indexes for categorias
+CREATE INDEX IF NOT EXISTS idx_categorias_tipo ON categorias(tipo);
+CREATE INDEX IF NOT EXISTS idx_categorias_nombre ON categorias(nombre);
+
+-- Seed predefined expense categories (AFTER table is created)
+INSERT OR IGNORE INTO categorias (id, nombre, tipo, es_predefinida, creada_por)
+VALUES
+  ('cat-empleados', 'Empleados', 'GASTO', 1, NULL),
+  ('cat-servicios', 'Servicios', 'GASTO', 1, NULL),
+  ('cat-mantenimiento', 'Mantenimiento', 'GASTO', 1, NULL),
+  ('cat-materiales', 'Materiales', 'GASTO', 1, NULL),
+  ('cat-otros', 'Otros', 'GASTO', 1, NULL);
 
 -- Transacciones (Transactions) table
 -- Stores all financial transactions (income, expenses, payments)
@@ -323,3 +316,12 @@ CREATE TABLE IF NOT EXISTS transacciones (
   FOREIGN KEY (registrada_por) REFERENCES users(id) ON DELETE RESTRICT,
   FOREIGN KEY (categoria) REFERENCES categorias(nombre) ON DELETE RESTRICT
 );
+
+-- Indexes for transacciones
+CREATE INDEX IF NOT EXISTS idx_transacciones_mes_referencia ON transacciones(mes_referencia);
+CREATE INDEX IF NOT EXISTS idx_transacciones_tipo ON transacciones(tipo);
+CREATE INDEX IF NOT EXISTS idx_transacciones_categoria ON transacciones(categoria);
+CREATE INDEX IF NOT EXISTS idx_transacciones_alumna_id ON transacciones(alumna_id);
+CREATE INDEX IF NOT EXISTS idx_transacciones_instructor_id ON transacciones(instructor_id);
+CREATE INDEX IF NOT EXISTS idx_transacciones_estado ON transacciones(estado);
+CREATE INDEX IF NOT EXISTS idx_transacciones_fecha ON transacciones(fecha);

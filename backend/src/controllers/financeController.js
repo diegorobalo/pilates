@@ -107,11 +107,11 @@ export const getExpensesByCategory = async (req, res, next) => {
 
     const expenses = await Transaction.getExpensesByCategory(mes_referencia);
 
-    const total = expenses.reduce((sum, e) => sum + parseFloat(e.total), 0);
+    const total = expenses.reduce((sum, e) => sum + parseFloat(e.monto), 0);
     const categorias = expenses.map(e => ({
       categoria: e.categoria,
-      monto: parseFloat(e.total),
-      porcentaje: total > 0 ? ((parseFloat(e.total) / total) * 100).toFixed(2) : 0
+      monto: parseFloat(e.monto),
+      porcentaje: total > 0 ? ((parseFloat(e.monto) / total) * 100).toFixed(2) : 0
     }));
 
     res.json({

@@ -5,7 +5,7 @@ import User from '../models/User.js';
 import db from '../db/connection.js';
 import { getAsync, runAsync } from '../db/connection.js';
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
+const getJWTSecret = () => process.env.JWT_SECRET_KEY;
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
 const verificationCodeTTL = 10 * 60; // 10 minutes in seconds
 
@@ -251,12 +251,12 @@ export const verifyPhoneCode = async (req, res) => {
       telefono: user.telefono
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, {
+    const token = jwt.sign(payload, getJWTSecret(), {
       expiresIn: JWT_EXPIRE,
       issuer: 'pilates-api'
     });
 
-    const refreshToken = jwt.sign(payload, JWT_SECRET, {
+    const refreshToken = jwt.sign(payload, getJWTSecret(), {
       expiresIn: '30d',
       issuer: 'pilates-api'
     });
@@ -305,7 +305,7 @@ export const refreshAccessToken = async (req, res) => {
     // Verify refresh token
     let decoded;
     try {
-      decoded = jwt.verify(refreshToken, JWT_SECRET);
+      decoded = jwt.verify(refreshToken, getJWTSecret());
     } catch (error) {
       return res.status(401).json({
         error: 'Invalid refresh token',
@@ -370,8 +370,8 @@ async function getDueñaConfig() {
 
 function signDueñaTokens(cfg) {
   const payload = { userId: cfg.id, tipo: 'DUEÑA', username: cfg.username };
-  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE, issuer: 'pilates-api' });
-  const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '30d', issuer: 'pilates-api' });
+  const accessToken = jwt.sign(payload, getJWTSecret(), { expiresIn: JWT_EXPIRE, issuer: 'pilates-api' });
+  const refreshToken = jwt.sign(payload, getJWTSecret(), { expiresIn: '30d', issuer: 'pilates-api' });
   return { accessToken, refreshToken };
 }
 
