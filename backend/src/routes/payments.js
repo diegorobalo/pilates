@@ -3,6 +3,7 @@ import {
   createPayment,
   getPaymentById,
   getPaymentsByAlumna,
+  getMyPayments,
   getPaymentsByMonth,
   updatePayment,
   deletePayment,
@@ -35,6 +36,14 @@ router.get('/stats', authMiddleware, requireRole('DUEÑA'), getFinanceStats);
  * Only DUEÑA can view
  */
 router.get('/:id', authMiddleware, requireRole('DUEÑA'), getPaymentById);
+
+/**
+ * GET /api/payments/alumna/me
+ * Get payments for the logged-in student
+ * Only ALUMNA can view their own payments
+ * Must come BEFORE /alumna/:alumnaId route
+ */
+router.get('/alumna/me', authMiddleware, getMyPayments);
 
 /**
  * GET /api/payments/alumna/:alumnaId

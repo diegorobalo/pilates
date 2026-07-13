@@ -104,6 +104,34 @@ export const getPaymentsByAlumna = async (req, res) => {
 };
 
 /**
+ * Get payments for the logged-in student
+ * GET /api/payments/alumna/me
+ * Only ALUMNA can view their own payments
+ */
+export const getMyPayments = async (req, res) => {
+  try {
+    if (req.user.tipo !== 'ALUMNA') {
+      return res.status(403).json({
+        error: 'Insufficient permissions',
+        message: 'Only students can access their own payments'
+      });
+    }
+
+    const payments = await Payment.findByAlumna(req.user.userId);
+
+    res.json({
+      payments
+    });
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    res.status(500).json({
+      error: 'Failed to fetch payments',
+      message: error.message
+    });
+  }
+};
+
+/**
  * Get all payments for a specific month
  * GET /api/payments/month/:monthYear
  * monthYear format: YYYY-MM (e.g., 2026-07)

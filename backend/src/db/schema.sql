@@ -155,6 +155,15 @@ CREATE TABLE IF NOT EXISTS admin_config (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Owner/DUEÑA master credentials (single row, id = 1). Optional login by username/password.
+CREATE TABLE IF NOT EXISTS dueña_config (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  username TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  email TEXT,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Verification Codes table (for phone verification)
 CREATE TABLE IF NOT EXISTS verification_codes (
   id TEXT PRIMARY KEY,

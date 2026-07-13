@@ -114,6 +114,30 @@ export const getAttendanceByAlumna = async (req, res, next) => {
 };
 
 /**
+ * Get attendance records for the logged-in student
+ * GET /api/attendance/alumna/mine
+ * Only ALUMNA can view their own records
+ */
+export const getMyAttendance = async (req, res, next) => {
+  try {
+    if (req.user.tipo !== 'ALUMNA') {
+      return res.status(403).json({
+        error: 'Insufficient permissions',
+        message: 'Only students can access their own attendance'
+      });
+    }
+
+    const attendanceRecords = await Attendance.findByAlumna(req.user.userId);
+
+    res.json({
+      attendance: attendanceRecords
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Get all attendance records for a specific schedule
  * GET /api/attendance/schedule/:scheduleId
  * DUEÑA can view attendance for any schedule

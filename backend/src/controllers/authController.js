@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 import User from '../models/User.js';
 import db from '../db/connection.js';
+import { getAsync, runAsync } from '../db/connection.js';
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
@@ -340,6 +342,73 @@ export const refreshAccessToken = async (req, res) => {
     console.error('Error refreshing token:', error);
     res.status(500).json({
       error: 'Token refresh failed',
+      message: error.message
+    });
+  }
+};
+
+/**
+ * Get or create DUEÑA config (single row)
+ */
+async function getDueñaConfig() {
+  try {
+    let row = await getAsync('SELECT * FROM dueña_config WHERE id = 1');
+    if (!row) {
+      // Initialize with default credentials on first use
+      const hash = await bcrypt.hash('dueña123', 10);
+      await runAsync(
+        'INSERT INTO dueña_config (id, username, password_hash, email) VALUES (1, ?, ?, NULL)',
+        ['dueña', hash]
+      );
+      row = await getAsync('SELECT * FROM dueña_config WHERE id = 1');
+    }
+    return row;
+  } catch (error) {
+    throw new Error(`Error getting DUEÑA config: ${error.message}`);
+  }
+}
+
+function signDueñaTokens(cfg) {
+  const payload = { userId: cfg.id, tipo: 'DUEÑA', username: cfg.username };
+  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE, issuer: 'pilates-api' });
+  const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '30d', issuer: 'pilates-api' });
+  return { accessToken, refreshToken };
+}
+
+/**
+ * POST /api/auth/login-owner  { username, password }
+ * Login as DUEÑA using username and password
+ */
+export const dueñaLogin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({
+        error: 'Invalid request',
+        message: 'Usuario y contraseña son requeridos'
+      });
+    }
+
+    const cfg = await getDueñaConfig();
+    const ok = username === cfg.username && (await bcrypt.compare(password, cfg.password_hash));
+    if (!ok) {
+      return res.status(401).json({
+        error: 'Invalid credentials',
+        message: 'Usuario o contraseña incorrectos'
+      });
+    }
+
+    const { accessToken, refreshToken } = signDueñaTokens(cfg);
+    res.json({
+      message: 'DUEÑA authenticated',
+      user: { id: cfg.id, nombre: 'Propietaria', tipo: 'DUEÑA', username: cfg.username },
+      accessToken,
+      refreshToken
+    });
+  } catch (error) {
+    console.error('DUEÑA login error:', error);
+    res.status(500).json({
+      error: 'Login failed',
       message: error.message
     });
   }
