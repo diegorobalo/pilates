@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
+let JWT_SECRET_CACHE = null;
+
+export const setJWTSecret = (secret) => {
+  JWT_SECRET_CACHE = secret;
+};
 
 /**
  * Authentication middleware - verifies JWT token
@@ -23,6 +27,7 @@ export const authMiddleware = (req, res, next) => {
 
     let decoded;
     try {
+      const JWT_SECRET = JWT_SECRET_CACHE || process.env.JWT_SECRET_KEY;
       decoded = jwt.verify(token, JWT_SECRET);
     } catch (error) {
       if (error.name === 'TokenExpiredError') {

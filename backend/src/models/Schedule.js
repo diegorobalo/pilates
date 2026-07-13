@@ -50,13 +50,21 @@ class Schedule {
   }
 
   /**
-   * Find schedule by ID
+   * Find schedule by ID with professor details
    * @param {string} id - Schedule ID
-   * @returns {Promise<Object|null>} Schedule object or null if not found
+   * @returns {Promise<Object|null>} Schedule object with profesor info or null if not found
    */
   static async findById(id) {
     try {
-      return await getAsync('SELECT * FROM horarios_clases WHERE id = ?', [id]);
+      return await getAsync(
+        `SELECT h.*,
+                u.nombre as profesora_nombre,
+                u.apellido as profesora_apellido
+         FROM horarios_clases h
+         LEFT JOIN users u ON h.profesora_asignada = u.id
+         WHERE h.id = ?`,
+        [id]
+      );
     } catch (error) {
       throw new Error(`Error finding schedule by ID: ${error.message}`);
     }
