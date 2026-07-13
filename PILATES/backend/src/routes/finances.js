@@ -1,127 +1,126 @@
 import express from 'express';
-import {
-  createStudentPayment,
-  getStudentPayments,
-  getAllStudentPayments,
-  updateStudentPayment,
-  deleteStudentPayment,
-  createTeacherPayment,
-  getTeacherPayments,
-  getAllTeacherPayments,
-  createExpense,
-  getExpenses,
-  updateExpense,
-  deleteExpense,
-  getFinancialSummary,
-  getStudentDebtReport
-} from '../controllers/financeController.js';
 import { authMiddleware, requireRole } from '../middleware/auth.js';
+import {
+  // Transacciones
+  createTransaction,
+  getTransactions,
+  updateTransaction,
+  deleteTransaction,
+  // Reportes
+  getMonthlySummary,
+  getExpensesByCategory,
+  getStudentPaymentStatus,
+  getInstructorPaymentStatus,
+  // Categorias
+  createCategory,
+  getCategories,
+  deleteCategory
+} from '../controllers/financeController.js';
 
 const router = express.Router();
 
-// Only DUEÑA and ADMIN can manage finances
-const STAFF = ['DUEÑA'];
+// Apply auth middleware to all routes
+router.use(authMiddleware);
+router.use(requireRole(['DUEÑA', 'ADMIN']));
 
-// ==================== STUDENT PAYMENTS ====================
-router.post(
-  '/payments/student',
-  authMiddleware,
-  requireRole(STAFF),
-  createStudentPayment
-);
+/**
+ * TRANSACCIONES ENDPOINTS
+ */
 
-router.get(
-  '/payments/student/:alumna_id',
-  authMiddleware,
-  requireRole(STAFF),
-  getStudentPayments
-);
+/**
+ * POST /api/finances/transacciones
+ * Create a new transaction
+ * Body: { concepto: string, cantidad: number, categoria_id: number, fecha: string, descripcion?: string, tipo: 'ingreso' | 'egreso' }
+ * Response: { message, transaccion }
+ */
+router.post('/transacciones', createTransaction);
 
-router.get(
-  '/payments/student',
-  authMiddleware,
-  requireRole(STAFF),
-  getAllStudentPayments
-);
+/**
+ * GET /api/finances/transacciones
+ * Get all transactions with optional filters
+ * Query: { mes_referencia?: string, categoria_id?: number, tipo?: 'ingreso' | 'egreso', page?: number, limit?: number }
+ * Response: { transacciones: [], total: number, page: number, limit: number }
+ */
+router.get('/transacciones', getTransactions);
 
-router.put(
-  '/payments/student/:id',
-  authMiddleware,
-  requireRole(STAFF),
-  updateStudentPayment
-);
+/**
+ * PUT /api/finances/transacciones/:id
+ * Update a transaction
+ * Params: { id: number }
+ * Body: { concepto?: string, cantidad?: number, categoria_id?: number, fecha?: string, descripcion?: string, tipo?: 'ingreso' | 'egreso' }
+ * Response: { message, transaccion }
+ */
+router.put('/transacciones/:id', updateTransaction);
 
-router.delete(
-  '/payments/student/:id',
-  authMiddleware,
-  requireRole(STAFF),
-  deleteStudentPayment
-);
+/**
+ * DELETE /api/finances/transacciones/:id
+ * Delete a transaction
+ * Params: { id: number }
+ * Response: { message }
+ */
+router.delete('/transacciones/:id', deleteTransaction);
 
-// ==================== TEACHER PAYMENTS ====================
-router.post(
-  '/payments/teacher',
-  authMiddleware,
-  requireRole(STAFF),
-  createTeacherPayment
-);
+/**
+ * REPORTES ENDPOINTS
+ */
 
-router.get(
-  '/payments/teacher/:profesora_id',
-  authMiddleware,
-  requireRole(STAFF),
-  getTeacherPayments
-);
+/**
+ * GET /api/finances/resumen
+ * Get monthly summary report
+ * Query: { mes_referencia: string (YYYY-MM) }
+ * Response: { mes: string, resumen: { ingresos_totales: number, egresos_totales: number, saldo: number, detalles: {} } }
+ */
+router.get('/resumen', getMonthlySummary);
 
-router.get(
-  '/payments/teacher',
-  authMiddleware,
-  requireRole(STAFF),
-  getAllTeacherPayments
-);
+/**
+ * GET /api/finances/gastos-por-categoria
+ * Get expenses breakdown by category
+ * Query: { mes_referencia: string (YYYY-MM) }
+ * Response: { mes: string, categorias: [{ categoria_id: number, nombre: string, total: number, porcentaje: number }] }
+ */
+router.get('/gastos-por-categoria', getExpensesByCategory);
 
-// ==================== EXPENSES ====================
-router.post(
-  '/expenses',
-  authMiddleware,
-  requireRole(STAFF),
-  createExpense
-);
+/**
+ * GET /api/finances/pagos-alumnos
+ * Get student payment status report
+ * Query: { mes_referencia: string (YYYY-MM) }
+ * Response: { mes: string, estudiantes: [{ usuario_id: number, nombre: string, estado_pago: 'pagado' | 'pendiente' | 'vencido', monto: number }] }
+ */
+router.get('/pagos-alumnos', getStudentPaymentStatus);
 
-router.get(
-  '/expenses',
-  authMiddleware,
-  requireRole(STAFF),
-  getExpenses
-);
+/**
+ * GET /api/finances/pagos-instructores
+ * Get instructor payment status report
+ * Query: { mes_referencia: string (YYYY-MM) }
+ * Response: { mes: string, instructores: [{ usuario_id: number, nombre: string, estado_pago: 'pagado' | 'pendiente', monto: number }] }
+ */
+router.get('/pagos-instructores', getInstructorPaymentStatus);
 
-router.put(
-  '/expenses/:id',
-  authMiddleware,
-  requireRole(STAFF),
-  updateExpense
-);
+/**
+ * CATEGORIAS ENDPOINTS
+ */
 
-router.delete(
-  '/expenses/:id',
-  authMiddleware,
-  requireRole(STAFF),
-  deleteExpense
-);
+/**
+ * POST /api/finances/categorias
+ * Create a new expense category
+ * Body: { nombre: string, descripcion?: string, color?: string }
+ * Response: { message, categoria }
+ */
+router.post('/categorias', createCategory);
 
-// ==================== REPORTS ====================
-router.get(
-  '/summary',
-  authMiddleware,
-  requireRole(STAFF),
-  getFinancialSummary
-);
+/**
+ * GET /api/finances/categorias
+ * Get all expense categories
+ * Response: { categorias: [{ id: number, nombre: string, descripcion?: string, color?: string }] }
+ */
+router.get('/categorias', getCategories);
 
-router.get(
-  '/debt-report',
-  authMiddleware,
-  requireRole(STAFF),
-  getStudentDebtReport
-);
+/**
+ * DELETE /api/finances/categorias/:id
+ * Delete an expense category
+ * Params: { id: number }
+ * Response: { message }
+ */
+router.delete('/categorias/:id', deleteCategory);
 
 export default router;
