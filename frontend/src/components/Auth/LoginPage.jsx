@@ -28,6 +28,7 @@ export default function LoginPage() {
   const [resetPassword, setResetPassword] = useState('')
   const [info, setInfo] = useState('')
   const [greetName, setGreetName] = useState('')
+  const [adminTab, setAdminTab] = useState('admin') // 'admin' or 'dueña'
   const secretTaps = useRef(0)
   const secretTimer = useRef(null)
 
@@ -206,7 +207,8 @@ export default function LoginPage() {
     setError('')
     setInfo('')
     try {
-      const res = await fetch('/api/admin/login', {
+      const endpoint = adminTab === 'dueña' ? '/api/auth/login-owner' : '/api/admin/login'
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: adminUsername, password: adminPassword }),
@@ -378,10 +380,37 @@ export default function LoginPage() {
             <>
               {step === 'admin' && (
                 <>
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-4">
                     <ShieldCheck className="w-6 h-6 text-primary" />
-                    <h2 className="text-2xl font-bold text-gray-900">Acceso Administrador</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Acceso Privado</h2>
                   </div>
+
+                  {/* Tab selector */}
+                  <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setAdminTab('admin')}
+                      className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
+                        adminTab === 'admin'
+                          ? 'bg-white text-primary shadow-sm'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Admin
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAdminTab('dueña')}
+                      className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
+                        adminTab === 'dueña'
+                          ? 'bg-white text-primary shadow-sm'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Propietaria
+                    </button>
+                  </div>
+
                   <p className="text-gray-600 mb-6">Ingresá con usuario y contraseña</p>
 
                   <form onSubmit={handleAdminLogin} className="space-y-4">
