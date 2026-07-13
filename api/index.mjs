@@ -5,6 +5,14 @@ import * as dbModule from '../backend/src/db/connection-lazy.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { setJWTSecret } from '../backend/src/middleware/auth.js';
+
+// Set JWT secret before any route imports
+if (process.env.JWT_SECRET_KEY) {
+  setJWTSecret(process.env.JWT_SECRET_KEY);
+} else {
+  console.warn('⚠️ WARNING: JWT_SECRET_KEY not set in environment');
+}
 
 // Static imports so Vercel's bundler traces and includes every route file.
 import authRoutes from '../backend/src/routes/auth.js';
