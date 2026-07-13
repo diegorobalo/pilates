@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diseño Final - Camas disponibles</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 500px; margin: 0 auto; }
+    h1 { margin-bottom: 10px; color: #222; }
+    .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; }
+
+    /* Toggle buttons */
+    .toggle-section {
+      margin-bottom: 30px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .toggle-btn {
+      padding: 10px 16px;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn.active {
+      background: #7c3aed;
+      color: white;
+      border-color: #7c3aed;
+    }
+
+    .toggle-btn:hover {
+      border-color: #7c3aed;
+    }
+
+    /* Mockup area */
+    .mockup-area {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mockup-area.active {
+      display: block;
+    }
+
+    /* Header with date and instructor */
+    .header-section {
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 16px;
+    }
+
+    .class-date {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .class-date-value {
+      font-weight: 600;
+      color: #222;
+    }
+
+    .class-time {
+      font-size: 16px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 12px;
+    }
+
+    /* Instructor section - highlighted */
+    .instructor-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: #f8f8f8;
+      border-radius: 8px;
+      border-left: 4px solid #7c3aed;
+    }
+
+    .instructor-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .instructor-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .instructor-name.pending {
+      color: #999;
+      font-style: italic;
+    }
+
+    .instructor-icon {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+
+    /* Available count */
+    .available-count {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 18px 0;
+      padding: 12px;
+      background: #f0f7ff;
+      border-radius: 6px;
+      border-left: 3px solid #3b82f6;
+      color: #1e40af;
+    }
+
+    .beds-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    /* Grid moderno */
+    .beds-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+    .bed-button {
+      padding: 16px 12px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      position: relative;
+    }
+
+    .bed-number {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .bed-reserved-by {
+      font-size: 10px;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      opacity: 0.85;
+      font-style: italic;
+    }
+
+    /* Available state */
+    .bed-button.available {
+      background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+      color: white;
+      border-color: #43a047;
+      box-shadow: 0 2px 4px rgba(66, 160, 71, 0.2);
+    }
+
+    .bed-button.available:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(66, 160, 71, 0.3);
+    }
+
+    .bed-button.available:active {
+      transform: translateY(-2px);
+    }
+
+    /* Occupied state */
+    .bed-button.occupied {
+      background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+      color: #999;
+      border-color: #ddd;
+      cursor: not-allowed;
+      opacity: 0.75;
+    }
+
+    .bed-badge {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-available {
+      background: rgba(255,255,255,0.3);
+      color: white;
+    }
+
+    .badge-occupied {
+      background: rgba(0,0,0,0.1);
+      color: #999;
+    }
+
+    /* Info box */
+    .info-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 3px solid #7c3aed;
+    }
+
+    .info-box h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 8px;
+    }
+
+    .info-box ul {
+      list-style: none;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .info-box li:before {
+      content: "✓ ";
+      color: #7c3aed;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ Diseño Final</h1>
+    <p class="subtitle">Versión B+C mejorada con instructor destacado</p>
+
+    <!-- Toggle buttons -->
+    <div class="toggle-section">
+      <button class="toggle-btn active" onclick="toggleMockup('with-instructor')">Con instructor asignado</button>
+      <button class="toggle-btn" onclick="toggleMockup('without-instructor')">Sin instructor (Pendiente)</button>
+    </div>
+
+    <!-- Mockup 1: WITH INSTRUCTOR -->
+    <div class="mockup-area active" id="with-instructor">
+      <!-- Header -->
+      <div class="header-section">
+        <div class="class-date">📅 <span class="class-date-value">Lunes, 13 de julio</span></div>
+        <div class="class-time">🕙 10:30</div>
+
+        <!-- Instructor - Prominently displayed -->
+        <div class="instructor-section">
+          <span class="instructor-icon">👩‍🏫</span>
+          <div>
+            <div class="instructor-label">Instructora</div>
+            <div class="instructor-name">Jacqueline Martínez</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available count -->
+      <div class="available-count">
+        ✅ 3 camas disponibles de 6
+      </div>
+
+      <!-- Beds label -->
+      <div class="beds-label">Selecciona una cama</div>
+
+      <!-- Beds grid -->
+      <div class="beds-grid">
+        <button class="bed-button available">
+          <div class="bed-number">1</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+
+        <button class="bed-button occupied">
+          <div class="bed-number">2</div>
+          <span class="bed-badge badge-occupied">Ocupada</span>
+          <div class="bed-reserved-by">María López</div>
+        </button>
+
+        <button class="bed-button available">
+          <div class="bed-number">3</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+
+        <button class="bed-button available">
+          <div class="bed-number">4</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+
+        <button class="bed-button occupied">
+          <div class="bed-number">5</div>
+          <span class="bed-badge badge-occupied">Ocupada</span>
+          <div class="bed-reserved-by">Laura García</div>
+        </button>
+
+        <button class="bed-button occupied">
+          <div class="bed-number">6</div>
+          <span class="bed-badge badge-occupied">Ocupada</span>
+          <div class="bed-reserved-by">Paula M.</div>
+        </button>
+      </div>
+
+      <div class="info-box">
+        <h3>🎯 Features</h3>
+        <ul>
+          <li>Instructor destacado arriba</li>
+          <li>Gradients y hover effects modernos</li>
+          <li>Muestra quién ocupa cada cama</li>
+          <li>Contador de disponibles</li>
+          <li>Selección intuitiva</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Mockup 2: WITHOUT INSTRUCTOR -->
+    <div class="mockup-area" id="without-instructor">
+      <!-- Header -->
+      <div class="header-section">
+        <div class="class-date">📅 <span class="class-date-value">Martes, 14 de julio</span></div>
+        <div class="class-time">🕙 18:00</div>
+
+        <!-- Instructor - PENDING -->
+        <div class="instructor-section">
+          <span class="instructor-icon">❌</span>
+          <div>
+            <div class="instructor-label">Instructora</div>
+            <div class="instructor-name pending">Pendiente de asignar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available count -->
+      <div class="available-count">
+        ✅ 4 camas disponibles de 6
+      </div>
+
+      <!-- Beds label -->
+      <div class="beds-label">Selecciona una cama</div>
+
+      <!-- Beds grid -->
+      <div class="beds-grid">
+        <button class="bed-button available">
+          <div class="bed-number">1</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+
+        <button class="bed-button available">
+          <div class="bed-number">2</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+
+        <button class="bed-button occupied">
+          <div class="bed-number">3</div>
+          <span class="bed-badge badge-occupied">Ocupada</span>
+          <div class="bed-reserved-by">Sofia R.</div>
+        </button>
+
+        <button class="bed-button available">
+          <div class="bed-number">4</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+
+        <button class="bed-button occupied">
+          <div class="bed-number">5</div>
+          <span class="bed-badge badge-occupied">Ocupada</span>
+          <div class="bed-reserved-by">Ana G.</div>
+        </button>
+
+        <button class="bed-button available">
+          <div class="bed-number">6</div>
+          <span class="bed-badge badge-available">Disponible</span>
+        </button>
+      </div>
+
+      <div class="info-box">
+        <h3>📌 Estado sin Instructor</h3>
+        <ul>
+          <li>Muestra "Pendiente de asignar" en gris</li>
+          <li>El estudiante aún puede reservar</li>
+          <li>La clase se asignará después</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMockup(id) {
+      // Hide all
+      document.querySelectorAll('.mockup-area').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.querySelectorAll('.toggle-btn').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Show selected
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

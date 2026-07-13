@@ -1,6 +1,7 @@
 import Schedule from '../models/Schedule.js';
 import AlumnaSubscription from '../models/AlumnaSubscription.js';
 import Reservation from '../models/Reservation.js';
+import User from '../models/User.js';
 
 /**
  * When a class schedule is created, auto-create PENDIENTE reservations for every
@@ -281,6 +282,7 @@ export const deleteSchedule = async (req, res, next) => {
 export const getAvailableBeds = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const alumnaId = req.user?.userId;
 
     // Check if schedule exists
     const schedule = await Schedule.findById(id);
@@ -292,12 +294,51 @@ export const getAvailableBeds = async (req, res, next) => {
 
     const availableBeds = await Schedule.getAvailableBeds(id);
 
+    // Get instructor info if assigned
+    let instructor = null;
+    if (schedule.profesora_asignada) {
+      instructor = await User.findById(schedule.profesora_asignada);
+    }
+
+    // Get current reservation for this student (if any)
+    let currentReservation = null;
+    if (alumnaId) {
+      const reservas = await Reservation.findBySchedule(id);
+      const myReserva = reservas.find(r => r.alumna_id === alumnaId);
+      if (myReserva) {
+        currentReservation = {
+          id: myReserva.id,
+          cama_numero: myReserva.cama_numero,
+          estado: myReserva.estado,
+          bedNumber: myReserva.cama_numero
+        };
+      }
+    }
+
+    // Get all reservations with student names (for showing who occupies each bed)
+    const reservas = await Reservation.findBySchedule(id);
+    const reservationsByBed = {};
+    reservas.forEach(r => {
+      reservationsByBed[r.cama_numero] = {
+        alumnaId: r.alumna_id,
+        nombre: r.nombre_alumna,
+        estado: r.estado
+      };
+    });
+
     res.json({
       scheduleId: id,
       capacidad: schedule.capacidad,
       availableBeds,
       totalAvailable: availableBeds.length,
-      totalReserved: schedule.capacidad - availableBeds.length
+      totalReserved: schedule.capacidad - availableBeds.length,
+      instructor: instructor ? {
+        id: instructor.id,
+        nombre: instructor.nombre,
+        apellido: instructor.apellido
+      } : null,
+      currentReservation,
+      reservationsByBed
     });
   } catch (error) {
     next(error);

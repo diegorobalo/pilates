@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { BarChart3, Calendar, CheckCircle, TrendingUp, AlertCircle, CreditCard } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
 
 export default function AlumnaStats() {
+  const { accessToken } = useAuth()
   const [stats, setStats] = useState({
     total_attended: 0,
     total_confirmed: 0,
@@ -13,18 +15,22 @@ export default function AlumnaStats() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchStats()
-  }, [])
+    if (accessToken) {
+      fetchStats()
+    }
+  }, [accessToken])
 
   const fetchStats = async () => {
+    if (!accessToken) return
     setLoading(true)
     setError('')
     try {
+      const headers = { 'Authorization': `Bearer ${accessToken}` }
       const [attendanceRes, reservasRes, subsRes, paymentRes] = await Promise.all([
-        fetch('/api/attendance/alumna/mine'),
-        fetch('/api/reservations/mine?status=CONFIRMADA'),
-        fetch('/api/subscriptions/mine'),
-        fetch('/api/payments/alumna/me')
+        fetch('/api/attendance/alumna/mine', { headers }),
+        fetch('/api/reservations/mine?status=CONFIRMADA', { headers }),
+        fetch('/api/subscriptions/mine', { headers }),
+        fetch('/api/payments/alumna/me', { headers })
       ])
 
       let attended = 0
@@ -41,7 +47,7 @@ export default function AlumnaStats() {
 
       if (reservasRes.ok) {
         const data = await reservasRes.json()
-        const reservas = Array.isArray(data) ? data : data.reservaciones || []
+        const reservas = Array.isArray(data) ? data : data.reservations || data.reservaciones || []
         confirmed = reservas.length
         upcoming = reservas
           .filter(r => new Date(r.horario?.fecha || r.fecha) >= new Date())
@@ -50,8 +56,8 @@ export default function AlumnaStats() {
 
       if (subsRes.ok) {
         const data = await subsRes.json()
-        const subs = Array.isArray(data) ? data : data.suscripciones || []
-        active = subs.filter(s => s.activa).length
+        const subs = Array.isArray(data) ? data : data.subscriptions || data.suscripciones || []
+        active = subs.filter(s => s.activa || s.active).length
       }
 
       if (paymentRes.ok) {
