@@ -1,0 +1,24 @@
+{
+  "name": "pilates",
+  "version": "1.0.0",
+  "description": "Sistema de reserva de camas para clases de pilates",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --prefix ./frontend",
+    "dev:backend": "npm run dev --prefix ./backend",
+    "dev:frontend": "npm run dev --prefix ./frontend"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "nodemailer": "^9.0.3"
+  },
+  "author": "Diego Robalo",
+  "license": "ISC"
+}

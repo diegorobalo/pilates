@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opciones de visualización - Camas disponibles</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { margin-bottom: 10px; color: #222; }
+    .subtitle { color: #666; margin-bottom: 30px; }
+
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .option { border: 2px solid #ddd; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s; background: white; }
+    .option:hover { border-color: #7c3aed; background: #fafafa; }
+    .option.selected { border-color: #7c3aed; background: #f3f0ff; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1); }
+    .option h3 { margin-bottom: 12px; color: #222; }
+    .option p { color: #666; font-size: 14px; line-height: 1.5; }
+
+    /* Mockup styles */
+    .mockup-area { background: white; border-radius: 8px; padding: 20px; margin: 15px 0; }
+    .class-info { background: #f0f0f0; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; }
+    .available-count { font-size: 16px; font-weight: 600; margin-bottom: 15px; }
+
+    /* Option A: Simple grid */
+    .beds-grid-a { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .bed-button-a { padding: 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+    .bed-button-a.available { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; cursor: pointer; }
+    .bed-button-a.available:hover { background: #c8e6c9; border-color: #43a047; }
+    .bed-button-a.occupied { background: #ffebee; border-color: #ef5350; color: #c62828; cursor: not-allowed; }
+
+    /* Option B: Colorful grid with status */
+    .beds-grid-b { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .bed-button-b { padding: 16px 8px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; text-align: center; }
+    .bed-button-b.available { background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%); color: white; border-color: #43a047; }
+    .bed-button-b.available:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(66, 160, 71, 0.3); }
+    .bed-button-b.occupied { background: #f5f5f5; color: #999; border-color: #ddd; cursor: not-allowed; opacity: 0.6; }
+    .bed-badge { font-size: 12px; display: block; margin-top: 4px; opacity: 0.8; }
+
+    /* Option C: Detailed list */
+    .beds-list-c { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .bed-item-c { border: 1px solid #ddd; border-radius: 8px; padding: 12px; font-size: 13px; }
+    .bed-item-c.available { border-color: #66bb6a; background: #f1f8f4; }
+    .bed-item-c.occupied { border-color: #ef5350; background: #fef5f5; }
+    .bed-name { font-weight: 600; margin-bottom: 4px; }
+    .bed-status { color: #666; font-size: 12px; }
+    .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-top: 4px; }
+    .status-available { background: #c8e6c9; color: #2e7d32; }
+    .status-occupied { background: #ffcdd2; color: #c62828; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>¿Cómo mostrar camas disponibles?</h1>
+    <p class="subtitle">Selecciona la opción que te guste más para el modal de reserva</p>
+
+    <div class="options">
+      <!-- Option A -->
+      <div class="option" onclick="this.classList.toggle('selected')">
+        <h3>✨ Opción A: Simple y claro</h3>
+        <p>Grid con colores claros: verde para disponibles, rojo para ocupadas. Muestra solo el número de cama.</p>
+        <div class="mockup-area">
+          <div class="class-info">📅 13 Jul, 10:30 - Jacqueline</div>
+          <div class="available-count">✅ 3 camas disponibles</div>
+          <div class="beds-grid-a">
+            <button class="bed-button-a available">Cama 1</button>
+            <button class="bed-button-a occupied">Cama 2</button>
+            <button class="bed-button-a available">Cama 3</button>
+            <button class="bed-button-a available">Cama 4</button>
+            <button class="bed-button-a occupied">Cama 5</button>
+            <button class="bed-button-a occupied">Cama 6</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option B -->
+      <div class="option" onclick="this.classList.toggle('selected')">
+        <h3>🎨 Opción B: Visual y moderna</h3>
+        <p>Grid con gradientes y efecto hover. Muestra estado con badge. Más llamativo y profesional.</p>
+        <div class="mockup-area">
+          <div class="class-info">📅 13 Jul, 10:30 - Jacqueline</div>
+          <div class="available-count">✅ 3 de 6 disponibles</div>
+          <div class="beds-grid-b">
+            <button class="bed-button-b available">
+              Cama 1
+              <span class="bed-badge">Disponible</span>
+            </button>
+            <button class="bed-button-b occupied">
+              Cama 2
+              <span class="bed-badge">Ocupada</span>
+            </button>
+            <button class="bed-button-b available">
+              Cama 3
+              <span class="bed-badge">Disponible</span>
+            </button>
+            <button class="bed-button-b available">
+              Cama 4
+              <span class="bed-badge">Disponible</span>
+            </button>
+            <button class="bed-button-b occupied">
+              Cama 5
+              <span class="bed-badge">Ocupada</span>
+            </button>
+            <button class="bed-button-b occupied">
+              Cama 6
+              <span class="bed-badge">Ocupada</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option C -->
+      <div class="option" onclick="this.classList.toggle('selected')">
+        <h3>📋 Opción C: Con más detalles</h3>
+        <p>Lista compacta mostrando cada cama con estado. Perfecto si quieres ver quién ocupó qué cama (opcional).</p>
+        <div class="mockup-area">
+          <div class="class-info">📅 13 Jul, 10:30 - Jacqueline</div>
+          <div class="available-count">✅ 3 de 6 disponibles</div>
+          <div class="beds-list-c">
+            <div class="bed-item-c available">
+              <div class="bed-name">Cama 1</div>
+              <span class="status-badge status-available">Disponible</span>
+            </div>
+            <div class="bed-item-c occupied">
+              <div class="bed-name">Cama 2</div>
+              <div class="bed-status">Reservada por María</div>
+              <span class="status-badge status-occupied">Ocupada</span>
+            </div>
+            <div class="bed-item-c available">
+              <div class="bed-name">Cama 3</div>
+              <span class="status-badge status-available">Disponible</span>
+            </div>
+            <div class="bed-item-c available">
+              <div class="bed-name">Cama 4</div>
+              <span class="status-badge status-available">Disponible</span>
+            </div>
+            <div class="bed-item-c occupied">
+              <div class="bed-name">Cama 5</div>
+              <div class="bed-status">Reservada por Laura</div>
+              <span class="status-badge status-occupied">Ocupada</span>
+            </div>
+            <div class="bed-item-c occupied">
+              <div class="bed-name">Cama 6</div>
+              <div class="bed-status">Reservada por Paula</div>
+              <span class="status-badge status-occupied">Ocupada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 40px;">
+      <h2 style="margin-bottom: 15px;">📝 Lo que cambiaría:</h2>
+      <ul style="line-height: 1.8; color: #555;">
+        <li><strong>Contador visual:</strong> "3 de 6 disponibles" así sabes de un vistazo</li>
+        <li><strong>Colores más claros:</strong> Verde oscuro (disponible) vs gris (ocupada)</li>
+        <li><strong>Estado en el botón:</strong> Mostrar si está disponible u ocupada</li>
+        <li><strong>Selección intuitiva:</strong> Solo se pueden clickear las camas disponibles</li>
+        <li><strong>Info adicional (opcional):</strong> En Opción C, quién reservó cada cama</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
