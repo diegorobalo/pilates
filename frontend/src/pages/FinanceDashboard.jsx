@@ -4,15 +4,14 @@ import {
   ArrowLeft,
   TrendingUp,
   Users,
-  FileText,
   Clock,
-  UserCheck,
 } from 'lucide-react'
 import FinanceSummary from '../components/Finance/FinanceSummary'
 import StudentPayments from '../components/Finance/StudentPayments'
-import InstructorPayments from '../components/Finance/InstructorPayments'
 import PaymentHistory from '../components/Finance/PaymentHistory'
-import Reports from '../components/Finance/Reports'
+// TODO: Desactivado - endpoints faltantes en backend
+// import InstructorPayments from '../components/Finance/InstructorPayments'
+// import Reports from '../components/Finance/Reports'
 
 export default function FinanceDashboard() {
   const [activeTab, setActiveTab] = useState('resumen')
@@ -21,9 +20,10 @@ export default function FinanceDashboard() {
   const tabs = [
     { id: 'resumen', label: 'Resumen', icon: TrendingUp },
     { id: 'alumnas', label: 'Cobrar a Alumnas', icon: Users },
-    { id: 'instructoras', label: 'Pagar a Instructoras', icon: UserCheck },
     { id: 'pagos', label: 'Historial', icon: Clock },
-    { id: 'reportes', label: 'Reportes', icon: FileText },
+    // TODO: Agregar cuando se implementen endpoints backend
+    // { id: 'instructoras', label: 'Pagar a Instructoras', icon: UserCheck },
+    // { id: 'reportes', label: 'Reportes', icon: FileText },
   ]
 
   return (
@@ -79,9 +79,7 @@ export default function FinanceDashboard() {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {activeTab === 'resumen' && <FinanceSummary />}
         {activeTab === 'alumnas' && <StudentPayments />}
-        {activeTab === 'instructoras' && <InstructorPayments />}
         {activeTab === 'pagos' && <PaymentHistory />}
-        {activeTab === 'reportes' && <Reports />}
       </main>
     </div>
   )
