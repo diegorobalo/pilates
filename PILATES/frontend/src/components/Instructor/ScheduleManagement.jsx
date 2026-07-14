@@ -11,6 +11,7 @@ const STATUS_COLORS = {
 
 export default function ScheduleManagement() {
   const [schedules, setSchedules] = useState([])
+  const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedSchedule, setSelectedSchedule] = useState(null)
@@ -20,7 +21,40 @@ export default function ScheduleManagement() {
 
   useEffect(() => {
     fetchSchedules()
+    fetchInstructors()
   }, [])
+
+  const fetchInstructors = async () => {
+    try {
+      const res = await fetch('/api/users?includeInactive=false')
+      const data = await res.json()
+      const list = (data.users || data || []).filter(
+        (u) => u.tipo === 'PROFESORA' || u.tipo === 'DUEÑA'
+      )
+      setInstructors(list)
+    } catch (err) {
+      console.error('Error fetching instructors:', err)
+    }
+  }
+
+  // Assign (or clear) the instructor for a class — saves immediately
+  const assignInstructor = async (scheduleId, profesoraId) => {
+    try {
+      const res = await fetch(`/api/schedules/${scheduleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profesora_asignada: profesoraId || null }),
+      })
+      if (!res.ok) throw new Error('No se pudo asignar el instructor')
+      // Optimistic local update + refresh
+      setSchedules((prev) =>
+        prev.map((s) => (s.id === scheduleId ? { ...s, profesora_asignada: profesoraId || null } : s))
+      )
+      fetchSchedules()
+    } catch (err) {
+      alert(`Error: ${err.message}`)
+    }
+  }
 
   const fetchSchedules = async () => {
     try {
@@ -56,6 +90,40 @@ export default function ScheduleManagement() {
 
   const handleSaveSchedule = async (scheduleData) => {
     try {
+      // Batch create: scheduleData is an array of schedules (varios días)
+      if (Array.isArray(scheduleData)) {
+        const results = await Promise.allSettled(
+          scheduleData.map((s) =>
+            fetch('/api/schedules', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(s),
+            }).then(async (r) => {
+              if (!r.ok) {
+                let detail = `HTTP ${r.status}`
+                try {
+                  const d = await r.json()
+                  detail = d.error || d.message || detail
+                } catch {
+                  // non-JSON error page
+                }
+                throw new Error(`${s.fecha}: ${detail}`)
+              }
+            })
+          )
+        )
+        const ok = results.filter((r) => r.status === 'fulfilled').length
+        const failures = results.filter((r) => r.status === 'rejected').map((r) => r.reason.message)
+        handleCloseModal()
+        fetchSchedules()
+        if (failures.length > 0) {
+          const sample = failures.slice(0, 3).join('\n')
+          alert(`${ok} clase(s) creada(s). ${failures.length} fallaron:\n${sample}`)
+        }
+        return
+      }
+
+      // Single create or update
       const url = selectedSchedule
         ? `/api/schedules/${selectedSchedule.id}`
         : '/api/schedules'
@@ -119,7 +187,7 @@ export default function ScheduleManagement() {
       )}
 
       {/* Header with create button */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-900">
           Horarios de Clases
         </h2>
@@ -132,8 +200,86 @@ export default function ScheduleManagement() {
         </button>
       </div>
 
-      {/* Schedules Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Mobile: card list */}
+      <div className="md:hidden space-y-3">
+        {schedules.length === 0 ? (
+          <div className="bg-white rounded-lg shadow px-4 py-8 text-center text-gray-500">
+            No hay horarios para mostrar
+          </div>
+        ) : (
+          schedules.map((schedule) => (
+            <div key={schedule.id} className="bg-white rounded-lg shadow p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900 capitalize">
+                    {formatDate(schedule.fecha)}
+                  </p>
+                  <p className="text-sm text-gray-500">{schedule.hora} hs</p>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
+                    STATUS_COLORS[schedule.estado] || 'bg-gray-100 text-gray-800'
+                  }`}
+                >
+                  {schedule.estado}
+                </span>
+              </div>
+
+              <div className="mt-3">
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-gray-500">Reservas</span>
+                  <span className="text-gray-700">
+                    <span className="font-medium">{schedule.reservas_count || 0}</span>
+                    <span className="text-gray-400"> / {schedule.capacidad}</span>
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full"
+                    style={{
+                      width: `${((schedule.reservas_count || 0) / schedule.capacidad) * 100}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="mt-3">
+                <label className="block text-xs text-gray-500 mb-1">Instructor a cargo</label>
+                <select
+                  value={schedule.profesora_asignada || ''}
+                  onChange={(e) => assignInstructor(schedule.id, e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary"
+                >
+                  <option value="">Sin asignar</option>
+                  {instructors.map((i) => (
+                    <option key={i.id} value={i.id}>
+                      {i.nombre} {i.apellido || ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mt-3 flex gap-2 border-t border-gray-100 pt-3">
+                <button
+                  onClick={() => handleOpenModal(schedule)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors text-sm font-medium"
+                >
+                  <Edit className="w-4 h-4" /> Editar
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(schedule)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors text-sm font-medium"
+                >
+                  <Trash2 className="w-4 h-4" /> Eliminar
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop: table */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
@@ -153,6 +299,9 @@ export default function ScheduleManagement() {
                 Estado
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Instructor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                 Acciones
               </th>
             </tr>
@@ -161,7 +310,7 @@ export default function ScheduleManagement() {
             {schedules.length === 0 ? (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="px-6 py-8 text-center text-gray-500"
                 >
                   No hay horarios para mostrar
@@ -204,6 +353,20 @@ export default function ScheduleManagement() {
                     >
                       {schedule.estado}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <select
+                      value={schedule.profesora_asignada || ''}
+                      onChange={(e) => assignInstructor(schedule.id, e.target.value)}
+                      className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-primary"
+                    >
+                      <option value="">Sin asignar</option>
+                      {instructors.map((i) => (
+                        <option key={i.id} value={i.id}>
+                          {i.nombre} {i.apellido || ''}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td className="px-6 py-4 text-sm space-x-2 flex">
                     <button

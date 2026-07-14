@@ -50,13 +50,21 @@ class Schedule {
   }
 
   /**
-   * Find schedule by ID
+   * Find schedule by ID with professor details
    * @param {string} id - Schedule ID
-   * @returns {Promise<Object|null>} Schedule object or null if not found
+   * @returns {Promise<Object|null>} Schedule object with profesor info or null if not found
    */
   static async findById(id) {
     try {
-      return await getAsync('SELECT * FROM horarios_clases WHERE id = ?', [id]);
+      return await getAsync(
+        `SELECT h.*,
+                u.nombre as profesora_nombre,
+                u.apellido as profesora_apellido
+         FROM horarios_clases h
+         LEFT JOIN users u ON h.profesora_asignada = u.id
+         WHERE h.id = ?`,
+        [id]
+      );
     } catch (error) {
       throw new Error(`Error finding schedule by ID: ${error.message}`);
     }
@@ -86,7 +94,14 @@ class Schedule {
   static async findAll() {
     try {
       return await allAsync(
-        'SELECT * FROM horarios_clases ORDER BY fecha ASC, hora ASC',
+        `SELECT h.*,
+                u.nombre as profesora_nombre,
+                u.apellido as profesora_apellido,
+                (SELECT COUNT(*) FROM reservas r
+                 WHERE r.horario_id = h.id AND r.estado IN ('CONFIRMADA', 'PENDIENTE')) AS reservas_count
+         FROM horarios_clases h
+         LEFT JOIN users u ON h.profesora_asignada = u.id
+         ORDER BY h.fecha ASC, h.hora ASC`,
         []
       );
     } catch (error) {
@@ -192,7 +207,9 @@ class Schedule {
       return await allAsync(
         `SELECT h.*,
                 u.nombre as profesora_nombre,
-                u.apellido as profesora_apellido
+                u.apellido as profesora_apellido,
+                (SELECT COUNT(*) FROM reservas r
+                 WHERE r.horario_id = h.id AND r.estado IN ('CONFIRMADA', 'PENDIENTE')) AS reservas_count
          FROM horarios_clases h
          LEFT JOIN users u ON h.profesora_asignada = u.id
          WHERE h.fecha BETWEEN ? AND ?

@@ -91,7 +91,10 @@ export default function PendingReservations({ onCountChange }) {
   }
 
   const formatDate = (dateStr) => {
-    const date = new Date(dateStr)
+    if (!dateStr) return '—'
+    // Parse at noon to avoid UTC off-by-one shifting the day
+    const date = new Date(`${dateStr}T12:00:00`)
+    if (isNaN(date.getTime())) return '—'
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
@@ -164,7 +167,7 @@ export default function PendingReservations({ onCountChange }) {
               reservations.map((reservation) => (
                 <tr key={reservation.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                    {reservation.nombre_alumna}
+                    {reservation.nombre_alumna || reservation.telefono_alumna || '—'}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
                     {formatDate(reservation.fecha)}

@@ -6,12 +6,14 @@ import AlumnaPortal from './pages/AlumnaPortal'
 import InstructorDashboard from './pages/InstructorDashboard'
 import FinanceDashboard from './pages/FinanceDashboard'
 import ClassAttendance from './pages/ClassAttendance'
+import DesignSystem from './pages/DesignSystem'
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/design-system" element={<DesignSystem />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="/alumna"

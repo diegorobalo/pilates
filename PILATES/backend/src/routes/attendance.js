@@ -3,6 +3,7 @@ import {
   markPresent,
   markAbsent,
   getAttendanceByAlumna,
+  getMyAttendance,
   getAttendanceBySchedule,
   getAttendanceRecord,
   getAttendanceStatistics
@@ -26,6 +27,14 @@ router.post('/:reservationId/present', authMiddleware, requireRole('DUEÑA'), ma
  * Body: empty (uses reservationId from URL)
  */
 router.post('/:reservationId/absent', authMiddleware, requireRole('DUEÑA'), markAbsent);
+
+/**
+ * GET /api/attendance/alumna/mine
+ * Get attendance records for the logged-in student
+ * Only ALUMNA can view their own records
+ * Must come BEFORE /:alumnaId route
+ */
+router.get('/alumna/mine', authMiddleware, getMyAttendance);
 
 /**
  * GET /api/attendance/alumna/:alumnaId

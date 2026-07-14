@@ -3,6 +3,7 @@ import {
   createPayment,
   getPaymentById,
   getPaymentsByAlumna,
+  getMyPayments,
   getPaymentsByMonth,
   updatePayment,
   deletePayment,
@@ -37,21 +38,29 @@ router.get('/stats', authMiddleware, requireRole('DUEÑA'), getFinanceStats);
 router.get('/:id', authMiddleware, requireRole('DUEÑA'), getPaymentById);
 
 /**
+ * GET /api/payments/alumna/me
+ * Get payments for the logged-in student
+ * Only ALUMNA can view their own payments
+ * Must come BEFORE /alumna/:alumnaId route
+ */
+router.get('/alumna/me', authMiddleware, getMyPayments);
+
+/**
  * GET /api/payments/alumna/:alumnaId
  * Get all payments for a specific student
  * DUEÑA can view, or student can view their own
  * Note: This must be placed BEFORE /month/:monthYear pattern
  */
 router.get('/alumna/:alumnaId', authMiddleware, (req, res, next) => {
-  // Check if user is DUEÑA or the student themselves
-  if (req.user.tipo === 'DUEÑA' || req.user.id === req.params.alumnaId) {
-    next();
-  } else {
-    return res.status(403).json({
-      error: 'Insufficient permissions',
-      message: 'You can only view your own payments'
-    });
+  // Staff can view anyone; a student can view only their own
+  const staff = ['DUEÑA', 'ADMIN', 'PROFESORA'];
+  if (staff.includes(req.user.tipo) || req.user.userId === req.params.alumnaId) {
+    return next();
   }
+  return res.status(403).json({
+    error: 'Insufficient permissions',
+    message: 'You can only view your own payments'
+  });
 }, getPaymentsByAlumna);
 
 /**
@@ -67,15 +76,14 @@ router.get('/month/:monthYear', authMiddleware, requireRole('DUEÑA'), getPaymen
  * DUEÑA can view, or student can view their own
  */
 router.get('/status/:alumnaId', authMiddleware, (req, res, next) => {
-  // Check if user is DUEÑA or the student themselves
-  if (req.user.tipo === 'DUEÑA' || req.user.id === req.params.alumnaId) {
-    next();
-  } else {
-    return res.status(403).json({
-      error: 'Insufficient permissions',
-      message: 'You can only view your own payment status'
-    });
+  const staff = ['DUEÑA', 'ADMIN', 'PROFESORA'];
+  if (staff.includes(req.user.tipo) || req.user.userId === req.params.alumnaId) {
+    return next();
   }
+  return res.status(403).json({
+    error: 'Insufficient permissions',
+    message: 'You can only view your own payment status'
+  });
 }, getPaymentStatus);
 
 /**

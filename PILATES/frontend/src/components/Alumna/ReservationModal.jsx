@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, AlertCircle } from 'lucide-react'
+import { X, AlertCircle, Check } from 'lucide-react'
 
 export default function ReservationModal({ schedule, onClose, onSuccess }) {
   const [availableBeds, setAvailableBeds] = useState([])
@@ -8,6 +8,8 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
   const [currentReservation, setCurrentReservation] = useState(null)
+  const [instructor, setInstructor] = useState(null)
+  const [reservationsByBed, setReservationsByBed] = useState({})
 
   useEffect(() => {
     fetchAvailableBeds()
@@ -16,11 +18,16 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
   const fetchAvailableBeds = async () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/schedules/${schedule.id}/available-beds`)
+      const token = localStorage.getItem('accessToken')
+      const response = await fetch(`/api/schedules/${schedule.id}/available-beds`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      })
       if (response.ok) {
         const data = await response.json()
-        setAvailableBeds(data.beds || [])
+        setAvailableBeds(data.availableBeds || data.beds || [])
         setCurrentReservation(data.currentReservation || null)
+        setInstructor(data.instructor || null)
+        setReservationsByBed(data.reservationsByBed || {})
       }
     } catch (err) {
       console.error('Error fetching available beds:', err)
@@ -59,8 +66,8 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          scheduleId: schedule.id,
-          bedNumber: selectedBed,
+          horario_id: schedule.id,
+          cama_numero: selectedBed,
         }),
       })
 
@@ -131,9 +138,9 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full max-h-96 overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
           <h2 className="text-xl font-bold text-gray-900">Reserva de Clase</h2>
           <button
             onClick={onClose}
@@ -144,7 +151,7 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-4 overflow-y-auto flex-1">
           {/* Class info */}
           <div className="bg-gray-50 rounded-lg p-4 space-y-2">
             <div>
@@ -156,10 +163,17 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
                 <p className="text-xs text-gray-500 uppercase">Hora</p>
                 <p className="text-lg font-semibold text-gray-900">{schedule.hora}</p>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase">Instructor</p>
-                <p className="text-lg font-semibold text-gray-900">{schedule.instructor}</p>
-              </div>
+            </div>
+            {/* Instructor info */}
+            <div className="bg-white rounded-lg p-3 border-l-4 border-primary">
+              <p className="text-xs text-gray-500 uppercase font-semibold mb-1">👩‍🏫 Instructora</p>
+              {instructor ? (
+                <p className="text-sm font-semibold text-gray-900">
+                  {instructor.nombre} {instructor.apellido}
+                </p>
+              ) : (
+                <p className="text-sm text-gray-500 italic">Pendiente de asignar</p>
+              )}
             </div>
           </div>
 
@@ -181,24 +195,39 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
           {/* Bed selection */}
           {!currentReservation && (
             <div>
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded mb-4">
+                <p className="text-sm font-semibold text-blue-900">
+                  ✅ {availableBeds.length} camas disponibles de 6
+                </p>
+              </div>
               <p className="text-sm font-medium text-gray-900 mb-3">Selecciona una Cama</p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-3">
                 {[1, 2, 3, 4, 5, 6].map((bedNum) => {
                   const isAvailable = availableBeds.includes(bedNum)
+                  const reservation = reservationsByBed[bedNum]
                   return (
                     <button
                       key={bedNum}
+                      type="button"
                       onClick={() => isAvailable && setSelectedBed(bedNum)}
                       disabled={!isAvailable}
-                      className={`p-3 rounded-lg border-2 font-semibold transition-colors ${
+                      className={`p-4 rounded-lg border-2 font-semibold transition-all select-none touch-manipulation text-center flex flex-col items-center justify-center min-h-28 ${
                         selectedBed === bedNum
-                          ? 'border-primary bg-primary/10 text-primary'
+                          ? 'border-green-600 bg-gradient-to-b from-green-100 to-green-50 text-green-900 scale-105'
                           : isAvailable
-                          ? 'border-gray-300 bg-white text-gray-900 hover:border-primary'
-                          : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                          ? 'border-green-400 bg-gradient-to-b from-green-50 to-green-25 text-green-900 hover:from-green-100 hover:to-green-50 hover:shadow-md'
+                          : 'border-gray-200 bg-gradient-to-b from-gray-50 to-gray-100 text-gray-400 cursor-not-allowed opacity-60'
                       }`}
                     >
-                      Cama {bedNum}
+                      <span className="text-2xl font-bold">{bedNum}</span>
+                      <span className="text-xs mt-1 font-semibold uppercase tracking-wide">
+                        {isAvailable ? 'Disponible' : 'Ocupada'}
+                      </span>
+                      {reservation && (
+                        <span className="text-xs mt-2 text-gray-600 font-normal italic max-w-full truncate">
+                          {reservation.nombre}
+                        </span>
+                      )}
                     </button>
                   )
                 })}
@@ -225,7 +254,7 @@ export default function ReservationModal({ schedule, onClose, onSuccess }) {
         </div>
 
         {/* Actions */}
-        <div className="border-t border-gray-200 p-6 bg-gray-50 flex gap-3 justify-end">
+        <div className="border-t border-gray-200 p-6 bg-gray-50 flex gap-3 justify-end flex-shrink-0">
           <button
             onClick={onClose}
             className="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-colors"

@@ -45,7 +45,7 @@ class AlumnaSubscription {
       const params = [alumna_id];
 
       if (active_only) {
-        query += ' AND activa = 1 AND (fecha_fin IS NULL OR fecha_fin >= date("now"))';
+        query += ' AND activa = 1 AND (fecha_fin IS NULL OR fecha_fin >= CURRENT_DATE)';
       }
 
       query += ' ORDER BY dia_semana ASC, hora ASC';
@@ -59,11 +59,24 @@ class AlumnaSubscription {
     try {
       return await allAsync(
         `SELECT * FROM suscripciones_alumnos
-         WHERE activa = 1 AND (fecha_fin IS NULL OR fecha_fin >= date("now"))
+         WHERE activa = 1 AND (fecha_fin IS NULL OR fecha_fin >= CURRENT_DATE)
          ORDER BY dia_semana ASC, hora ASC`
       );
     } catch (error) {
       throw new Error(`Error finding active subscriptions: ${error.message}`);
+    }
+  }
+
+  static async findActiveByDayAndTime(dia_semana, hora) {
+    try {
+      return await allAsync(
+        `SELECT * FROM suscripciones_alumnos
+         WHERE activa = 1 AND dia_semana = ? AND hora = ?
+           AND (fecha_fin IS NULL OR fecha_fin >= CURRENT_DATE)`,
+        [dia_semana, hora]
+      );
+    } catch (error) {
+      throw new Error(`Error finding subscriptions by day/time: ${error.message}`);
     }
   }
 

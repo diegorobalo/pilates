@@ -1,6 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
 import User from '../models/User.js';
 import AlumnaSubscription from '../models/AlumnaSubscription.js';
-import { getAsync } from '../db/connection.js';
+import { getAsync, runAsync } from '../db/connection.js';
 
 /**
  * Get complete student profile/legajo
@@ -106,11 +107,11 @@ export const recordPayment = async (req, res, next) => {
     }
 
     // Record payment
-    const id = require('uuid').v4();
+    const id = uuidv4();
     const currentMonth = new Date().toISOString().slice(0, 7);
     const today = new Date().toISOString().split('T')[0];
 
-    await require('../db/connection.js').runAsync(
+    await runAsync(
       `INSERT INTO pagos (id, alumna_id, monto, moneda, fecha_pago, mes_referencia, metodo, registrada_por, notas)
        VALUES (?, ?, ?, 'ARS', ?, ?, ?, ?, ?)`,
       [id, alumna_id, monto, today, currentMonth, metodo, req.user.userId, notas || null]

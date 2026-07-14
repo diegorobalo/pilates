@@ -3,10 +3,19 @@ import {
   requestAccess,
   requestPhoneVerification,
   verifyPhoneCode,
-  refreshAccessToken
+  refreshAccessToken,
+  dueñaLogin
 } from '../controllers/authController.js';
 
 const router = express.Router();
+
+/**
+ * POST /api/auth/login-owner
+ * DUEÑA login with username and password
+ * Body: { username: string, password: string }
+ * Response: { message, user, accessToken, refreshToken }
+ */
+router.post('/login-owner', dueñaLogin);
 
 /**
  * POST /api/auth/access

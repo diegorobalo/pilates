@@ -223,7 +223,7 @@ export default function CalendarManagement() {
             ) : (
               exceptions.map(ex => (
                 <tr key={ex.id} className="border-b hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold">{new Date(ex.fecha).toLocaleDateString('es-AR')}</td>
+                  <td className="px-4 py-3 font-semibold">{new Date(`${ex.fecha}T12:00:00`).toLocaleDateString('es-AR')}</td>
                   <td className="px-4 py-3">{ex.descripcion}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${

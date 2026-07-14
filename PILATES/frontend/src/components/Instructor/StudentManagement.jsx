@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Trash2, Edit, UserPlus, Search, FileText, CheckCircle, XCircle } from 'lucide-react'
+import { Trash2, Edit, UserPlus, Search, FileText, CheckCircle, XCircle, DollarSign } from 'lucide-react'
 import StudentModal from './StudentModal'
 import PlanModal from './PlanModal'
 import ConfirmDialog from './ConfirmDialog'
+import PaymentModal from '../Finance/PaymentModal'
 
 export default function StudentManagement() {
   const [students, setStudents] = useState([])
@@ -18,6 +19,7 @@ export default function StudentManagement() {
   const [showLegajo, setShowLegajo] = useState(false)
   const [legajoData, setLegajoData] = useState(null)
   const [legajoLoading, setLegajoLoading] = useState(false)
+  const [showPayment, setShowPayment] = useState(false)
 
   useEffect(() => {
     fetchStudents()
@@ -144,6 +146,25 @@ export default function StudentManagement() {
     } finally {
       setLegajoLoading(false)
     }
+  }
+
+  const reloadLegajo = async (id) => {
+    try {
+      const response = await fetch(`/api/legajo/${id}`)
+      if (response.ok) {
+        const data = await response.json()
+        setLegajoData(data.legajo)
+      }
+    } catch (err) {
+      console.error('Error reloading legajo:', err)
+    }
+  }
+
+  // Open the edit form pre-filled from the legajo the user is viewing
+  const handleEditFromLegajo = () => {
+    setSelectedStudent(legajoData)
+    setShowLegajo(false)
+    setShowModal(true)
   }
 
   if (loading) {
@@ -466,11 +487,23 @@ export default function StudentManagement() {
                 </div>
               )}
 
-              {/* Close button */}
-              <div className="border-t border-gray-200 pt-4">
+              {/* Actions */}
+              <div className="border-t border-gray-200 pt-4 flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={handleEditFromLegajo}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                >
+                  <Edit className="w-4 h-4" /> Editar datos
+                </button>
+                <button
+                  onClick={() => setShowPayment(true)}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                >
+                  <DollarSign className="w-4 h-4" /> Registrar Pago
+                </button>
                 <button
                   onClick={() => setShowLegajo(false)}
-                  className="w-full px-4 py-2 bg-gray-200 text-gray-900 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg font-medium hover:bg-gray-300 transition-colors"
                 >
                   Cerrar
                 </button>
@@ -478,6 +511,18 @@ export default function StudentManagement() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Payment Modal (opened from legajo) */}
+      {showPayment && legajoData && (
+        <PaymentModal
+          student={legajoData}
+          onClose={() => setShowPayment(false)}
+          onSuccess={() => {
+            setShowPayment(false)
+            reloadLegajo(legajoData.id)
+          }}
+        />
       )}
     </div>
   )

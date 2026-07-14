@@ -79,7 +79,17 @@ class Reservation {
   static async findBySchedule(horarioId) {
     try {
       return await allAsync(
-        'SELECT * FROM reservas WHERE horario_id = ? ORDER BY cama_numero ASC',
+        `SELECT r.*,
+                r.cama_numero AS numero_cama,
+                TRIM(u.nombre || ' ' || COALESCE(u.apellido, '')) AS nombre_alumna,
+                u.telefono AS telefono_alumna,
+                a.presente AS presente
+         FROM reservas r
+         JOIN users u ON r.alumna_id = u.id
+         LEFT JOIN asistencia a ON a.alumna_id = r.alumna_id AND a.horario_id = r.horario_id
+         WHERE r.horario_id = ?
+           AND r.estado IN ('CONFIRMADA', 'PENDIENTE')
+         ORDER BY r.cama_numero ASC`,
         [horarioId]
       );
     } catch (error) {
@@ -94,7 +104,17 @@ class Reservation {
   static async findPending() {
     try {
       return await allAsync(
-        'SELECT * FROM reservas WHERE estado = ? ORDER BY fecha_solicitud ASC',
+        `SELECT r.*,
+                r.cama_numero AS numero_cama,
+                TRIM(u.nombre || ' ' || COALESCE(u.apellido, '')) AS nombre_alumna,
+                u.telefono AS telefono_alumna,
+                h.fecha AS fecha,
+                h.hora AS hora
+         FROM reservas r
+         JOIN users u ON r.alumna_id = u.id
+         JOIN horarios_clases h ON r.horario_id = h.id
+         WHERE r.estado = ?
+         ORDER BY h.fecha ASC, h.hora ASC, r.fecha_solicitud ASC`,
         ['PENDIENTE']
       );
     } catch (error) {
@@ -263,21 +283,6 @@ class Reservation {
     }
   }
 
-  /**
-   * Find reservations by schedule
-   * @param {string} horario_id - Schedule ID
-   * @returns {Promise<Array>} Array of reservations for that schedule
-   */
-  static async findBySchedule(horario_id) {
-    try {
-      return await allAsync(
-        `SELECT * FROM reservas WHERE horario_id = ? AND estado IN ('PENDIENTE', 'CONFIRMADA')`,
-        [horario_id]
-      );
-    } catch (error) {
-      throw new Error(`Error finding reservations by schedule: ${error.message}`);
-    }
-  }
 }
 
 export default Reservation;
